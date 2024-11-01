@@ -29,6 +29,26 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --application-submitted: 309 46% 92%;
+    --application-interview: 43 75% 83%;
+    --application-offerLetter: 147 61% 89%;
+    --application-accepted: 204 61% 89%;
+    --application-rejected: 0 60% 81%;
+    --collection-1: 203 100% 77%;
+    --collection-2: 142 100% 77%;
+    --collection-3: 37 100% 77%;
+    --collection-4: 338 100% 77%;
+    --collection-5: 323 100% 77%;
+    --collection-6: 344 100% 77%;
+    --collection-7: 120 100% 77%;
+    --collection-8: 41 100% 77%;
+    --collection-9: 22 100% 77%;
+    --collection-10: 300 100% 77%;
+    --collection-11: 157 100% 77%;
+    --collection-12: 140 100% 77%;
+    --collection-13: 83 100% 77%;
+    --collection-14: 224 100% 77%;
+    --collection-15: 277 100% 77%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -64,4 +84,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+body {
+  font-family: "Poppins";
 }
