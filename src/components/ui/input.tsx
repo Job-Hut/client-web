@@ -1,25 +1,80 @@
-import * as React from "react"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
+import { Eye, EyeOff } from "lucide-react";
+
+const inputVariants = cva("w-full border border-black text-sm", {
+  variants: {
+    variant: {
+      default: "",
+      "capsule-icon": "rounded-full ",
+    },
+    inputSize: {
+      default: "px-5 py-4",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    inputSize: "default",
+  },
+});
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+  extends React.InputHTMLAttributes<HTMLInputElement>,
+    VariantProps<typeof inputVariants> {
+  icon?: React.ReactNode;
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, variant, inputSize, type, icon: Icon, ...props }, ref) => {
     return (
-      <input
-        type={type}
-        className={cn(
-          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
+      <div className={cn("relative", className)}>
+        {variant === "capsule-icon" && Icon && (
+          <span className="absolute top-1/2 left-4 transform -translate-y-1/2">
+            {Icon}
+          </span>
         )}
-        ref={ref}
-        {...props}
-      />
-    )
+        <input
+          type={type}
+          className={cn(inputVariants({ variant, inputSize }), {
+            "px-14": variant === "capsule-icon",
+          })}
+          ref={ref}
+          {...props}
+        ></input>
+      </div>
+    );
   }
-)
-Input.displayName = "Input"
+);
+Input.displayName = "Input";
 
-export { Input }
+const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, variant, inputSize, ...props }, ref) => {
+    const [isVisible, setIsVisible] = React.useState(false);
+
+    const handleVisibility = () => {
+      setIsVisible((prev) => !prev);
+    };
+
+    return (
+      <div className="relative">
+        <Input
+          variant={variant}
+          type={isVisible ? "text" : "password"}
+          ref={ref}
+          {...props}
+        />
+        <div
+          onClick={handleVisibility}
+          className="absolute top-1/2 right-4 transform -translate-y-1/2 hover:cursor-pointer"
+        >
+          {isVisible ? <Eye /> : <EyeOff />}
+        </div>
+      </div>
+    );
+  }
+);
+InputPassword.displayName = "InputPassword";
+
+export { Input, InputPassword, inputVariants };
