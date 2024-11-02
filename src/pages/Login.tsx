@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input, InputPassword } from "@/components/ui/input";
+
 import { Lock, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,10 +11,29 @@ export default function Login() {
     password: "",
   });
 
+  // const { login } = useAuth();
+
   const nav = useNavigate();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // const user = {
+    //   _id: "123456",
+    //   username: "johndoe",
+    //   email: "johndoe@mail.com",
+    // };
+
+    // // contoh buat login
+    // nanti ini bakal masuk ke state user dan access token
+    // dan juga bakal disimpen di local storage
+    // login({
+    //   user ,
+    //   accessToken: "123456",
+    // })
+
+
+
     nav("/");
   };
 
