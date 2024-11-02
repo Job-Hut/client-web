@@ -5,6 +5,7 @@ JobHut is a user-friendly app designed to make job hunting easier. It brings tog
 ## Installation
 
 Clone the repository and install the dependencies by running the following command:
+
 ```bash
 npm install
 ```
@@ -12,6 +13,7 @@ npm install
 ## Usage
 
 Start the application by running the following command:
+
 ```bash
 npm run start
 ```
