@@ -18,11 +18,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col justify-between lg:justify-center px-5 py-12 min-h-screen md:w-3/4 md:mx-auto lg:w-1/2">
+    <div className="flex min-h-screen flex-col justify-between px-5 py-12 md:mx-auto md:w-3/4 lg:w-1/2 lg:justify-center">
       <div>Logo</div>
       <div className="flex flex-col gap-4 md:gap-8 lg:gap-16">
         <div className="flex flex-col gap-2 lg:text-center">
-          <h2 className="text-5xl lg:text-6xl font-bold text-collection-1">
+          <h2 className="text-5xl font-bold text-collection-1 lg:text-6xl">
             Login
           </h2>
           <p className="text-sm lg:text-base">
@@ -46,17 +46,17 @@ export default function Login() {
             onChange={(e) => setInput({ ...input, password: e.target.value })}
           />
 
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex w-full flex-col gap-2">
             <Button variant={"roundAccent"} size={"mobile"}>
               Login
             </Button>
             <p className="text-center text-xs lg:text-base">
               Do not have an account?{" "}
               <Link
-                to={"/login"}
+                to={"/register"}
                 className="font-bold text-collection-1 underline underline-offset-1"
               >
-                Login
+                Register
               </Link>
             </p>
           </div>
