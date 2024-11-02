@@ -19,7 +19,7 @@ const wsLink = new GraphQLWsLink(
           : "",
       },
     },
-  })
+  }),
 );
 
 const authLink = setContext((_, { headers }) => {
@@ -43,7 +43,7 @@ const splitLink = split(
     );
   },
   wsLink,
-  httpAuthLink
+  httpAuthLink,
 );
 
 const client = new ApolloClient({

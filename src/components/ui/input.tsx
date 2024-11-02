@@ -31,7 +31,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={cn("relative", className)}>
         {variant === "capsule-icon" && Icon && (
-          <span className="absolute top-1/2 left-4 transform -translate-y-1/2">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 transform">
             {Icon}
           </span>
         )}
@@ -45,7 +45,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ></input>
       </div>
     );
-  }
+  },
 );
 Input.displayName = "Input";
 
@@ -67,13 +67,13 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
         />
         <div
           onClick={handleVisibility}
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 hover:cursor-pointer"
+          className="absolute right-4 top-1/2 -translate-y-1/2 transform hover:cursor-pointer"
         >
           {isVisible ? <Eye /> : <EyeOff />}
         </div>
       </div>
     );
-  }
+  },
 );
 InputPassword.displayName = "InputPassword";
 
