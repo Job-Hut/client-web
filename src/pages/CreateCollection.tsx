@@ -127,7 +127,7 @@
 //           {/* Save Button */}
 //           <Button
 //             type="submit"
-//             className="w-full bg-[#88D1FF] text-black font-semibold rounded-full py-2 mb-10"
+//             className="w-full bg-[#88D1FF] text-primary font-semibold rounded-full py-2 mb-10"
 //           >
 //             Save
 //           </Button>
@@ -264,7 +264,7 @@ export default function CreateCollection() {
             {/* Save Button */}
             <Button
               type="submit"
-              className="w-full bg-[#88D1FF] text-black font-semibold rounded-full py-3 mt-6"
+              className="w-full bg-[#88D1FF] text-primary font-semibold rounded-full py-3 mt-6"
             >
               Save
             </Button>

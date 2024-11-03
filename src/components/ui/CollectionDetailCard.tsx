@@ -29,7 +29,7 @@ export default function CollectionDetailCard({
         >
           Due Tomorrow
         </Button>
-        <CardDescription className="text-sm font-bold text-black">
+        <CardDescription className="text-sm font-bold text-primary">
           Airbnb
         </CardDescription>
         <div className="flex w-full items-center justify-between">
@@ -65,10 +65,10 @@ export default function CollectionDetailCard({
 
       {/* Application created date + Add application button */}
       <div className="mt-1 flex items-center justify-between">
-        <CardDescription className="text-xs font-semibold text-black">
+        <CardDescription className="text-xs font-semibold text-primary">
           Submit Updated Portfolio
         </CardDescription>
-        <CardDescription className="text-xs font-semibold text-black">
+        <CardDescription className="text-xs font-semibold text-primary">
           23/10/24
         </CardDescription>
       </div>
