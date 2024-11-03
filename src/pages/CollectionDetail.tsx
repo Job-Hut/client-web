@@ -7,7 +7,7 @@ export default function CollectionDetail() {
     <div className="flex w-full flex-col items-center justify-center">
         {/* Invite button */}
       <div className="flex w-[350px] justify-end">
-        <Button className={cn("bg-[#88D1FF] text-black")}>Invite</Button>
+        <Button className={cn("bg-[#88D1FF] text-primary")}>Invite</Button>
       </div>
       <CollectionDetailCard />
       <CollectionDetailCard />
