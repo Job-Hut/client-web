@@ -1,14 +1,21 @@
-import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
+import { ApolloClient, InMemoryCache, split, ApolloLink } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
-import config from "./config";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { setContext } from "@apollo/client/link/context";
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
+import config from "./config";
 
-const httpLink = new HttpLink({
+// Create upload link with CSRF prevention
+const uploadLink = createUploadLink({
   uri: config.apiBaseUrl,
+  credentials: "include",
+  headers: {
+    "apollo-require-preflight": "true",
+  },
 });
 
+// WebSocket link setup
 const wsLink = new GraphQLWsLink(
   createClient({
     url: config.apiWebSocketUrl,
@@ -22,8 +29,12 @@ const wsLink = new GraphQLWsLink(
   }),
 );
 
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("access_token");
+// Authentication link
+const authLink = setContext((operation, { headers }) => {
+  let token = localStorage.getItem("access_token");
+  if (token) {
+    token = token.replace(/^"|"$/g, ""); // Remove the leading and trailing double quotes
+  }
   return {
     headers: {
       ...headers,
@@ -32,8 +43,22 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const httpAuthLink = authLink.concat(httpLink);
+// CSRF prevention link
+const csrfLink = new ApolloLink((operation, forward) => {
+  operation.setContext(({ headers = {} }) => ({
+    headers: {
+      ...headers,
+      "apollo-require-preflight": "true",
+      "x-apollo-operation-name": operation.operationName || "",
+    },
+  }));
+  return forward(operation);
+});
 
+// Combine auth and CSRF links with upload link
+const httpLink = ApolloLink.from([csrfLink, authLink, uploadLink]);
+
+// Split operations between WebSocket and HTTP
 const splitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
@@ -43,12 +68,23 @@ const splitLink = split(
     );
   },
   wsLink,
-  httpAuthLink,
+  httpLink,
 );
 
+// Create Apollo Client instance
 const client = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "network-only",
+      errorPolicy: "ignore",
+    },
+    query: {
+      fetchPolicy: "network-only",
+      errorPolicy: "all",
+    },
+  },
 });
 
 export default client;

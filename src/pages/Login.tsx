@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input, InputPassword } from "@/components/ui/input";
+import useAuth from "@/hooks/use-auth";
+import { gql, useMutation } from "@apollo/client";
+
 import { Lock, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,11 +13,46 @@ export default function Login() {
     password: "",
   });
 
+  const { login } = useAuth();
+
+  const [loginMutation] = useMutation(
+    gql`
+      mutation Login($email: String!, $password: String!) {
+        login(email: $email, password: $password) {
+          access_token
+          userId
+          username
+          email
+        }
+      }
+    `,
+    {
+      variables: input,
+    },
+  );
+
   const nav = useNavigate();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    nav("/");
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      const { data } = await loginMutation();
+
+      login({
+        user: {
+          id: data.login?.userId,
+          email: data.login?.email,
+          username: data.login?.username,
+        },
+        accessToken: data.login?.access_token,
+      }); 
+      debugger;
+
+      nav("/");
+    } catch (error) {
+      // ! Handle error
+      console.error(error);
+    }
   };
 
   return (
