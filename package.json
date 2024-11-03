@@ -16,6 +16,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@uidotdev/usehooks": "^2.4.1",
     "apollo-link-context": "^1.0.20",
+    "apollo-upload-client": "^18.0.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "graphql": "^16.9.0",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@types/apollo-upload-client": "^18.0.0",
     "@types/node": "^22.8.2",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
