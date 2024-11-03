@@ -60,7 +60,7 @@ export default function Login() {
       <div>Logo</div>
       <div className="flex flex-col gap-4 md:gap-8 lg:gap-16">
         <div className="flex flex-col gap-2 lg:text-center">
-          <h2 className="text-collection-1 text-5xl font-bold lg:text-6xl">
+          <h2 className="text-5xl font-bold text-collection-1 lg:text-6xl">
             Login
           </h2>
           <p className="text-sm lg:text-base">
@@ -91,10 +91,10 @@ export default function Login() {
             <p className="text-center text-xs lg:text-base">
               Do not have an account?{" "}
               <Link
-                to={"/login"}
-                className="text-collection-1 font-bold underline underline-offset-1"
+                to={"/register"}
+                className="font-bold text-collection-1 underline underline-offset-1"
               >
-                Login
+                Register
               </Link>
             </p>
           </div>
