@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input, InputPassword } from "@/components/ui/input";
+import useAuth from "@/hooks/use-auth";
+import { gql, useMutation } from "@apollo/client";
 
 import { Lock, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
@@ -11,38 +13,54 @@ export default function Login() {
     password: "",
   });
 
-  // const { login } = useAuth();
+  const { login } = useAuth();
+
+  const [loginMutation] = useMutation(
+    gql`
+      mutation Login($email: String!, $password: String!) {
+        login(email: $email, password: $password) {
+          access_token
+          userId
+          username
+          email
+        }
+      }
+    `,
+    {
+      variables: input,
+    },
+  );
 
   const nav = useNavigate();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      const { data } = await loginMutation();
 
-    // const user = {
-    //   _id: "123456",
-    //   username: "johndoe",
-    //   email: "johndoe@mail.com",
-    // };
+      login({
+        user: {
+          id: data.login?.userId,
+          email: data.login?.email,
+          username: data.login?.username,
+        },
+        accessToken: data.login?.access_token,
+      }); 
+      debugger;
 
-    // // contoh buat login
-    // nanti ini bakal masuk ke state user dan access token
-    // dan juga bakal disimpen di local storage
-    // login({
-    //   user ,
-    //   accessToken: "123456",
-    // })
-
-
-
-    nav("/");
+      nav("/");
+    } catch (error) {
+      // ! Handle error
+      console.error(error);
+    }
   };
 
   return (
-    <div className="flex flex-col justify-between lg:justify-center px-5 py-12 min-h-screen md:w-3/4 md:mx-auto lg:w-1/2">
+    <div className="flex min-h-screen flex-col justify-between px-5 py-12 md:mx-auto md:w-3/4 lg:w-1/2 lg:justify-center">
       <div>Logo</div>
       <div className="flex flex-col gap-4 md:gap-8 lg:gap-16">
         <div className="flex flex-col gap-2 lg:text-center">
-          <h2 className="text-5xl lg:text-6xl font-bold text-collection-1">
+          <h2 className="text-collection-1 text-5xl font-bold lg:text-6xl">
             Login
           </h2>
           <p className="text-sm lg:text-base">
@@ -66,7 +84,7 @@ export default function Login() {
             onChange={(e) => setInput({ ...input, password: e.target.value })}
           />
 
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex w-full flex-col gap-2">
             <Button variant={"roundAccent"} size={"mobile"}>
               Login
             </Button>
@@ -74,7 +92,7 @@ export default function Login() {
               Do not have an account?{" "}
               <Link
                 to={"/login"}
-                className="font-bold text-collection-1 underline underline-offset-1"
+                className="text-collection-1 font-bold underline underline-offset-1"
               >
                 Login
               </Link>
