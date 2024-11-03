@@ -50,7 +50,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = "Input";
 
 const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, variant, inputSize, ...props }, ref) => {
+  ({ variant, ...props }, ref) => {
     const [isVisible, setIsVisible] = React.useState(false);
 
     const handleVisibility = () => {
