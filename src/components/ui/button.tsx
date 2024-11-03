@@ -20,7 +20,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         roundAccent:
           "rounded-full bg-collection-1 hover:bg-collection-1/90 text-sm font-semibold w-full",
-        floating: "bg-white rounded-full aspect-square shadow-md",
+        floating: "bg-card rounded-full aspect-square shadow-md",
       },
       size: {
         default: "px-4 py-2",
