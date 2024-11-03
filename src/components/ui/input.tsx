@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 
-const inputVariants = cva("w-full border border-black text-sm", {
+const inputVariants = cva("w-full border border-primary text-sm", {
   variants: {
     variant: {
       default: "",
