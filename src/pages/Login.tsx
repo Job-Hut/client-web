@@ -15,7 +15,7 @@ export default function Login() {
 
   const { login } = useAuth();
 
-  const [loginMutation] = useMutation(
+  const [loginMutation, { loading }] = useMutation(
     gql`
       mutation Login($email: String!, $password: String!) {
         login(email: $email, password: $password) {
@@ -45,8 +45,7 @@ export default function Login() {
           username: data.login?.username,
         },
         accessToken: data.login?.access_token,
-      }); 
-      debugger;
+      });
 
       nav("/");
     } catch (error) {
@@ -85,7 +84,7 @@ export default function Login() {
           />
 
           <div className="flex w-full flex-col gap-2">
-            <Button variant={"roundAccent"} size={"mobile"}>
+            <Button variant={"roundAccent"} size={"mobile"} disabled={loading}>
               Login
             </Button>
             <p className="text-center text-xs lg:text-base">

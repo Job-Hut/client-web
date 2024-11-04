@@ -30,7 +30,7 @@ const wsLink = new GraphQLWsLink(
 );
 
 // Authentication link
-const authLink = setContext((operation, { headers }) => {
+const authLink = setContext((_, { headers }) => {
   let token = localStorage.getItem("access_token");
   if (token) {
     token = token.replace(/^"|"$/g, ""); // Remove the leading and trailing double quotes
