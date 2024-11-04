@@ -74,11 +74,11 @@ export default {
           14: "hsl(var(--collection-14))",
           15: "hsl(var(--collection-15))",
         },
-        screens: {
-          msm: "320px",
-          mmd: "375px",
-          mlg: "425px",
-        },
+      },
+      screens: {
+        msm: "320px",
+        mmd: "375px",
+        mlg: "425px",
       },
     },
   },
