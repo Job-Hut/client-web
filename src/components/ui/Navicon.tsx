@@ -34,7 +34,7 @@ export default function Navicon({ icon, title, route }: NavIconProps) {
   return (
     <Link
       to={route}
-      className={`flex h-full w-full flex-col items-center gap-1 px-5 py-5 text-sm transition-all duration-100 ease-linear active:bg-primary/5 ${isActive ? "border-t-2 border-primary" : ""}`}
+      className={`mlg:w-full mmd:w-16 flex h-full w-14 flex-col items-center gap-1 px-5 py-5 text-sm transition-all duration-100 ease-linear active:bg-primary/5 ${isActive ? "border-t-2 border-primary" : ""}`}
     >
       <button title={title}>{icon}</button>
     </Link>
