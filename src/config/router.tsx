@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";
-import InviteToGroup from "@/pages/InviteToGroup";
+import Collection from "@/pages/Collection";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/collections",
+    element: <Collection />,
   }
 ]);
 
