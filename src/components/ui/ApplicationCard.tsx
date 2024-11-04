@@ -10,6 +10,7 @@ export default function ApplicationCard() {
           >
             Due Today
           </span>
+
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-full bg-[#FF5A5F] p-2">
               <svg

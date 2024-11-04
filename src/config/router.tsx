@@ -3,6 +3,7 @@ import Home from "../pages/Home";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import Collection from "@/pages/Collection";
+import ApplicationDetail from "@/pages/ApplicationDetail";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
   {
     path: "/collections",
     element: <Collection />,
-  }
+  },
+  {
+    path: "/applications/:_id",
+    element: <ApplicationDetail />,
+  },
 ]);
 
 export default router;
