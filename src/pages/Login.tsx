@@ -45,8 +45,8 @@ export default function Login() {
           username: data.login?.username,
         },
         accessToken: data.login?.access_token,
-      }); 
-      debugger;
+      });
+      // debugger;
 
       nav("/");
     } catch (error) {
@@ -70,7 +70,7 @@ export default function Login() {
         <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-4">
           <Input
             variant={"capsule-icon"}
-            icon={<Mail color="black" />}
+            icon={<Mail color="black" width={16} />}
             placeholder="Email"
             type="email"
             value={input.email}
@@ -78,7 +78,7 @@ export default function Login() {
           />
           <InputPassword
             variant={"capsule-icon"}
-            icon={<Lock color="black" />}
+            icon={<Lock color="black" width={16} />}
             placeholder="Password"
             value={input.password}
             onChange={(e) => setInput({ ...input, password: e.target.value })}
