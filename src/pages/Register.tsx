@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input, InputPassword } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { gql, useMutation } from "@apollo/client";
 import { Lock, Mail, UserRound } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,19 +15,48 @@ export default function Register() {
     passwordConfirmation: "",
   });
 
+  const { toast } = useToast();
+
+  const [registerMutation, { loading }] = useMutation(gql`
+    mutation Register($input: RegisterInput) {
+      register(input: $input) {
+        _id
+        username
+      }
+    }
+  `);
+
   const nav = useNavigate();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    nav("/");
+
+    try {
+      const user = {
+        fullName: input.fullname,
+        username: input.username,
+        email: input.email,
+        password: input.password,
+      };
+      await registerMutation({ variables: { input: user } });
+      nav("/login");
+    } catch (err: unknown) {
+      toast({
+        title: "Error",
+        description: (err as Error).message,
+        variant: "destructive",
+      });
+      // handle error
+      console.error(err);
+    }
   };
 
   return (
-    <div className="flex flex-col justify-between lg:justify-center px-5 py-12 min-h-screen md:w-3/4 md:mx-auto lg:w-1/2">
+    <div className="flex min-h-screen flex-col justify-between px-5 py-12 md:mx-auto md:w-3/4 lg:w-1/2 lg:justify-center">
       <div>Logo</div>
       <div className="flex flex-col gap-4 md:gap-8 lg:gap-16">
         <div className="flex flex-col gap-2 lg:text-center">
-          <h2 className="text-5xl lg:text-6xl font-bold text-collection-1">
+          <h2 className="text-5xl font-bold text-collection-1 lg:text-6xl">
             Register
           </h2>
           <p className="text-sm lg:text-base">
@@ -73,8 +104,8 @@ export default function Register() {
               setInput({ ...input, passwordConfirmation: e.target.value })
             }
           />
-          <div className="flex flex-col gap-2 w-full">
-            <Button variant={"roundAccent"} size={"mobile"}>
+          <div className="flex w-full flex-col gap-2">
+            <Button variant={"roundAccent"} size={"mobile"} disabled={loading}>
               Create Account
             </Button>
             <p className="text-center text-xs lg:text-base">
