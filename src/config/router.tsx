@@ -3,6 +3,7 @@ import Home from "../pages/Home";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import InviteToGroup from "@/pages/InviteToGroup";
+import ApplicationDetail from "@/pages/ApplicationDetail";
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
-  }
+  },
+  {
+    path: "/applications/:_id",
+    element: <ApplicationDetail />,
+  },
 ]);
 
 export default router;
