@@ -14,7 +14,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ApolloProvider client={client}>
       <AuthProvider>
-      <Toaster/>
+        <Toaster />
         <RouterProvider router={router} />
       </AuthProvider>
     </ApolloProvider>
