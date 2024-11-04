@@ -2,14 +2,21 @@ import { Button } from "@/components/ui/button";
 import CollectionList from "@/components/ui/CollectionList";
 import Navbar from "@/components/ui/Navbar";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 export default function Collection() {
+  const navigate = useNavigate();
+  
+  const handleCreateCollection = () => {
+    navigate("/create-collection"); 
+  };
+
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-secondary">
       <Navbar />
 
       {/* Main Button */}
-      <Button className="mt-6 w-11/12 mx-auto sm:max-w-screen-sm">
+      <Button className="mt-6 w-11/12 mx-auto sm:max-w-screen-sm" onClick={handleCreateCollection}>
         New Collection
       </Button>
 
