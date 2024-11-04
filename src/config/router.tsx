@@ -4,6 +4,7 @@ import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import InviteToGroup from "@/pages/InviteToGroup";
 import ApplicationDetail from "@/pages/ApplicationDetail";
+import ApplicationForm from "@/pages/ApplicationForm";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/applications/:_id",
     element: <ApplicationDetail />,
+  },
+  {
+    path: "/applications/:_id/edit",
+    element: <ApplicationForm />,
   },
 ]);
 
