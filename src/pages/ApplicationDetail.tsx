@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import TaskCard from "@/components/ui/TaskCard";
 import ApplicationStatus from "@/components/ui/ApplicationStatus";
+import { Link } from "react-router-dom";
 
 export default function ApplicationDetail() {
   return (
@@ -77,9 +78,9 @@ export default function ApplicationDetail() {
                 <p>Jakarta, ID</p>
               </div>
             </div>
-            <div>
+            <Link to={`/applications/:id/edit`}>
               <Button>Edit</Button>
-            </div>
+            </Link>
           </div>
         </div>
         <div>
