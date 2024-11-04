@@ -4,14 +4,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 
-const inputVariants = cva("w-full border border-black text-sm", {
+const inputVariants = cva("w-full border border-primary text-sm", {
   variants: {
     variant: {
-      default: "",
+      default: "rounded-sm",
       "capsule-icon": "rounded-full ",
     },
     inputSize: {
       default: "px-5 py-4",
+      small: "px-2 py-2",
     },
   },
   defaultVariants: {
@@ -50,7 +51,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = "Input";
 
 const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, variant, inputSize, ...props }, ref) => {
+  ({ variant, ...props }, ref) => {
     const [isVisible, setIsVisible] = React.useState(false);
 
     const handleVisibility = () => {

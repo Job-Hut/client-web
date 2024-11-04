@@ -20,12 +20,16 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         roundAccent:
           "rounded-full bg-collection-1 hover:bg-collection-1/90 text-sm font-semibold w-full",
+        floating: "bg-card rounded-full aspect-square shadow-md",
+        applicationStage:
+          "bg-background hover:bg-accent hover:text-accent-foreground text-xs rounded-full gap-2",
       },
       size: {
         default: "px-4 py-2",
         mobile: "px-4 py-5",
         lg: "px-8",
         icon: "",
+        applicationStage: "px-4 py-2",
       },
     },
     defaultVariants: {
