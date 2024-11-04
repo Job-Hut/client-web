@@ -6,7 +6,7 @@ type CardProps = React.ComponentProps<typeof Card>;
 
 export default function CollectionList({ className, ...props }: CardProps) {
   return (
-    <a href={"/applications/:_id"}>
+    <a href={"/collections/:_id"}>
       <div
         className={cn(
           "gap-2.5 rounded-lg bg-background p-2 w-full",
