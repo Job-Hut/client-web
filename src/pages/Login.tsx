@@ -46,6 +46,7 @@ export default function Login() {
         },
         accessToken: data.login?.access_token,
       });
+      // debugger;
 
       nav("/");
     } catch (error) {
@@ -59,9 +60,7 @@ export default function Login() {
       <div>Logo</div>
       <div className="flex flex-col gap-4 md:gap-8 lg:gap-16">
         <div className="flex flex-col gap-2 lg:text-center">
-          <h2 className="text-5xl font-bold text-collection-1 lg:text-6xl">
-            Login
-          </h2>
+          <h2 className="text-5xl font-bold lg:text-6xl">Login</h2>
           <p className="text-sm lg:text-base">
             Welcome back! Let's track your application!
           </p>
@@ -69,7 +68,7 @@ export default function Login() {
         <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-4">
           <Input
             variant={"capsule-icon"}
-            icon={<Mail color="black" />}
+            icon={<Mail color="black" width={16} />}
             placeholder="Email"
             type="email"
             value={input.email}
@@ -77,21 +76,21 @@ export default function Login() {
           />
           <InputPassword
             variant={"capsule-icon"}
-            icon={<Lock color="black" />}
+            icon={<Lock color="black" width={16} />}
             placeholder="Password"
             value={input.password}
             onChange={(e) => setInput({ ...input, password: e.target.value })}
           />
 
           <div className="flex w-full flex-col gap-2">
-            <Button variant={"roundAccent"} size={"mobile"} disabled={loading}>
+            <Button size={"mobile"} disabled={loading}>
               Login
             </Button>
             <p className="text-center text-xs lg:text-base">
               Do not have an account?{" "}
               <Link
                 to={"/register"}
-                className="font-bold text-collection-1 underline underline-offset-1"
+                className="font-bold underline underline-offset-1"
               >
                 Register
               </Link>
