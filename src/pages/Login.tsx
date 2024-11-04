@@ -15,7 +15,7 @@ export default function Login() {
 
   const { login } = useAuth();
 
-  const [loginMutation] = useMutation(
+  const [loginMutation, { loading }] = useMutation(
     gql`
       mutation Login($email: String!, $password: String!) {
         login(email: $email, password: $password) {
@@ -60,9 +60,7 @@ export default function Login() {
       <div>Logo</div>
       <div className="flex flex-col gap-4 md:gap-8 lg:gap-16">
         <div className="flex flex-col gap-2 lg:text-center">
-          <h2 className="text-5xl font-bold text-collection-1 lg:text-6xl">
-            Login
-          </h2>
+          <h2 className="text-5xl font-bold lg:text-6xl">Login</h2>
           <p className="text-sm lg:text-base">
             Welcome back! Let's track your application!
           </p>
@@ -85,14 +83,14 @@ export default function Login() {
           />
 
           <div className="flex w-full flex-col gap-2">
-            <Button variant={"roundAccent"} size={"mobile"}>
+            <Button size={"mobile"} disabled={loading}>
               Login
             </Button>
             <p className="text-center text-xs lg:text-base">
               Do not have an account?{" "}
               <Link
                 to={"/register"}
-                className="font-bold text-collection-1 underline underline-offset-1"
+                className="font-bold underline underline-offset-1"
               >
                 Register
               </Link>
