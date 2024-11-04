@@ -7,11 +7,12 @@ import { Eye, EyeOff } from "lucide-react";
 const inputVariants = cva("w-full border border-primary text-sm", {
   variants: {
     variant: {
-      default: "",
+      default: "rounded-sm",
       "capsule-icon": "rounded-full ",
     },
     inputSize: {
       default: "px-5 py-4",
+      small: "px-2 py-2",
     },
   },
   defaultVariants: {
