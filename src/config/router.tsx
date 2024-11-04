@@ -10,7 +10,7 @@ import CollectionDetail from "@/pages/CollectionDetail";
 import InviteToGroup from "@/pages/InviteToGroup";
 import GroupChat from "@/pages/GroupChat";
 import ViewMembers from "@/pages/ViewMembers";
-
+import Jobs from "@/pages/Jobs";
 
 const router = createBrowserRouter([
   {
@@ -43,28 +43,32 @@ const router = createBrowserRouter([
   },
   {
     path: "/create-collection",
-    element: <CreateCollection />
+    element: <CreateCollection />,
   },
   {
     path: "/collections/:_id",
-    element: <CollectionDetail />
+    element: <CollectionDetail />,
   },
   {
     path: "/invite-user/:_id",
-    element: <InviteToGroup />
+    element: <InviteToGroup />,
   },
   {
     path: "/group-chat",
-    element: <GroupChat />
+    element: <GroupChat />,
   },
   {
     path: "/view-joined-members/:_id",
-    element: <ViewMembers />
+    element: <ViewMembers />,
   },
   {
     path: "/view-online-members/:_id",
-    element: <ViewMembers />
-  }
+    element: <ViewMembers />,
+  },
+  {
+    path: "/jobs",
+    element: <Jobs />,
+  },
 ]);
 
 export default router;
