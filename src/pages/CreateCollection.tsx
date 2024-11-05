@@ -3,30 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import Navbar from "@/components/ui/Navbar";
 import { useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import { gql, useMutation } from "@apollo/client";
 import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 
 // Form validation schema
 const FormSchema = z.object({
@@ -57,7 +40,6 @@ export default function CreateCollection() {
     defaultValues: {
       name: "",
       description: "",
-      visibility: "Public",
     },
   });
 
@@ -89,9 +71,6 @@ export default function CreateCollection() {
     }
   }
 
-  const inputClassName =
-    "border border-black rounded-lg px-4 py-2 focus:border-black focus:ring-2 focus:ring-black focus:outline-none placeholder-gray-400 placeholder-opacity-75";
-
   const navigate = useNavigate();
 
   const handleCancel = () => {
@@ -100,14 +79,41 @@ export default function CreateCollection() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-secondary">
-      <div className="sticky top-0 z-10 w-full">
         <Navbar />
+        <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
+        <button
+          className="text-lg"
+          aria-label="Go back"
+          onClick={() => navigate(`/collections`)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-circle-arrow-left"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M16 12H8" />
+            <path d="m12 8-4 4 4 4" />
+          </svg>
+        </button>
+
+        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-semibold sm:text-lg">
+          Create Collection
+        </h2>
       </div>
+
       {/* Main Container with Top Padding */}
-      <div className="flex w-full flex-col items-center px-4 pb-10 msm:mb-40 sm:mb-38 sm:mt-5 sm:max-w-screen-sm md:mt-24">
+      <div className="mb-20 flex w-full flex-col items-center px-4 pb-10 sm:mt-5 sm:max-w-screen-sm md:mt-24">
         {/* Header */}
         <div className="mb-8 mt-6 flex flex-col items-center text-center">
-          <h1 className="font-poppins text-3xl font-bold text-[#88D1FF]">
+          <h1 className="font-poppins text-3xl font-bold text-primary">
             Create Collection
           </h1>
           <p className="font-poppins text-primary">Let the new journey begin</p>
@@ -115,95 +121,40 @@ export default function CreateCollection() {
 
         {/* Form */}
         <div className="w-full rounded-lg bg-background p-6 shadow-md">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* If I use the Input component somehow the styling cannot be overridden */}
-              {/* Name field */}
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-poppins text-lg">Name</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Name"
-                        {...field}
-                        className={cn("!h-[40px]", inputClassName)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Name field */}
+            <Input
+              id="name"
+              name="name"
+              placeholder="Name"
+              type="text"
+              inputSize={"small"}
+            />
+            {/* Description Field */}
+            <Textarea
+              id="description"
+              name="description"
+              placeholder="Description"
+              className="border-primary"
+            />
 
-              {/* Description Field */}
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-poppins text-lg">
-                      Description
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Enter collection’s description here..."
-                        {...field}
-                        className={cn("h-40", inputClassName)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Visibility Field */}
-              <FormField
-                control={form.control}
-                name="visibility"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-poppins text-lg">
-                      Visibility
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className={inputClassName}>
-                          <SelectValue placeholder="Select visibility" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Public">Public</SelectItem>
-                          <SelectItem value="Private">Private</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Save and Cancel Buttons */}
-              <div className="space-y-4">
-                <Button
-                  type="submit"
-                  className="w-full rounded-full bg-[#88D1FF] py-3 font-semibold text-primary"
-                >
-                  Save
-                </Button>
-                <Button
-                  type="button"
-                  className="w-full rounded-full bg-secondary py-3 font-semibold text-primary"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </Form>
+            {/* Save and Cancel Buttons */}
+            <div className="space-y-4">
+              <Button
+                type="submit"
+                className="w-full rounded-full bg-primary py-3 font-semibold text-background"
+              >
+                Save
+              </Button>
+              <Button
+                type="button"
+                className="w-full rounded-full bg-secondary py-3 font-semibold text-primary hover:text-background"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
