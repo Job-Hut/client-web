@@ -39,14 +39,6 @@ export default function Collection() {
     <div className="relative flex min-h-screen flex-col items-center bg-secondary">
       <Navbar />
 
-      {/* Main Button */}
-      <Button
-        className="mx-auto mt-6 w-11/12 sm:max-w-screen-sm"
-        onClick={handleCreateCollection}
-      >
-        New Collection
-      </Button>
-
       {/* Loading Indicator */}
       {loading && <p className="mt-8 text-center text-xl">Loading...</p>}
 
@@ -56,13 +48,7 @@ export default function Collection() {
       )}
 
       {/* CollectionList Grid */}
-
       <div className="mx-auto mt-4 flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
-        <CollectionList className={cn("bg-collection-1")} />
-        <CollectionList className={cn("bg-collection-2")} />
-        <CollectionList className={cn("bg-collection-3")} />
-
-        <div className="mt-6 flex w-11/12 flex-col gap-4 pb-48 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
           {/* Display the Collections */}
           {data?.getAllCollection?.map(
             (collection: Collection, iter: number) => (
@@ -73,8 +59,6 @@ export default function Collection() {
               />
             ),
           )}
-          {/* Additional CollectionList items for testing */}
-        </div>
         <BottomNavigation />
         {/* Main Button */}
         <Button
