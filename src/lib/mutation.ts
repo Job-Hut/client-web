@@ -77,3 +77,18 @@ export const ADD_EDUCATION = gql`
     }
   }
 `;
+
+export const ADD_LICENSE = gql`
+  mutation AddLicense($input: LicenseInput) {
+    addLicense(input: $input) {
+      licenses {
+        _id
+        number
+        name
+        issuedBy
+        issuedAt
+        expiryDate
+      }
+    }
+  }
+`;

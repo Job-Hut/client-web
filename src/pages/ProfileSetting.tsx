@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import { Education, Experience, License } from "@/lib/types";
 import AddCareerModal from "@/components/ui/AddCareerModal";
 import AddEducationModal from "@/components/ui/AddEducationmodal";
+import AddLicenseModal from "@/components/ui/AddLicenseModal";
 
 export default function ProfileSetting() {
   const [isEditImageModalOpen, setEditImageModalOpen] = useState(false);
@@ -377,66 +378,7 @@ export default function ProfileSetting() {
 
       {/* Add license modal */}
       {isAddLicenseModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-            <button
-              onClick={closeAddLicenseModal}
-              className="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
-              aria-label="Close"
-            >
-              &times;
-            </button>
-            <h2 className="mb-4 text-xl font-semibold text-gray-800">
-              Add License / Certification
-            </h2>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                License / Certification Name
-              </label>
-              <Input
-                id="license"
-                name="license"
-                placeholder="License / Certification Name"
-                type="text"
-                inputSize={"small"}
-              />
-
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Issuing Organization
-              </label>
-              <Input
-                id="organization"
-                name="organization"
-                placeholder="Issuing Organization Name"
-                type="text"
-                inputSize={"small"}
-              />
-
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Validity
-              </label>
-              <div className="flex gap-2">
-                <Input
-                  id="expiredDate"
-                  name="expiredDate"
-                  placeholder="Start Date (e.g., Aug 2024)"
-                  type="text"
-                  inputSize={"small"}
-                  className="flex-1"
-                />
-              </div>
-
-              <Button
-                className="hover:bg-primary-dark mt-4 w-full rounded-md bg-primary py-2 font-semibold text-white shadow-sm"
-                onClick={() => {
-                  closeAddLicenseModal();
-                }}
-              >
-                Add License / Certification
-              </Button>
-            </form>
-          </div>
-        </div>
+        <AddLicenseModal closeAddLicenseModal={closeAddLicenseModal} />
       )}
     </div>
   );
