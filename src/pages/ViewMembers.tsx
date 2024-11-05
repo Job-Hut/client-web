@@ -41,14 +41,12 @@ export default function ViewMembers() {
         <UserCard
           user={{
             username: "John Doe",
-            avatarUrl: "https://example.com/johndoe.jpg",
             isInvited: true,
           }}
         />
         <UserCard
           user={{
             username: "Jane Smith",
-            avatarUrl: "https://example.com/janesmith.jpg",
             isInvited: true,
           }}
         />
