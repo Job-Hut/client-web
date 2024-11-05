@@ -6,63 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { gql, useMutation, useQuery } from "@apollo/client";
-
-const UPDATE_AVATAR = gql`
-  mutation UpdateAvatar($avatar: Upload!) {
-    updateAvatar(avatar: $avatar) {
-      _id
-    }
-  }
-`;
-
-const GET_USER = gql`
-  query GetAuthenticatedUser {
-    getAuthenticatedUser {
-      _id
-      username
-      avatar
-      fullName
-      email
-      profile {
-        _id
-        bio
-        location
-        createdAt
-        updatedAt
-        experiences {
-          _id
-          jobTitle
-          institute
-          startDate
-          endDate
-        }
-        education {
-          _id
-          name
-          institute
-          startDate
-          endDate
-        }
-        licenses {
-          _id
-          number
-          name
-          issuedBy
-          issuedAt
-          expiryDate
-        }
-      }
-      collections {
-        _id
-        name
-      }
-      isOnline
-      createdAt
-      updatedAt
-    }
-  }
-`;
+import { useMutation, useQuery } from "@apollo/client";
+import { UPDATE_AVATAR } from "@/lib/mutation";
+import { GET_AUTHENTICATED_USER } from "@/lib/queries";
 
 export default function ProfileSetting() {
   const [isEditImageModalOpen, setEditImageModalOpen] = useState(false);
@@ -93,7 +39,7 @@ export default function ProfileSetting() {
   const openAddLicenseModal = () => setAddLicenseModalOpen(true);
   const closeAddLicenseModal = () => setAddLicenseModalOpen(false);
 
-  const { data: userData } = useQuery(GET_USER);
+  const { data: userData } = useQuery(GET_AUTHENTICATED_USER);
 
   const [updateAvatarMutation, { loading: updateAvatarLoading }] =
     useMutation(UPDATE_AVATAR);
@@ -145,7 +91,7 @@ export default function ProfileSetting() {
               <AvatarImage
                 src={
                   userData?.getAuthenticatedUser?.avatar ||
-                  "https://github.com/shadcn"
+                  `https://avatar.iran.liara.run/username?username=${userData?.getAuthenticatedUser?.username}`
                 }
                 alt="User avatar"
                 className="h-full w-full rounded-full object-cover"
