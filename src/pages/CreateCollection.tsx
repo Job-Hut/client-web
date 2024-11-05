@@ -62,7 +62,7 @@ export default function CreateCollection() {
         <Navbar />
       </div>
       {/* Main Container with Top Padding */}
-      <div className="flex w-full flex-col items-center px-4 pb-10 sm:mb-32 sm:mt-5 sm:max-w-screen-sm md:mt-24">
+      <div className="flex w-full flex-col items-center px-4 pb-10 msm:mb-40 sm:mb-38 sm:mt-5 sm:max-w-screen-sm md:mt-24">
         {/* Header */}
         <div className="mb-8 mt-6 flex flex-col items-center text-center">
           <h1 className="font-poppins text-3xl font-bold text-[#88D1FF]">
