@@ -111,11 +111,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/jobs",
-    element: <Jobs />,
+    element: (
+      <GuardAuth>
+        <Jobs />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/applications",
-    element: <Applications />,
+    element: (
+      <GuardAuth>
+        <Applications />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/insert-applications-to-collection/:_id",
@@ -123,7 +131,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: (
+      <GuardAuth>
+        <Profile />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/profile-setting",

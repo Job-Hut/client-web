@@ -13,7 +13,7 @@ export default function GroupChat() {
 
   const { user } = useAuth();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   // Get Collection Data By ID
   const { data } = useQuery(
@@ -160,6 +160,8 @@ export default function GroupChat() {
       {/* Chat Messages */}
       <div className="flex flex-1 flex-col space-y-4 overflow-y-auto p-4">
         {messages.map((message: Message) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           if (message.senderId._id === user!.id) {
             return <ChatBubbleRight key={message._id} message={message} />;
           }

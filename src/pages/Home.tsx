@@ -34,21 +34,16 @@ export default function Home() {
     }
   `);
 
-  // handle loading
-  if (loading) {
-    console.log("loading...");
-  }
-
-  // handle error
-  if (error) {
-    console.log(error);
-  }
-
-  console.log(data);
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-secondary">
       <Navbar />
-      <CardList />
+
+      {loading && <p className="text-center">Loading...</p>}
+      {error && <p className="text-center">Error: {error.message}</p>}
+
+      {data?.getSortedByPriorityApplication && (
+        <CardList applications={data?.getSortedByPriorityApplication} />
+      )}
     </div>
   );
 }

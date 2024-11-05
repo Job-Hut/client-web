@@ -16,9 +16,46 @@ import {
 import { Button } from "@/components/ui/button";
 import TaskCard from "@/components/ui/TaskCard";
 import ApplicationStatus from "@/components/ui/ApplicationStatus";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { gql, useQuery } from "@apollo/client";
 
 export default function ApplicationDetail() {
+  const { _id } = useParams();
+
+  const { data } = useQuery(
+    gql`
+      query GetApplicationById($id: ID!) {
+        getApplicationById(_id: $id) {
+          _id
+          ownerId
+          collectionId
+          jobTitle
+          description
+          organizationName
+          organizationAddress
+          organizationLogo
+          location
+          salary
+          type
+          startDate
+          endDate
+          createdAt
+          updatedAt
+          tasks {
+            _id
+            title
+            description
+            completed
+            dueDate
+            createdAt
+            updatedAt
+          }
+        }
+      }
+    `,
+    { variables: { id: _id } },
+  );
+
   return (
     <div className="flex min-h-screen flex-col gap-2 bg-secondary pb-10">
       <div className="flex w-full items-center justify-between bg-black p-4 text-background">
@@ -41,7 +78,7 @@ export default function ApplicationDetail() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Application Id</BreadcrumbPage>
+                <BreadcrumbPage>{_id}1</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -62,7 +99,9 @@ export default function ApplicationDetail() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm">Airbnb</p>
+                <p className="text-sm">
+                  {data?.getApplicationById?.organizationName}
+                </p>
                 <p className="text-sm font-bold">Backend Developer</p>
               </div>
             </div>
@@ -71,11 +110,11 @@ export default function ApplicationDetail() {
             <div className="text-sm">
               <div className="flex items-center gap-2">
                 <Wallet width={16} />
-                <p>Rp. 8,000,000</p>
+                <p>{data?.getApplicationById?.salary || "Not Specified"}</p>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin width={16} />
-                <p>Jakarta, ID</p>
+                <p>{data?.getApplicationById?.location || "Not Specified"}</p>
               </div>
             </div>
             <Link to={`/applications/:id/edit`}>
@@ -84,7 +123,10 @@ export default function ApplicationDetail() {
           </div>
         </div>
         <div>
-          <TaskCard />
+          <TaskCard
+            tasks={data?.getApplicationById?.tasks}
+            applicationId={_id}
+          />
         </div>
       </div>
     </div>
