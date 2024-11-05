@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Application } from "@/lib/types";
 import Navbar from "@/components/ui/Navbar";
 import BottomNavigation from "@/components/ui/BottomNavigation";
+import { Edit3 } from "lucide-react";
 
 export default function CollectionDetail() {
   const { _id } = useParams();
@@ -160,10 +161,18 @@ export default function CollectionDetail() {
           {/*  Top Container */}
           <div className="mt-10 w-[90%] max-w-screen-md space-y-4 rounded-lg bg-background p-4 shadow-md md:mt-28 md:max-w-screen-lg lg:max-w-screen-lg">
             {/* Title and Status */}
-            <div className="flex flex-col items-center md:flex-row md:justify-between">
+            <div className="flex items-center md:flex-row md:justify-between">
               <h1 className="text-center text-2xl font-semibold md:text-left">
                 {data?.getCollectionById?.name} Collection
               </h1>
+              {/* Edit button */}
+              <button
+                className="hover:text-primary-dark ml-4 p-1 text-primary"
+                onClick={() => navigate(`/edit-collection/${_id}`)}
+                aria-label="Edit Collection"
+              >
+                <Edit3 className="h-5 w-5" />
+              </button>
             </div>
 
             <hr className="my-4 hidden border-t-2 border-secondary md:block" />
@@ -268,9 +277,9 @@ export default function CollectionDetail() {
               </div>
 
               {/* Display up to 3 avatars */}
-              <div className="w-full mt-2 flex justify-center sm:justify-start items-center">
+              <div className="mt-2 flex w-full items-center justify-center sm:justify-start">
                 {[...Array(3)].map((_, index) => (
-                  <div key={index} className="flex flex-col items-center m-2">
+                  <div key={index} className="m-2 flex flex-col items-center">
                     <div className="relative">
                       {/* Avatar */}
                       <img

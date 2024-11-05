@@ -20,6 +20,7 @@ import NotFoundPage from "@/pages/NotFoundPage";
 import GuardAuth from "@/components/ui/GuardAuth";
 import GuardGuest from "@/components/ui/GuardGuest";
 import ProfileSetting from "@/pages/ProfileSetting";
+import EditCollection from "@/pages/EditCollection";
 
 
 const router = createBrowserRouter([
@@ -147,6 +148,14 @@ const router = createBrowserRouter([
       </GuardAuth>
     ),
   },
+  {
+    path: "/edit-collection/:_id",
+    element: (
+      <GuardAuth>
+        <EditCollection />,
+      </GuardAuth>
+    )
+  }
 ]);
 
 export default router;
