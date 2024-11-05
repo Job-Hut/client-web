@@ -1,11 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Card, CardDescription } from "./card";
+import { Message } from "@/lib/types";
 
-export default function ChatBubbleLeft() {
+type ChatBubbleLeftProps = {
+  message: Message;
+};
+
+export default function ChatBubbleLeft({ message }: ChatBubbleLeftProps) {
   return (
     <div className="flex items-start space-x-3">
       {/* Avatar */}
-      <Avatar className="self-start w-8 h-8">
+      <Avatar className="h-8 w-8 self-start">
         <AvatarImage
           src="https://github.com/shadcn.png"
           className="rounded-full"
@@ -14,15 +19,12 @@ export default function ChatBubbleLeft() {
       </Avatar>
 
       {/* Chat Bubble */}
-      <Card className="flex flex-col p-4 rounded-lg border border-primary shadow-md bg-background max-w-[80%]">
-        <CardDescription className="font-semibold text-primary mb-1">
-          username
+      <Card className="flex max-w-[80%] flex-col rounded-lg border border-primary bg-background p-4 shadow-md">
+        <CardDescription className="mb-1 font-semibold text-primary">
+          {message.senderId?.username}
         </CardDescription>
         <CardDescription className="text-primary">
-          The React Framework - created and maintained by @vercel. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Minima quam modi totam? Blanditiis, ex totam? Quia ad
-          explicabo temporibus aliquam et doloribus cumque recusandae a doloremque aut, ipsum
-          velit nesciunt placeat officiis quas.
+          {message.content}
         </CardDescription>
       </Card>
     </div>
