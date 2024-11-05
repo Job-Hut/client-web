@@ -1,6 +1,7 @@
 import Navbar from "@/components/ui/Navbar";
 import CardList from "@/components/ui/CardList";
 import { gql, useQuery } from "@apollo/client";
+import BottomNavigation from "@/components/ui/BottomNavigation";
 
 export default function Home() {
   const { data, error, loading } = useQuery(gql`
@@ -49,6 +50,7 @@ export default function Home() {
     <div className="relative flex min-h-screen flex-col items-center bg-secondary">
       <Navbar />
       <CardList />
+      <BottomNavigation />
     </div>
   );
 }

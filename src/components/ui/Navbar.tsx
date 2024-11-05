@@ -1,17 +1,9 @@
-import {
-  Home as Homeicon,
-  Briefcase,
-  Folder,
-  User,
-  NotepadText,
-  Plus,
-  CircleUserRound,
-} from "lucide-react";
-import Navicon from "./Navicon";
-import { Button } from "./button";
-import { Link } from "react-router-dom";
+import { CircleUserRound } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Navbar() {
+  const { pathname } = useLocation();
+  const [slash, path] = pathname.split("/");
   return (
     <div className="w-full">
       <nav className="fixed hidden w-full bg-primary py-8 text-primary-foreground md:block">
@@ -22,39 +14,28 @@ export default function Navbar() {
             </li>
             <div className="flex gap-10">
               <li>
-                <Link to={"/"}>Jobs</Link>
+                <Link to={"/jobs"}>Jobs</Link>
               </li>
               <li>
-                <Link to={"/"}>Application</Link>
+                <Link to={"/applications"}>Application</Link>
               </li>
               <li>
-                <Link to={"/"}>Collections</Link>
+                <Link to={"/collections"}>Collections</Link>
               </li>
             </div>
             <li>
-              <Link to={"/"}>
+              <Link to={"/profile"}>
                 <CircleUserRound />
               </Link>
             </li>
           </ul>
         </div>
       </nav>
-      <div className="fixed bottom-28 left-1/2 mx-auto flex w-11/12 -translate-x-1/2 transform justify-end sm:w-8/12 md:hidden">
-        <Button variant={"floating"}>
-          <Plus />
-        </Button>
+      <div className="flex w-full items-center justify-center bg-black p-4 text-background md:hidden">
+        <h2 className="font-semibold capitalize">
+          {path ? path : "Upcoming Task"} List
+        </h2>
       </div>
-      <nav className="fixed bottom-5 left-1/2 mx-auto flex w-11/12 -translate-x-1/2 transform justify-between overflow-hidden rounded-xl bg-card shadow-lg sm:w-8/12 md:hidden">
-        <Navicon icon={<Homeicon />} title="Home" route="/" />
-        <Navicon icon={<Briefcase />} title="Jobs" route="/jobs" />
-        <Navicon
-          icon={<NotepadText />}
-          title="Application"
-          route="/applications"
-        />
-        <Navicon icon={<Folder />} title="Collections" route="/collections" />
-        <Navicon icon={<User />} title="Profile" route="/profile" />
-      </nav>
     </div>
   );
 }

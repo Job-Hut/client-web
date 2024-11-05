@@ -1,17 +1,33 @@
-import { Link2, MapPin, Wallet } from "lucide-react";
+import { Link2, MapPin, Search, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/ui/Navbar";
+import { Input } from "@/components/ui/input";
+import BottomNavigation from "@/components/ui/BottomNavigation";
 
 export default function Jobs() {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("msuk");
+  };
   return (
-    <div className="flex min-h-screen flex-col gap-2 bg-secondary pb-10">
-      <div className="flex w-full items-center justify-center bg-black p-4 text-background">
-        <h2 className="font-semibold">Jobs List</h2>
-      </div>
+    <div className="flex min-h-screen flex-col bg-secondary pb-10">
       <Navbar />
 
-      <div className="mx-auto flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+      <form
+        onSubmit={(e) => handleSubmit(e)}
+        className="mx-auto mt-4 flex w-11/12 gap-2 md:pt-24"
+      >
+        <Input
+          type="text"
+          placeholder="Search job preference"
+          className="w-full"
+        />
+        <Button>
+          <Search color="white" width={16} />
+        </Button>
+      </form>
+      <div className="mx-auto mt-4 flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         <div className="flex flex-col justify-between gap-5 rounded-lg bg-card p-2 shadow-md">
           <div className="flex w-full flex-col items-start justify-between gap-4 rounded-lg p-4 pb-0">
             <div className="flex items-center gap-3">
@@ -55,6 +71,7 @@ export default function Jobs() {
           <Button aria-label="add to application">Add to application</Button>
         </div>
       </div>
+      <BottomNavigation />
     </div>
   );
 }

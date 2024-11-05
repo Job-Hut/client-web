@@ -1,6 +1,7 @@
 import Navbar from "@/components/ui/Navbar";
 import { Mail, Phone, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import BottomNavigation from "@/components/ui/BottomNavigation";
 
 export default function ProfilePage() {
   return (
@@ -129,7 +130,7 @@ export default function ProfilePage() {
           </div>
 
           {/* License Card */}
-          <div className="mt-4 mb-40 rounded-lg border border-gray-200 bg-background p-4 shadow-sm">
+          <div className="mb-40 mt-4 rounded-lg border border-gray-200 bg-background p-4 shadow-sm">
             <h3 className="font-bold text-primary">License / Certification</h3>
             <div className="mt-2 text-gray-700">
               <div className="border-b border-gray-200 py-2">
@@ -150,6 +151,7 @@ export default function ProfilePage() {
           </div>
         </section>
       </div>
+      <BottomNavigation />
     </div>
   );
 }

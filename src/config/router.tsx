@@ -16,12 +16,12 @@ import Applications from "@/pages/Applications";
 
 import BulkInsertApplication from "@/pages/BulkInsertApplication";
 import Profile from "@/pages/Profile";
-
+import NotFoundPage from "@/pages/NotFoundPage";
 
 const router = createBrowserRouter([
   {
     path: "*",
-    element: <div>Not Found</div>,
+    element: <NotFoundPage />,
   },
   {
     path: "/",
@@ -81,12 +81,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/insert-applications-to-collection/:_id",
-    element: <BulkInsertApplication />
+    element: <BulkInsertApplication />,
   },
   {
     path: "/profile",
-    element: <Profile />
-  }
+    element: <Profile />,
+  },
 ]);
 
 export default router;
