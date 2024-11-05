@@ -1,23 +1,69 @@
 import CollectionDetailCard from "@/components/ui/CollectionDetailCard";
-import Navbar from "@/components/ui/Navbar";
 import { useNavigate } from "react-router-dom";
+import {
+  Home as Homeicon,
+  Briefcase,
+  Folder,
+  User,
+  NotepadText,
+  Plus,
+  CircleUserRound,
+} from "lucide-react";
+import Navicon from "@/components/ui/Navicon";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function CollectionDetail() {
   const navigate = useNavigate();
   const isPublic = true; // Needs to be adjusted later to show public/private
 
-  const handleInvite = () => {
-    navigate("/invite-user/:_id");
-  };
-
-  const handleOpenGroupChat = () => {
-    navigate("/group-chat");
-  };
-
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar for bigger screen*/}
-      <Navbar />
+      <div className="w-full">
+        <nav className="fixed hidden w-full bg-primary py-8 text-primary-foreground md:block">
+          <div className="mx-auto max-w-screen-xl px-10">
+            <ul className="flex justify-between">
+              <li>
+                <Link to={"/"}>Logo</Link>
+              </li>
+              <div className="flex gap-10">
+                <li>
+                  <Link to={"/"}>Jobs</Link>
+                </li>
+                <li>
+                  <Link to={"/"}>Application</Link>
+                </li>
+                <li>
+                  <Link to={"/"}>Collections</Link>
+                </li>
+              </div>
+              <li>
+                <Link to={"/"}>
+                  <CircleUserRound />
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div className="fixed bottom-28 left-1/2 mx-auto flex w-11/12 -translate-x-1/2 transform justify-end sm:w-8/12 md:hidden">
+          <Button variant={"floating"} onClick={()=>navigate("/insert-applications-to-collection/:_id")}>
+            <Plus />
+          </Button>
+        </div>
+        <nav className="fixed bottom-5 left-1/2 mx-auto flex w-11/12 -translate-x-1/2 transform justify-between overflow-hidden rounded-xl bg-card shadow-lg sm:w-8/12 md:hidden">
+          <Navicon icon={<Homeicon />} title="Home" route="/" />
+          <Navicon icon={<Briefcase />} title="Jobs" route="/jobs" />
+          <Navicon
+            icon={<NotepadText />}
+            title="Application"
+            route="/applications"
+          />
+          <Navicon icon={<Folder />} title="Collections" route="/collections" />
+          <Navicon icon={<User />} title="Profile" route="/profile" />
+        </nav>
+      </div>
+
       {/* Navbar for smaller screen */}
       <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
         <button
@@ -48,7 +94,7 @@ export default function CollectionDetail() {
         </h2>
 
         {/* Invite */}
-        <div className="flex items-center gap-2" onClick={handleInvite}>
+        <div className="flex items-center gap-2" onClick={()=> navigate("/invite-user/:_id")}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -78,7 +124,7 @@ export default function CollectionDetail() {
             Remote Job Collection
           </h1>
           <span
-            className={`mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-poppins font-semibold uppercase tracking-wider ${
+            className={`font-poppins mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${
               isPublic
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
@@ -191,15 +237,21 @@ export default function CollectionDetail() {
         <div className="flex gap-4 pt-4">
           <button
             className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
-            onClick={handleInvite}
+            onClick={()=> navigate("/invite-user/:_id")}
           >
             Invite User
           </button>
           <button
             className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
-            onClick={handleOpenGroupChat}
+            onClick={()=>navigate("/group-chat")}
           >
             Open Group Chat
+          </button>
+          <button
+            className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+            onClick={()=>navigate("/insert-applications-to-collection/:_id")}
+          >
+            Insert Application
           </button>
         </div>
       </div>
