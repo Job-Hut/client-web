@@ -130,7 +130,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: (
+      <GuardAuth>
+        <Profile />,
+      </GuardAuth>
+    ),
   },
 ]);
 

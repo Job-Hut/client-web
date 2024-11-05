@@ -7,25 +7,101 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "./input";
 import { Textarea } from "./textarea";
 import { Button } from "./button";
+import { Task } from "@/lib/types";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
-const tasks = [
-  {
-    title: "Your call has been confirmed.",
-    due: "22/04/24",
-  },
-  {
-    title: "You have a new message!",
-    due: "22/04/24",
-  },
-  {
-    title: "Your subscription is expiring soon!",
-    due: "22/04/24",
-  },
-];
+type CardProps = React.ComponentProps<typeof Card> & {
+  tasks: Task[];
+  applicationId?: string;
+  children?: React.ReactNode;
+};
 
-type CardProps = React.ComponentProps<typeof Card>;
+export default function TaskCard({
+  className,
+  applicationId,
+  tasks = [],
+  ...props
+}: CardProps) {
+  const [input, setInput] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+  });
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-export default function TaskCard({ className, ...props }: CardProps) {
+  const [addTaskMutation] = useMutation(gql`
+    mutation AddTaskToApplication($applicationId: ID!, $input: TaskInput) {
+      addTaskToApplication(applicationId: $applicationId, task: $input) {
+        _id
+      }
+    }
+  `);
+
+  const [generateTasksMutation] = useMutation(
+    gql`
+      mutation GetTasksGeneratedByAi($id: ID!) {
+        getTasksGeneratedByAi(_id: $id) {
+          title
+          description
+          dueDate
+          createdAt
+          updatedAt
+          completed
+        }
+      }
+    `,
+    {
+      variables: {
+        id: applicationId,
+      },
+    },
+  );
+
+  const handleAddTask = async () => {
+    try {
+      if (!input.title || !input.description || !input.dueDate) {
+        return;
+      }
+      await addTaskMutation({
+        variables: {
+          applicationId,
+          input: {
+            title: input.title,
+            description: input.description,
+            dueDate: input.dueDate,
+          },
+        },
+      });
+      navigate(`/applications/${applicationId}`);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          (error as Error).message || "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const generateTasks = async () => {
+    try {
+      await generateTasksMutation();
+      navigate(`/applications/${applicationId}`);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          (error as Error).message || "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <>
       <Tabs
@@ -46,7 +122,10 @@ export default function TaskCard({ className, ...props }: CardProps) {
           >
             <div className="flex flex-col gap-2">
               <CardTitle>Todo list</CardTitle>
-              <CardDescription>You have 3 unfinished tasks</CardDescription>
+              <CardDescription>
+                You have {tasks.filter((task) => !task.completed).length}{" "}
+                unfinished tasks
+              </CardDescription>
             </div>
             <div className="flex flex-col gap-4">
               {tasks.map((task, index) => (
@@ -60,7 +139,7 @@ export default function TaskCard({ className, ...props }: CardProps) {
                       <label htmlFor={task.title} className="font-bold">
                         {task.title}
                       </label>
-                      <p>{task.due}</p>
+                      <p>{dayjs(task.dueDate).format("DD/MM/YYYY")},</p>
                     </div>
                   </div>
                   <div>
@@ -80,15 +159,38 @@ export default function TaskCard({ className, ...props }: CardProps) {
             {...props}
           >
             <form className="flex flex-col gap-4">
-              <Input placeholder="What to do" type="text" inputSize={"small"} />
+              <Input
+                placeholder="What to do"
+                type="text"
+                inputSize={"small"}
+                value={input.title}
+                onChange={(e) => setInput({ ...input, title: e.target.value })}
+                required
+              />
               <Textarea
                 placeholder="Brief description"
                 className="border border-primary"
+                value={input.description}
+                onChange={(e) =>
+                  setInput({ ...input, description: e.target.value })
+                }
+                required
               />
-              <Input placeholder="Deadline" type="date" inputSize={"small"} />
+              <Input
+                placeholder="Deadline"
+                type="date"
+                inputSize={"small"}
+                value={input.dueDate}
+                onChange={(e) =>
+                  setInput({ ...input, dueDate: e.target.value })
+                }
+                required
+              />
               <div className="flex w-full flex-col gap-2">
-                <Button>Add New Task</Button>
-                <Button>Generate with AI</Button>
+                <Button onClick={() => handleAddTask()}>Add New Task</Button>
+                <Button type="button" onClick={() => generateTasks()}>
+                  Generate with AI
+                </Button>
               </div>
             </form>
           </div>

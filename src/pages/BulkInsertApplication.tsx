@@ -7,7 +7,7 @@ export default function BulkInsertApplication() {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
-        {/* Navbar */}
+      {/* Navbar */}
       <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
         <button
           className="text-lg"
@@ -35,13 +35,12 @@ export default function BulkInsertApplication() {
         <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-semibold sm:text-lg">
           Insert Application(s)
         </h2>
-
       </div>
 
       <div className="mt-20 flex w-11/12 flex-col gap-4 pb-10 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         <InsertApplicationCard />
       </div>
-      <Button className="rounded-full mb-20 w-11/12 max-w-sm">Insert</Button>
+      <Button className="mb-20 w-11/12 max-w-sm rounded-full">Insert</Button>
     </div>
   );
 }
