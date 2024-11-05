@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import dayjs from "dayjs";
 import { Collection } from "@/lib/types";
+import { Link } from "react-router-dom";
 
 type CardProps = React.ComponentProps<typeof Card> & {
   collection: Collection;
@@ -14,7 +15,7 @@ export default function CollectionList({
   ...props
 }: CardProps) {
   return (
-    <a href={"/collections/:_id"}>
+    <Link to={`/collections/${collection._id}`}>
       <div
         className={cn("w-full gap-2.5 rounded-lg bg-background p-2", "h-auto")}
       >
@@ -56,6 +57,6 @@ export default function CollectionList({
           </div>
         </Card>
       </div>
-    </a>
+    </Link>
   );
 }

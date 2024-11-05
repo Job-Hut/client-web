@@ -49,7 +49,7 @@ export default function Collection() {
           <CollectionList
             key={collection._id}
             collection={collection}
-            className={cn(`bg-collection-${(iter % 15) + 1}`)}
+            className={cn(`bg-collection-${(iter % 3) + 1}`)}
           />
         ))}
         {/* Additional CollectionList items for testing */}

@@ -25,6 +25,8 @@ import {
 import Navbar from "@/components/ui/Navbar";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { gql, useMutation } from "@apollo/client";
+import { useToast } from "@/hooks/use-toast";
 
 // Form validation schema
 const FormSchema = z.object({
@@ -34,6 +36,22 @@ const FormSchema = z.object({
 });
 
 export default function CreateCollection() {
+  // Mutation to create a collection
+  const [createCollection] = useMutation(gql`
+    mutation CreateCollection($input: CollectionInput) {
+      createCollection(input: $input) {
+        _id
+        name
+        description
+        ownerId
+        createdAt
+        updatedAt
+      }
+    }
+  `);
+
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -43,8 +61,32 @@ export default function CreateCollection() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      // Call the mutation to create a collection
+
+      await createCollection({
+        variables: {
+          input: {
+            name: data.name,
+            description: data.description,
+          },
+        },
+      });
+
+      toast({
+        title: "Success",
+        description: "Collection created successfully",
+      });
+
+      navigate("/collections");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
   }
 
   const inputClassName =
@@ -68,9 +110,7 @@ export default function CreateCollection() {
           <h1 className="font-poppins text-3xl font-bold text-[#88D1FF]">
             Create Collection
           </h1>
-          <p className="font-poppins text-primary">
-            Let the new journey begin
-          </p>
+          <p className="font-poppins text-primary">Let the new journey begin</p>
         </div>
 
         {/* Form */}
@@ -84,9 +124,7 @@ export default function CreateCollection() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="font-poppins text-lg">
-                      Name
-                    </FormLabel>
+                    <FormLabel className="font-poppins text-lg">Name</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Name"
