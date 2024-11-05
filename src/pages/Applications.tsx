@@ -3,6 +3,9 @@ import { Link2, MapPin, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/ui/Navbar";
+
+import BottomNavigation from "@/components/ui/BottomNavigation";
+
 import { gql, useQuery } from "@apollo/client";
 import { Application } from "@/lib/types";
 
@@ -30,10 +33,7 @@ export default function Applications() {
   `);
 
   return (
-    <div className="flex min-h-screen flex-col gap-2 bg-secondary pb-10">
-      <div className="flex w-full items-center justify-center bg-black p-4 text-background">
-        <h2 className="font-semibold">Applications</h2>
-      </div>
+    <div className="flex min-h-screen flex-col bg-secondary pb-10">
       <Navbar />
       {loading && <p className="text-center">Loading...</p>}
       {error && <p className="text-center">Error: {error.message} </p>}
@@ -96,6 +96,7 @@ export default function Applications() {
           ),
         )}
       </div>
+      <BottomNavigation />
     </div>
   );
 }
