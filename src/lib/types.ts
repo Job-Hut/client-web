@@ -101,6 +101,7 @@ export interface Education {
 
 export interface License {
   _id: string;
+  number: string;
   name: string;
   issuedBy: string;
   issuedAt: Date;
