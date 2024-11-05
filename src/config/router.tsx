@@ -11,6 +11,7 @@ import InviteToGroup from "@/pages/InviteToGroup";
 import GroupChat from "@/pages/GroupChat";
 import ViewMembers from "@/pages/ViewMembers";
 import Jobs from "@/pages/Jobs";
+import Applications from "@/pages/Applications";
 
 const router = createBrowserRouter([
   {
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
   {
     path: "/jobs",
     element: <Jobs />,
+  },
+  {
+    path: "/applications",
+    element: <Applications />,
   },
 ]);
 
