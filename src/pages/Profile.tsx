@@ -10,9 +10,9 @@ export default function ProfilePage() {
       <Navbar />
 
       {/* Profile Header */}
-      <div className="w-full p-4 md:mt-28 md:max-w-2xl lg:max-w-4xl">
+      <div className="flex w-full flex-col gap-4 p-4 md:mt-28 md:max-w-2xl lg:max-w-4xl">
         {/* Basic Info */}
-        <div className="mb-4 flex flex-col items-center space-y-3">
+        <div className="flex flex-col items-center space-y-3">
           {/* Avatar */}
           <Avatar className="h-24 w-24 rounded-full border-4 border-[#EDE1F4] shadow-md">
             <AvatarImage
@@ -58,22 +58,24 @@ export default function ProfilePage() {
         </div>
 
         {/* Bio Section */}
-        <section className="mt-4 w-full rounded-lg border border-gray-200 bg-background p-4 shadow-sm">
-          <h2 className="text-lg font-semibold text-primary">Bio</h2>
-          <p className="mt-2 text-sm text-gray-700 md:text-base">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            sit amet eros ut orci faucibus bibendum vitae sit amet urna. Nulla
-            facilisi. Morbi fringilla nisi a libero fermentum, et faucibus
-            ligula ultrices.
-          </p>
+        <section className="px-4">
+          <div className="w-full rounded-lg bg-background p-4 shadow-md">
+            <h2 className="text-lg font-semibold text-primary">Bio</h2>
+            <p className="mt-2 text-sm text-gray-700 md:text-base">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+              sit amet eros ut orci faucibus bibendum vitae sit amet urna. Nulla
+              facilisi. Morbi fringilla nisi a libero fermentum, et faucibus
+              ligula ultrices.
+            </p>
+          </div>
         </section>
 
         {/* Summary Section */}
-        <section className="mt-4 p-4">
+        <section className="px-4">
           <h2 className="text-lg font-semibold text-gray-700">Summary</h2>
 
           {/* Location Card */}
-          <div className="mt-4 rounded-lg border border-gray-200 bg-background p-4 shadow-sm">
+          <div className="mt-4 rounded-lg bg-background p-4 shadow-md">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-primary">Location</h3>
             </div>
@@ -90,7 +92,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Career History Card */}
-          <div className="mt-4 rounded-lg border border-gray-200 bg-background p-4 shadow-sm">
+          <div className="mt-4 rounded-lg bg-background p-4 shadow-md">
             <h3 className="font-bold text-primary">Career History</h3>
             <div className="mt-2 text-gray-700">
               <div className="border-b border-gray-200 py-2">
@@ -107,7 +109,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Education Card */}
-          <div className="mt-4 rounded-lg border border-gray-200 bg-background p-4 shadow-sm">
+          <div className="mt-4 rounded-lg bg-background p-4 shadow-md">
             <h3 className="font-bold text-primary">Education History</h3>
             <div className="mt-2 text-gray-700">
               <div className="border-b border-gray-200 py-2">
@@ -118,7 +120,7 @@ export default function ProfilePage() {
                   <p>GPA: 3.8/4.0</p>
                 </div>
               </div>
-              <div className="border-b border-gray-200 py-2">
+              <div className="py-2">
                 <p>Sekolah Tinggi Bajak Laut</p>
                 <p>S1 IT</p>
                 <div className="flex w-full items-center justify-between">
@@ -130,7 +132,7 @@ export default function ProfilePage() {
           </div>
 
           {/* License Card */}
-          <div className="mb-40 mt-4 rounded-lg border border-gray-200 bg-background p-4 shadow-sm">
+          <div className="mb-40 mt-4 rounded-lg bg-background p-4 shadow-md">
             <h3 className="font-bold text-primary">License / Certification</h3>
             <div className="mt-2 text-gray-700">
               <div className="border-b border-gray-200 py-2">
@@ -140,7 +142,7 @@ export default function ProfilePage() {
                   <p className="text-sm italic">Aug 2024 - Nov 2024</p>
                 </div>
               </div>
-              <div className="border-b border-gray-200 py-2">
+              <div className="py-2">
                 <p>Introduction to Javascript</p>
                 <p>Udemy</p>
                 <div className="flex w-full items-center justify-between">

@@ -81,14 +81,14 @@ export default function TaskCard({ className, ...props }: CardProps) {
           >
             <form className="flex flex-col gap-4">
               <Input placeholder="What to do" type="text" inputSize={"small"} />
-              <Textarea
+              {/* <Textarea
                 placeholder="Brief description"
                 className="border border-primary"
-              />
+              /> */}
               <Input placeholder="Deadline" type="date" inputSize={"small"} />
-              <div className="flex w-full flex-col gap-2">
-                <Button>Add New Task</Button>
-                <Button>Generate with AI</Button>
+              <div className="flex w-full flex-col gap-2 md:flex-row">
+                <Button className="md:w-full">Add New Task</Button>
+                <Button className="md:w-full">Generate with AI</Button>
               </div>
             </form>
           </div>

@@ -16,7 +16,7 @@ export default function Jobs() {
 
       <form
         onSubmit={(e) => handleSubmit(e)}
-        className="mx-auto mt-4 flex w-11/12 gap-2 md:pt-24"
+        className="mx-auto mt-4 flex w-11/12 max-w-screen-xl gap-2 px-10 md:pt-24"
       >
         <Input
           type="text"

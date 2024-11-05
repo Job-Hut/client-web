@@ -10,7 +10,7 @@ export default function Applications() {
   return (
     <div className="flex min-h-screen flex-col bg-secondary pb-10">
       <Navbar />
-      <form className="mx-auto mt-4 flex w-11/12 gap-2 md:pt-24">
+      <form className="mx-auto mt-4 flex w-11/12 max-w-screen-xl gap-2 px-10 md:pt-24">
         <Input
           type="text"
           placeholder="Search job preference"
@@ -20,7 +20,7 @@ export default function Applications() {
           <Search color="white" width={16} />
         </Button>
       </form>
-      <div className="mx-auto mt-4 flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+      <div className="mx-auto mt-4 flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         <div className="flex flex-col justify-between gap-2.5 rounded-lg bg-card p-2 shadow-md">
           <div className="flex w-full flex-col items-start justify-between gap-4 rounded-lg bg-application-submitted p-4">
             <div className="flex items-center gap-3">

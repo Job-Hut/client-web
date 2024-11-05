@@ -21,7 +21,7 @@ export default function BottomNavigation() {
           </Button>
         </div>
       )}
-      <div className="fixed bottom-0 h-20 w-full bg-secondary">
+      <div className="fixed bottom-0 h-20 w-full bg-secondary md:hidden">
         <nav className="fixed left-1/2 mx-auto flex w-11/12 -translate-x-1/2 transform justify-between overflow-hidden rounded-xl bg-card shadow-lg md:hidden">
           <Navicon icon={<Homeicon />} title="Home" route="/" />
           <Navicon icon={<Briefcase />} title="Jobs" route="/jobs" />
