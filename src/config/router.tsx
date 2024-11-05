@@ -16,14 +16,16 @@ import Applications from "@/pages/Applications";
 
 import BulkInsertApplication from "@/pages/BulkInsertApplication";
 import Profile from "@/pages/Profile";
+import NotFoundPage from "@/pages/NotFoundPage";
 import GuardAuth from "@/components/ui/GuardAuth";
 import GuardGuest from "@/components/ui/GuardGuest";
 import ProfileSetting from "@/pages/ProfileSetting";
 
+
 const router = createBrowserRouter([
   {
     path: "*",
-    element: <div>Not Found</div>,
+    element: <NotFoundPage />,
   },
   {
     path: "/",

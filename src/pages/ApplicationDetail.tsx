@@ -67,13 +67,13 @@ export default function ApplicationDetail() {
           <EllipsisVertical />
         </button>
       </div>
-      <div className="mx-auto flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+      <div className="mx-auto flex w-11/12 flex-col gap-4 md:max-w-screen-xl md:gap-4 md:pb-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         <div>
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink href="/applications">
-                  <FolderOpen width={15} />
+                  <FolderOpen width={15} className="md:w-8" />
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -83,7 +83,8 @@ export default function ApplicationDetail() {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <div className="flex flex-col justify-between gap-2.5 rounded-lg bg-card p-2 shadow-md">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+        <div className="flex flex-col justify-between gap-2.5 rounded-lg bg-card p-2 shadow-md lg:w-1/2">
           <div className="flex w-full flex-col items-start justify-between gap-4 rounded-lg bg-application-submitted p-4">
             <ApplicationStatus />
             <div className="flex items-center gap-3">
@@ -115,18 +116,23 @@ export default function ApplicationDetail() {
               <div className="flex items-center gap-2">
                 <MapPin width={16} />
                 <p>{data?.getApplicationById?.location || "Not Specified"}</p>
+                </div>
+
               </div>
+              <Link to={`/applications/:id/edit`}>
+                <Button>Edit</Button>
+              </Link>
             </div>
-            <Link to={`/applications/:id/edit`}>
-              <Button>Edit</Button>
-            </Link>
           </div>
+
         </div>
         <div>
           <TaskCard
+             className="lg:w-full">
             tasks={data?.getApplicationById?.tasks}
             applicationId={_id}
           />
+
         </div>
       </div>
     </div>
