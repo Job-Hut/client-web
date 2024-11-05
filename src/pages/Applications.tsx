@@ -1,15 +1,13 @@
-import { Link2, MapPin, Search, Wallet } from "lucide-react";
+import { Link2, MapPin, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/ui/Navbar";
 
-import { Input } from "@/components/ui/input";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 
 import { gql, useQuery } from "@apollo/client";
 import { Application } from "@/lib/types";
-
 
 export default function Applications() {
   const { data, loading, error } = useQuery(gql`
@@ -93,7 +91,6 @@ export default function Applications() {
                     <Button>Edit</Button>
                   </Link>
                 </div>
-
               </div>
             </Link>
           ),
