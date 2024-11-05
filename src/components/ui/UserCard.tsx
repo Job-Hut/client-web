@@ -15,8 +15,8 @@ export default function UserCard({ user }: UserCardProps) {
   const { username, avatarUrl, isInvited } = user;
 
   return (
-    <div className="w-full my-[10px]">
-      <Card className="flex items-center justify-between p-4 rounded-lg border border-primary shadow-lg w-full max-w-md">
+    <div className="w-full my-[5px]">
+      <Card className="flex items-center justify-between p-4 rounded-lg border border-primary shadow-lg w-full">
         {/* Avatar */}
         <Avatar className="w-10 h-10">
           <AvatarImage

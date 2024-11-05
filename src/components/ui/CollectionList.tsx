@@ -33,17 +33,11 @@ export default function CollectionList({
             <CardTitle className="mb-4 text-base font-semibold sm:text-lg md:text-xl">
               {collection.name}
             </CardTitle>
-            <Button
-              variant="secondary"
-              className="pointer-events-none mb-4 rounded-full px-3 py-1 text-xs sm:text-sm md:text-base"
-            >
-              Private
-            </Button>
           </div>
 
           {/* Application count */}
           <CardDescription className="mb-2 text-xs text-primary sm:text-sm md:text-base">
-            Collection: {collection.applications?.length} Applications
+            Collection: {collection.applications?.length} Application(s)
           </CardDescription>
 
           {/* Application created date + Add application button */}

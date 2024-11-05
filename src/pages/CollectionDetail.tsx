@@ -1,19 +1,9 @@
 import CollectionDetailCard from "@/components/ui/CollectionDetailCard";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Home as Homeicon,
-  Briefcase,
-  Folder,
-  User,
-  NotepadText,
-  Plus,
-  CircleUserRound,
-} from "lucide-react";
-import Navicon from "@/components/ui/Navicon";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { Application } from "@/lib/types";
+import Navbar from "@/components/ui/Navbar";
+import BottomNavigation from "@/components/ui/BottomNavigation";
 
 export default function CollectionDetail() {
   const { _id } = useParams();
@@ -50,12 +40,11 @@ export default function CollectionDetail() {
   );
 
   const navigate = useNavigate();
-  const isPublic = true; // Needs to be adjusted later to show public/private
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar for bigger screen*/}
-      <div className="w-full">
+      {/* <div className="w-full">
         <nav className="fixed hidden w-full bg-primary py-8 text-primary-foreground md:block">
           <div className="mx-auto max-w-screen-xl px-10">
             <ul className="flex justify-between">
@@ -100,7 +89,8 @@ export default function CollectionDetail() {
           <Navicon icon={<Folder />} title="Collections" route="/collections" />
           <Navicon icon={<User />} title="Profile" route="/profile" />
         </nav>
-      </div>
+      </div> */}
+      <Navbar />
 
       {/* Navbar for smaller screen */}
       <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
@@ -168,21 +158,12 @@ export default function CollectionDetail() {
       {data?.getCollectionById && (
         <>
           {/*  Top Container */}
-          <div className="mt-20 w-[90%] max-w-screen-md space-y-4 rounded-lg bg-background p-4 shadow-md md:mt-28 md:max-w-screen-lg lg:max-w-screen-lg">
+          <div className="mt-10 w-[90%] max-w-screen-md space-y-4 rounded-lg bg-background p-4 shadow-md md:mt-28 md:max-w-screen-lg lg:max-w-screen-lg">
             {/* Title and Status */}
             <div className="flex flex-col items-center md:flex-row md:justify-between">
               <h1 className="text-center text-2xl font-semibold md:text-left">
                 {data?.getCollectionById?.name} Collection
               </h1>
-              <span
-                className={`font-poppins mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${
-                  isPublic
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                } md:ml-4 md:mt-0`}
-              >
-                {isPublic ? "Public" : "Private"}
-              </span>
             </div>
 
             <hr className="my-4 hidden border-t-2 border-secondary md:block" />
@@ -217,40 +198,7 @@ export default function CollectionDetail() {
             <hr className="my-2 border-muted" />
 
             {/* Members Section */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-users"
-                >
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-                <p className="text-sm sm:text-base md:text-lg">
-                  <span className="font-semibold text-primary">
-                    Online Members:
-                  </span>{" "}
-                  2 people
-                </p>
-                <button
-                  className="rounded-full bg-primary px-4 py-1.5 text-background"
-                  onClick={() => navigate("/view-online-members/:_id")}
-                >
-                  View
-                </button>
-              </div>
-            </div>
-
+            {/* Joined members section */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <svg
@@ -285,7 +233,64 @@ export default function CollectionDetail() {
               </div>
             </div>
 
-            {/* Buttons for All Members and Group Chat */}
+            {/* Online Members Section */}
+            <div className="flex flex-col items-start gap-3">
+              <div className="flex items-center gap-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-users"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <p className="text-sm sm:text-base md:text-lg">
+                  <span className="font-semibold text-primary">
+                    Online Members:
+                  </span>{" "}
+                  2 people
+                </p>
+                <button
+                  className="rounded-full bg-primary px-4 py-1.5 text-background"
+                  onClick={() => navigate("/view-online-members/:_id")}
+                >
+                  View
+                </button>
+              </div>
+
+              {/* Display up to 3 avatars */}
+              <div className="w-full mt-2 flex justify-center sm:justify-start items-center">
+                {[...Array(3)].map((_, index) => (
+                  <div key={index} className="flex flex-col items-center m-2">
+                    <div className="relative">
+                      {/* Avatar */}
+                      <img
+                        src="https://via.placeholder.com/40"
+                        alt="User Avatar"
+                        className="h-10 w-10 rounded-full shadow-md"
+                      />
+                      {/* Online Indicator */}
+                      <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
+                    </div>
+                    {/* Username */}
+                    <p className="mt-1 text-xs font-medium text-gray-700">
+                      Username{index + 1}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Buttons for group chat, invite user, insert applcation */}
             <div className="flex gap-4 pt-4">
               <button
                 className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
@@ -312,11 +317,11 @@ export default function CollectionDetail() {
 
           {/* Main Content */}
           <h1 className="mt-10 text-center text-2xl font-bold text-primary">
-            Tasks
+            Applications
           </h1>
           <hr className="my-4 w-[90%] border-t-2 border-primary" />
 
-          {/* Tasks */}
+          {/* Applications */}
           <div className="mb-20 mt-6 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
             {data?.getCollectionById?.applications?.map(
               (application: Application) => (
@@ -329,6 +334,7 @@ export default function CollectionDetail() {
           </div>
         </>
       )}
+      <BottomNavigation />
     </div>
   );
 }
