@@ -39,6 +39,10 @@ export default function Register() {
         password: input.password,
       };
       await registerMutation({ variables: { input: user } });
+      toast({
+        title: "Success",
+        description: "Account created successfully",
+      });
       nav("/login");
     } catch (err: unknown) {
       toast({
@@ -46,8 +50,6 @@ export default function Register() {
         description: (err as Error).message,
         variant: "destructive",
       });
-      // handle error
-      console.error(err);
     }
   };
 

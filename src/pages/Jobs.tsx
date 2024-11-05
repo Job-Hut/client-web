@@ -2,17 +2,66 @@ import { Link2, MapPin, Search, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/ui/Navbar";
+
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { Job } from "@/lib/types";
+
 import { Input } from "@/components/ui/input";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 
 export default function Jobs() {
+    const [page, setPage] = useState(1);
+
+  const [jobsQuery, { data, loading, error }] = useLazyQuery(gql`
+    query GetJobs {
+      getJobs(page: 1, query: "") {
+        title
+        company
+        companyLogo
+        location
+        description
+        salary
+        source
+        sourceUrl
+        since
+      }
+    }
+  `);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("msuk");
   };
+
   return (
     <div className="flex min-h-screen flex-col bg-secondary pb-10">
       <Navbar />
+
+      {loading && <p className="text-center">Loading...</p>}
+      {error && <p className="text-center">Error: {error.message} </p>}
+
+      <div className="mx-auto flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+        {data &&
+          data?.getJobs?.map((job: Job, iter: number) => (
+            <div
+              className="flex flex-col justify-between gap-5 rounded-lg bg-card p-2 shadow-md"
+              key={`${job.title}-${iter}`}
+            >
+              <div className="flex w-full flex-col items-start justify-between gap-4 rounded-lg p-4 pb-0">
+                <div className="flex items-start items-center gap-3">
+                  <div>
+                    <img
+                      className="h-8 w-8 rounded-full bg-[#FF5A5F] object-cover"
+                      src={job.companyLogo}
+                    />
+                  </div>
+
+                  <div>
+                    <p className="text-sm">{job.company}</p>
+                    <p className="text-sm font-bold">{job.title}</p>
+                  </div>
+                </div>
 
       <form
         onSubmit={(e) => handleSubmit(e)}
@@ -43,33 +92,34 @@ export default function Jobs() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm">Airbnb</p>
-                <p className="text-sm font-bold">Backend Developer</p>
+                <div className="flex items-center justify-between pl-4">
+                  <div className="text-sm">
+                    <div className="flex items-center gap-2">
+                      <Wallet width={16} />
+                      <p>{job.salary || "Not specified"}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin width={16} />
+                      <p>{job.location}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Link2 width={16} />
+                      <a
+                        href={job.sourceUrl}
+                        className="text-blue-500"
+                        target="_blank"
+                      >
+                        {job.source}
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <Button aria-label="add to application">
+                Add to application
+              </Button>
             </div>
-          </div>
-          <div>
-            <div className="flex items-center justify-between pl-4">
-              <div className="text-sm">
-                <div className="flex items-center gap-2">
-                  <Wallet width={16} />
-                  <p>Rp. 8,000,000</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin width={16} />
-                  <p>Jakarta, ID</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Link2 width={16} />
-                  <a href="google.com" className="text-blue-500">
-                    www.jobstreet.com
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <Button aria-label="add to application">Add to application</Button>
-        </div>
+          ))}
       </div>
       <BottomNavigation />
     </div>
