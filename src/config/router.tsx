@@ -16,7 +16,8 @@ import Applications from "@/pages/Applications";
 
 import BulkInsertApplication from "@/pages/BulkInsertApplication";
 import Profile from "@/pages/Profile";
-
+import GuardAuth from "@/components/ui/GuardAuth";
+import GuardGuest from "@/components/ui/GuardGuest";
 
 const router = createBrowserRouter([
   {
@@ -25,27 +26,51 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Home />,
+    element: (
+      <GuardAuth>
+        <Home />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <GuardGuest>
+        <Register />,
+      </GuardGuest>
+    ),
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <GuardGuest>
+        <Login />,
+      </GuardGuest>
+    ),
   },
   {
     path: "/collections",
-    element: <Collection />,
+    element: (
+      <GuardAuth>
+        <Collection />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/applications/:_id",
-    element: <ApplicationDetail />,
+    element: (
+      <GuardAuth>
+        <ApplicationDetail />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/applications/:_id/edit",
-    element: <ApplicationForm />,
+    element: (
+      <GuardAuth>
+        <ApplicationForm />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/create-collection",
@@ -81,12 +106,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/insert-applications-to-collection/:_id",
-    element: <BulkInsertApplication />
+    element: <BulkInsertApplication />,
   },
   {
     path: "/profile",
-    element: <Profile />
-  }
+    element: <Profile />,
+  },
 ]);
 
 export default router;
