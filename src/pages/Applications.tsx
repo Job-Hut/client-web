@@ -1,19 +1,19 @@
 import { Link2, MapPin, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/ui/Navbar";
 
-export default function Jobs() {
+export default function Applications() {
   return (
     <div className="flex min-h-screen flex-col gap-2 bg-secondary pb-10">
       <div className="flex w-full items-center justify-center bg-black p-4 text-background">
-        <h2 className="font-semibold">Jobs List</h2>
+        <h2 className="font-semibold">Applications</h2>
       </div>
       <Navbar />
-
       <div className="mx-auto flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
-        <div className="flex flex-col justify-between gap-5 rounded-lg bg-card p-2 shadow-md">
-          <div className="flex w-full flex-col items-start justify-between gap-4 rounded-lg p-4 pb-0">
+        <div className="flex flex-col justify-between gap-2.5 rounded-lg bg-card p-2 shadow-md">
+          <div className="flex w-full flex-col items-start justify-between gap-4 rounded-lg bg-application-submitted p-4">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-full bg-[#FF5A5F] p-2">
                 <svg
@@ -32,27 +32,27 @@ export default function Jobs() {
               </div>
             </div>
           </div>
-          <div>
-            <div className="flex items-center justify-between pl-4">
-              <div className="text-sm">
-                <div className="flex items-center gap-2">
-                  <Wallet width={16} />
-                  <p>Rp. 8,000,000</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin width={16} />
-                  <p>Jakarta, ID</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Link2 width={16} />
-                  <a href="google.com" className="text-blue-500">
-                    www.jobstreet.com
-                  </a>
-                </div>
+          <div className="flex items-center justify-between pl-4">
+            <div className="text-sm">
+              <div className="flex items-center gap-2">
+                <Wallet width={16} />
+                <p>Rp. 8,000,000</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin width={16} />
+                <p>Jakarta, ID</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link2 width={16} />
+                <a href="google.com" className="text-blue-500">
+                  www.jobstreet.com
+                </a>
               </div>
             </div>
+            <Link to={`/applications/:id/edit`}>
+              <Button>Edit</Button>
+            </Link>
           </div>
-          <Button aria-label="add to application">Add to application</Button>
         </div>
       </div>
     </div>
