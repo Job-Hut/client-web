@@ -1,5 +1,5 @@
 import Navbar from "@/components/ui/Navbar";
-import { Edit3 } from "lucide-react";
+import { Edit3, PencilIcon } from "lucide-react";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@apollo/client";
-import { UPDATE_AVATAR, UPDATE_PROFILE } from "@/lib/mutation";
+import {
+  DELETE_EDUCATION,
+  DELETE_EXPERIENCE,
+  DELETE_LICENSE,
+  UPDATE_AVATAR,
+  UPDATE_EDUCATION,
+  UPDATE_EXPERIENCE,
+  UPDATE_LICENSE,
+  UPDATE_PROFILE,
+} from "@/lib/mutation";
 import { GET_AUTHENTICATED_USER } from "@/lib/queries";
 import dayjs from "dayjs";
 import { Education, Experience, License } from "@/lib/types";
@@ -20,6 +29,35 @@ export default function ProfileSetting() {
   const [isAddCareerModalOpen, setAddCareerModalOpen] = useState(false);
   const [isAddEducationModalOpen, setAddEducationModalOpen] = useState(false);
   const [isAddLicenseModalOpen, setAddLicenseModalOpen] = useState(false);
+
+  const [isEditCareerModalOpen, setEditCareerModalOpen] = useState(false);
+  const [isEditEducationModalOpen, setEditEducationModalOpen] = useState(false);
+  const [isEditLicenseModalOpen, setIsEditLicenseModalOpen] = useState(false);
+
+  const [editCareerInput, setEditCareerInput] = useState({
+    id: "",
+    jobTitle: "",
+    company: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  const [editEducationInput, setEditEducationInput] = useState({
+    id: "",
+    name: "",
+    institute: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  const [editLicenseInput, setEditLicenseInput] = useState({
+    id: "",
+    name: "",
+    number: "",
+    issuedBy: "",
+    issuedAt: "",
+    expiryDate: "",
+  });
 
   const [avatar, setAvatar] = useState<File | null>(null);
   const [username, setUsername] = useState("");
@@ -60,6 +98,48 @@ export default function ProfileSetting() {
     },
   );
 
+  const [updateExperience, { loading: updateExperienceLoading }] = useMutation(
+    UPDATE_EXPERIENCE,
+    {
+      refetchQueries: ["GetAuthenticatedUser"],
+    },
+  );
+
+  const [deleteExperience, { loading: deleteExperienceLoading }] = useMutation(
+    DELETE_EXPERIENCE,
+    {
+      refetchQueries: ["GetAuthenticatedUser"],
+    },
+  );
+
+  const [updateEducation, { loading: updateEducationLoading }] = useMutation(
+    UPDATE_EDUCATION,
+    {
+      refetchQueries: ["GetAuthenticatedUser"],
+    },
+  );
+
+  const [deleteEducation, { loading: deleteEducationLoading }] = useMutation(
+    DELETE_EDUCATION,
+    {
+      refetchQueries: ["GetAuthenticatedUser"],
+    },
+  );
+
+  const [editLicense, { loading: editLicenseLoading }] = useMutation(
+    UPDATE_LICENSE,
+    {
+      refetchQueries: ["GetAuthenticatedUser"],
+    },
+  );
+
+  const [deleteLicense, { loading: deleteLicenseLoading }] = useMutation(
+    DELETE_LICENSE,
+    {
+      refetchQueries: ["GetAuthenticatedUser"],
+    },
+  );
+
   const updateAvatarHandler = async () => {
     try {
       if (avatar) {
@@ -82,7 +162,7 @@ export default function ProfileSetting() {
     }
   };
 
-  const updateUserProfile = async () => {
+  const updateUserProfileHandler = async () => {
     try {
       await updateProfile({
         variables: {
@@ -96,6 +176,145 @@ export default function ProfileSetting() {
       toast({
         title: "Success",
         description: "Profile updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const updateExperienceHandler = async () => {
+    try {
+      await updateExperience({
+        variables: {
+          experienceId: editCareerInput.id,
+          input: {
+            jobTitle: editCareerInput.jobTitle,
+            institute: editCareerInput.company,
+            startDate: editCareerInput.startDate,
+            endDate: editCareerInput.endDate,
+          },
+        },
+      });
+      toast({
+        title: "Success",
+        description: "Career history updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deleteExperienceHandler = async (id: string) => {
+    try {
+      await deleteExperience({
+        variables: {
+          experienceId: id,
+        },
+      });
+      toast({
+        title: "Success",
+        description: "Career history deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const updateEducationHandler = async () => {
+    try {
+      await updateEducation({
+        variables: {
+          educationId: editEducationInput.id,
+          input: {
+            name: editEducationInput.name,
+            institute: editEducationInput.institute,
+            startDate: editEducationInput.startDate,
+            endDate: editEducationInput.endDate,
+          },
+        },
+      });
+      toast({
+        title: "Success",
+        description: "Education updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deleteEducationHandler = async (id: string) => {
+    try {
+      await deleteEducation({
+        variables: {
+          educationId: id,
+        },
+      });
+      toast({
+        title: "Success",
+        description: "Education deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const updateLicenseHandler = async () => {
+    try {
+      await editLicense({
+        variables: {
+          licenseId: editLicenseInput.id,
+          input: {
+            name: editLicenseInput.name,
+            number: editLicenseInput.number,
+            issuedBy: editLicenseInput.issuedBy,
+            issuedAt: editLicenseInput.issuedAt,
+            expiryDate: editLicenseInput.expiryDate,
+          },
+        },
+      });
+      toast({
+        title: "Success",
+        description: "License updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deleteLicenseHandler = async (id: string) => {
+    try {
+      await deleteLicense({
+        variables: {
+          licenseId: id,
+        },
+      });
+      toast({
+        title: "Success",
+        description: "License deleted successfully",
       });
     } catch (error) {
       toast({
@@ -247,7 +466,28 @@ export default function ProfileSetting() {
                 {userData?.getAuthenticatedUser?.profile?.experiences?.map(
                   (experience: Experience) => (
                     <div key={experience._id} className="py-4">
-                      <p className="font-bold">{experience.jobTitle}</p>
+                      <div className="flex justify-between">
+                        <p className="font-bold">{experience.jobTitle}</p>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setEditCareerInput({
+                              id: experience._id,
+                              jobTitle: experience.jobTitle,
+                              company: experience.institute,
+                              startDate: dayjs(experience.startDate).format(
+                                "YYYY-MM-DD",
+                              ),
+                              endDate: dayjs(experience.endDate).format(
+                                "YYYY-MM-DD",
+                              ),
+                            });
+                            setEditCareerModalOpen(true);
+                          }}
+                        >
+                          <PencilIcon size={16} />
+                        </Button>
+                      </div>
                       <p>{experience.institute}</p>
                       <p className="mt-2 text-sm italic">
                         {dayjs(experience.startDate).format("MMM YYYY")} -{" "}
@@ -271,16 +511,37 @@ export default function ProfileSetting() {
             <div>
               {/* Education Card */}
               {userData?.getAuthenticatedUser?.profile?.education?.length ===
-                0 && <p>No career history available</p>}
+                0 && <p>No educations available</p>}
               <div className="mt-2 divide-y divide-gray-300 text-gray-700">
                 {userData?.getAuthenticatedUser?.profile?.education?.map(
-                  (experience: Education) => (
-                    <div key={experience._id} className="py-4">
-                      <p className="font-bold">{experience.name}</p>
-                      <p>{experience.institute}</p>
+                  (education: Education) => (
+                    <div key={education._id} className="py-4">
+                      <div className="flex justify-between">
+                        <p className="font-bold">{education.name}</p>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setEditEducationInput({
+                              id: education._id,
+                              name: education.name,
+                              institute: education.institute,
+                              startDate: dayjs(education.startDate).format(
+                                "YYYY-MM-DD",
+                              ),
+                              endDate: dayjs(education.endDate).format(
+                                "YYYY-MM-DD",
+                              ),
+                            });
+                            setEditEducationModalOpen(true);
+                          }}
+                        >
+                          <PencilIcon size={16} />
+                        </Button>
+                      </div>
+                      <p>{education.institute}</p>
                       <p className="mt-2 text-sm italic">
-                        {dayjs(experience.startDate).format("MMM YYYY")} -{" "}
-                        {dayjs(experience.endDate).format("MMM YYYY")}
+                        {dayjs(education.startDate).format("MMM YYYY")} -{" "}
+                        {dayjs(education.endDate).format("MMM YYYY")}
                       </p>
                     </div>
                   ),
@@ -301,18 +562,41 @@ export default function ProfileSetting() {
             </div>
             <div>
               {/* License/Certification Card */}
-              {userData?.getAuthenticatedUser?.profile?.education?.length ===
-                0 && <p>No career history available</p>}
+              {userData?.getAuthenticatedUser?.profile?.licenses?.length ===
+                0 && <p>No licenses available</p>}
               <div className="mt-2 divide-y divide-gray-300 text-gray-700">
                 {userData?.getAuthenticatedUser?.profile?.licenses?.map(
                   (license: License) => (
                     <div key={license._id} className="py-4">
-                      <p className="font-bold">{license.name}</p>
+                      <div className="flex justify-between">
+                        <p className="font-bold">{license.name}</p>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setEditLicenseInput({
+                              id: license._id,
+                              name: license.name,
+                              number: license.number,
+                              issuedBy: license.issuedBy,
+                              issuedAt: dayjs(license.issuedAt).format(
+                                "YYYY-MM-DD",
+                              ),
+                              expiryDate: dayjs(license.expiryDate).format(
+                                "YYYY-MM-DD",
+                              ),
+                            });
+                            setIsEditLicenseModalOpen(true);
+                          }}
+                        >
+                          <PencilIcon size={16} />
+                        </Button>
+                      </div>
                       <p>{license.issuedBy}</p>
                       <p className="mt-2 text-sm italic">
                         {dayjs(license.issuedAt).format("MMM YYYY")} -{" "}
                         {dayjs(license.expiryDate).format("MMM YYYY")}
                       </p>
+                      <p className="mt-2">License Number: {license.number}</p>
                     </div>
                   ),
                 )}
@@ -324,7 +608,7 @@ export default function ProfileSetting() {
           <div className="mb-40 flex justify-center">
             <button
               className="hover:bg-primary-dark w-3/4 rounded-full bg-primary py-2 font-bold text-white shadow-md transition"
-              onClick={() => updateUserProfile()}
+              onClick={() => updateUserProfileHandler()}
               disabled={updateProfileLoading}
             >
               Save
@@ -388,6 +672,372 @@ export default function ProfileSetting() {
       {isAddLicenseModalOpen && (
         <AddLicenseModal closeAddLicenseModal={closeAddLicenseModal} />
       )}
+
+      {/* Edit Career Modal */}
+      {isEditCareerModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+            <button
+              onClick={() => setEditCareerModalOpen(false)}
+              className="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="mb-4 text-xl font-semibold text-gray-800">
+              Edit Career History
+            </h2>
+            <form>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Job Title
+              </label>
+              <Input
+                id="jobTitle"
+                name="jobTitle"
+                placeholder="Job Title"
+                type="text"
+                inputSize={"small"}
+                value={editCareerInput.jobTitle}
+                onChange={(e) =>
+                  setEditCareerInput({
+                    ...editCareerInput,
+                    jobTitle: e.target.value,
+                  })
+                }
+              />
+
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Company
+              </label>
+              <Input
+                id="company"
+                name="company"
+                placeholder="Company"
+                type="text"
+                inputSize={"small"}
+                value={editCareerInput.company}
+                onChange={(e) =>
+                  setEditCareerInput({
+                    ...editCareerInput,
+                    company: e.target.value,
+                  })
+                }
+              />
+
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Start Date
+              </label>
+              <Input
+                id="startDate"
+                name="startDate"
+                placeholder="Start Date"
+                type="date"
+                inputSize={"small"}
+                value={editCareerInput.startDate}
+                onChange={(e) =>
+                  setEditCareerInput({
+                    ...editCareerInput,
+                    startDate: e.target.value,
+                  })
+                }
+              />
+
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                End Date
+              </label>
+              <Input
+                id="endDate"
+                name="endDate"
+                placeholder="End Date"
+                type="date"
+                inputSize={"small"}
+                value={editCareerInput.endDate}
+                onChange={(e) =>
+                  setEditCareerInput({
+                    ...editCareerInput,
+                    endDate: e.target.value,
+                  })
+                }
+              />
+              <Button
+                type="submit"
+                className="hover:bg-primary-dark mt-4 w-full rounded-md bg-primary py-2 font-semibold text-white shadow-sm"
+                disabled={updateExperienceLoading}
+                onClick={async () => {
+                  await updateExperienceHandler();
+                  setEditCareerModalOpen(false);
+                }}
+              >
+                Update Career
+              </Button>
+              <Button
+                variant="outline"
+                className="mt-2 w-full border-red-600 text-red-600 hover:bg-red-200 hover:text-red-900"
+                type="button"
+                disabled={deleteExperienceLoading}
+                onClick={async () => {
+                  await deleteExperienceHandler(editCareerInput.id);
+                  setEditCareerModalOpen(false);
+                }}
+              >
+                Delete Career
+              </Button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Education Modal */}
+      {isEditEducationModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+            <button
+              onClick={() => setEditEducationModalOpen(false)}
+              className="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="mb-4 text-xl font-semibold text-gray-800">
+              Edit Education
+            </h2>
+            <form>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <Input
+                id="name"
+                name="name"
+                placeholder="Name"
+                type="text"
+                inputSize={"small"}
+                value={editEducationInput.name}
+                onChange={(e) =>
+                  setEditEducationInput({
+                    ...editEducationInput,
+                    name: e.target.value,
+                  })
+                }
+              />
+
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Institute
+              </label>
+              <Input
+                id="institute"
+                name="institute"
+                placeholder="Institute"
+                type="text"
+                inputSize={"small"}
+                value={editEducationInput.institute}
+                onChange={(e) =>
+                  setEditEducationInput({
+                    ...editEducationInput,
+                    institute: e.target.value,
+                  })
+                }
+              />
+
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Start Date
+              </label>
+              <Input
+                id="startDate"
+                name="startDate"
+                placeholder="Start Date"
+                type="date"
+                inputSize={"small"}
+                value={editEducationInput.startDate}
+                onChange={(e) =>
+                  setEditEducationInput({
+                    ...editEducationInput,
+                    startDate: e.target.value,
+                  })
+                }
+              />
+
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                End Date
+              </label>
+              <Input
+                id="endDate"
+                name="endDate"
+                placeholder="End Date"
+                type="date"
+                inputSize={"small"}
+                value={editEducationInput.endDate}
+                onChange={(e) =>
+                  setEditEducationInput({
+                    ...editEducationInput,
+                    endDate: e.target.value,
+                  })
+                }
+              />
+              <Button
+                type="submit"
+                className="hover:bg-primary-dark mt-4 w-full rounded-md bg-primary py-2 font-semibold text-white shadow-sm"
+                disabled={updateEducationLoading}
+                onClick={async () => {
+                  await updateEducationHandler();
+                  setEditCareerModalOpen(false);
+                }}
+              >
+                Update Education
+              </Button>
+              <Button
+                variant="outline"
+                className="mt-2 w-full border-red-600 text-red-600 hover:bg-red-200 hover:text-red-900"
+                type="button"
+                disabled={deleteEducationLoading}
+                onClick={async () => {
+                  await deleteEducationHandler(editEducationInput.id);
+                  setEditEducationModalOpen(false);
+                }}
+              >
+                Delete Education
+              </Button>
+            </form>
+          </div>
+        </div>
+      )}
+      {
+        /* Edit License Modal */
+        isEditLicenseModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+              <button
+                onClick={() => setIsEditLicenseModalOpen(false)}
+                className="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <h2 className="mb-4 text-xl font-semibold text-gray-800">
+                Edit License
+              </h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Name
+                </label>
+
+                <Input
+                  id="name"
+                  name="name"
+                  placeholder="Name"
+                  type="text"
+                  inputSize={"small"}
+                  value={editLicenseInput.name}
+                  onChange={(e) =>
+                    setEditLicenseInput({
+                      ...editLicenseInput,
+                      name: e.target.value,
+                    })
+                  }
+                />
+
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  License Number
+                </label>
+                <Input
+                  id="number"
+                  name="number"
+                  placeholder="License Number"
+                  type="text"
+                  inputSize={"small"}
+                  value={editLicenseInput.number}
+                  onChange={(e) =>
+                    setEditLicenseInput({
+                      ...editLicenseInput,
+                      number: e.target.value,
+                    })
+                  }
+                />
+
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Issued By
+                </label>
+                <Input
+                  id="issuedBy"
+                  name="issuedBy"
+                  placeholder="Issued By"
+                  type="text"
+                  inputSize={"small"}
+                  value={editLicenseInput.issuedBy}
+                  onChange={(e) =>
+                    setEditLicenseInput({
+                      ...editLicenseInput,
+                      issuedBy: e.target.value,
+                    })
+                  }
+                />
+
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Issued At
+                </label>
+                <Input
+                  id="issuedAt"
+                  name="issuedAt"
+                  placeholder="Issued At"
+                  type="date"
+                  inputSize={"small"}
+                  value={editLicenseInput.issuedAt}
+                  onChange={(e) =>
+                    setEditLicenseInput({
+                      ...editLicenseInput,
+                      issuedAt: e.target.value,
+                    })
+                  }
+                />
+
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Expiry Date
+                </label>
+                <Input
+                  id="expiryDate"
+                  name="expiryDate"
+                  placeholder="Expiry Date"
+                  type="date"
+                  inputSize={"small"}
+                  value={editLicenseInput.expiryDate}
+                  onChange={(e) =>
+                    setEditLicenseInput({
+                      ...editLicenseInput,
+                      expiryDate: e.target.value,
+                    })
+                  }
+                />
+                <Button
+                  type="submit"
+                  className="hover:bg-primary-dark mt-4 w-full rounded-md bg-primary py-2 font-semibold text-white shadow-sm"
+                  disabled={editLicenseLoading}
+                  onClick={async () => {
+                    await updateLicenseHandler();
+                    setIsEditLicenseModalOpen(false);
+                  }}
+                >
+                  Update License
+                </Button>
+                <Button
+                  variant="outline"
+                  className="mt-2 w-full border-red-600 text-red-600 hover:bg-red-200 hover:text-red-900"
+                  type="button"
+                  disabled={deleteLicenseLoading}
+                  onClick={async () => {
+                    await deleteLicenseHandler(editLicenseInput.id);
+                    setIsEditLicenseModalOpen(false);
+                  }}
+                >
+                  Delete License
+                </Button>
+              </form>
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 }

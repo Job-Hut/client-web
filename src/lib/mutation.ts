@@ -92,3 +92,89 @@ export const ADD_LICENSE = gql`
     }
   }
 `;
+
+export const UPDATE_EXPERIENCE = gql`
+  mutation UpdateExperience($experienceId: String!, $input: ExperienceInput) {
+    updateExperience(experienceId: $experienceId, input: $input) {
+      experiences {
+        _id
+        jobTitle
+        institute
+        startDate
+        endDate
+      }
+    }
+  }
+`;
+
+export const DELETE_EXPERIENCE = gql`
+  mutation AddExperience($experienceId: String!) {
+    deleteExperience(experienceId: $experienceId) {
+      experiences {
+        _id
+        jobTitle
+        institute
+        startDate
+        endDate
+      }
+    }
+  }
+`;
+
+export const UPDATE_EDUCATION = gql`
+  mutation UpdateEducation($educationId: String!, $input: EducationInput) {
+    updateEducation(educationId: $educationId, input: $input) {
+      education {
+        _id
+        name
+        institute
+        startDate
+        endDate
+      }
+    }
+  }
+`;
+
+export const DELETE_EDUCATION = gql`
+  mutation DeleteEducation($educationId: String!) {
+    deleteEducation(educationId: $educationId) {
+      education {
+        _id
+        name
+        institute
+        startDate
+        endDate
+      }
+    }
+  }
+`;
+
+export const UPDATE_LICENSE = gql`
+  mutation UpdateLicense($licenseId: String!, $input: LicenseInput) {
+    updateLicense(licenseId: $licenseId, input: $input) {
+      licenses {
+        _id
+        number
+        name
+        issuedBy
+        issuedAt
+        expiryDate
+      }
+    }
+  }
+`;
+
+export const DELETE_LICENSE = gql`
+  mutation DeleteLicense($licenseId: String!) {
+    deleteLicense(licenseId: $licenseId) {
+      licenses {
+        _id
+        number
+        name
+        issuedBy
+        issuedAt
+        expiryDate
+      }
+    }
+  }
+`;
