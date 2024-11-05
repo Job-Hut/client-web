@@ -4,32 +4,73 @@ import { Button } from "./button";
 
 type CardProps = React.ComponentProps<typeof Card>;
 
-export default function CollectionDetailCard({
+export default function InsertApplicationCard({
   className,
   ...props
 }: CardProps) {
+  const isSelected = false; //Needs to be changed with use state management later
+
   return (
     <Card
       className={cn(
         "flex flex-col justify-center overflow-hidden rounded-lg",
-        "w-full msm:p-2 md:p-4 my-4",
+        "msm:p-2 my-4 w-full md:p-4",
         "shadow-sm",
+        isSelected ? "border border-primary" : "",
         className,
       )}
       {...props}
     >
       {/* Top container */}
       <div className="flex w-full flex-col space-y-1 rounded-lg bg-[#FFE1CC] p-3">
-        <Button
-          variant={"secondary"}
-          className={cn(
-            "pointer-events-none w-1/3 sm:w-1/2 rounded-full px-2 py-1 text-xs font-bold text-[#D39269]",
-            "sm:text-sm md:text-base",
-            className,
+        <div className="flex w-full justify-between">
+          <Button
+            variant={"secondary"}
+            className={cn(
+              "pointer-events-none w-1/3 rounded-full px-2 py-1 text-xs font-bold text-[#D39269] sm:w-1/2",
+              "sm:text-sm md:text-base",
+              className,
+            )}
+          >
+            Due Tomorrow
+          </Button>
+
+          {/* Insert Button */}
+          {isSelected ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="primary"
+              stroke="background"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="lucide lucide-circle-check"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="primary"
+              stroke="background"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="lucide lucide-circle-plus"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M8 12h8" />
+              <path d="M12 8v8" />
+            </svg>
           )}
-        >
-          Due Tomorrow
-        </Button>
+        </div>
         <CardDescription className="text-xs font-bold text-black sm:text-sm md:text-base">
           Airbnb
         </CardDescription>
