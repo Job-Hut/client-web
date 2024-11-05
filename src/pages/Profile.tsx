@@ -2,9 +2,6 @@ import Navbar from "@/components/ui/Navbar";
 
 import { Mail, User, Edit3 } from "lucide-react";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { Mail, Phone, User, Edit3 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-
 import BottomNavigation from "@/components/ui/BottomNavigation";
 
 import { useNavigate } from "react-router-dom";
@@ -12,7 +9,6 @@ import { GET_APPLICATIONS, GET_AUTHENTICATED_USER } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import { Education, Experience, License } from "@/lib/types";
 import dayjs from "dayjs";
-
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -39,7 +35,6 @@ export default function ProfilePage() {
           >
             <Edit3 className="h-5 w-5" />
           </button>
-
 
           {/* Avatar */}
           <Avatar className="h-24 w-24 rounded-full border-4 border-[#EDE1F4] shadow-md">
@@ -89,7 +84,6 @@ export default function ProfilePage() {
             <h2 className="text-lg font-semibold text-primary">Bio</h2>
             <p className="mt-2 text-sm text-gray-700 md:text-base">
               {userData?.getAuthenticatedUser.profile.bio || "No bio available"}
-
             </p>
           </div>
         </section>

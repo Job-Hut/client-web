@@ -1,6 +1,7 @@
 import Navbar from "@/components/ui/Navbar";
 import CardList from "@/components/ui/CardList";
 import { gql, useQuery } from "@apollo/client";
+import BottomNavigation from "@/components/ui/BottomNavigation";
 
 export default function Home() {
   const { data, error, loading } = useQuery(gql`
@@ -44,6 +45,7 @@ export default function Home() {
       {data?.getSortedByPriorityApplication && (
         <CardList applications={data?.getSortedByPriorityApplication} />
       )}
+      <BottomNavigation />
     </div>
   );
 }

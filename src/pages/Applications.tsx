@@ -82,8 +82,12 @@ export default function Applications() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Link2 width={16} />
-                      <a href="google.com" className="text-blue-500">
-                        www.jobstreet.com
+                      <a
+                        href={application.source ? application.source : "#"}
+                        className="text-blue-500"
+                        target="_blank"
+                      >
+                        Source
                       </a>
                     </div>
                   </div>
