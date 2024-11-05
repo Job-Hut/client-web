@@ -7,9 +7,12 @@ import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import { useEffect, useState } from "react";
 import useAuth from "@/hooks/use-auth";
 import { Message } from "@/lib/types";
+import { useNavigate } from "react-router-dom";
+import Navbar from "@/components/ui/Navbar";
 
 export default function GroupChat() {
   const { _id } = useParams();
+  const navigate = useNavigate();
 
   const { user } = useAuth();
   const [message, setMessage] = useState("");
@@ -116,14 +119,18 @@ export default function GroupChat() {
   // Send message to server
   const sendMessage = async () => {
     sendMessageMutation();
+    setMessage("");
   };
 
   return (
     <div className="max-w-screen flex h-screen w-full flex-col overflow-hidden bg-secondary">
-      {/* Header */}
-      <div className="flex w-full items-center justify-between bg-black p-4 text-background">
-        {/* Back button */}
-        <button className="text-lg" aria-label="Go back">
+      {/* Navbar */}
+      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
+        <button
+          className="text-lg"
+          aria-label="Go back"
+          onClick={() => navigate(`/collections/${_id}`)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -141,24 +148,14 @@ export default function GroupChat() {
             <path d="m12 8-4 4 4 4" />
           </svg>
         </button>
-        <h2 className="font-semibold">Group Chat</h2>
-        {/* Online users count with tooltip */}
-        {/* ! TODO: later inject how many users online here */}
-        <div
-          className="flex items-center gap-2"
-          title="5 online"
-          aria-label="5 users online"
-        >
-          <img
-            src="https://github.com/shadcn.png"
-            alt="Online users"
-            className="h-6 w-6 rounded-full"
-          />
-        </div>
+
+        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-semibold sm:text-lg">
+          Group Chat
+        </h2>
       </div>
 
       {/* Chat Messages */}
-      <div className="flex flex-1 flex-col space-y-4 overflow-y-auto p-4">
+      <div className="flex flex-1 flex-col space-y-4 overflow-y-auto p-4 mt-20">
         {messages.map((message: Message) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
