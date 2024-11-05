@@ -42,6 +42,7 @@ export interface Application {
   salary: number;
   type: string;
   tasks: Task[];
+  source: string;
   startDate: Date;
   endDate: Date;
   createdAt: Date;
