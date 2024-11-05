@@ -63,3 +63,17 @@ export const ADD_EXPERIENCE = gql`
     }
   }
 `;
+
+export const ADD_EDUCATION = gql`
+  mutation AddEducation($input: EducationInput) {
+    addEducation(input: $input) {
+      education {
+        _id
+        name
+        institute
+        startDate
+        endDate
+      }
+    }
+  }
+`;
