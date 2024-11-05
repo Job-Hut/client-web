@@ -7,3 +7,59 @@ export const UPDATE_AVATAR = gql`
     }
   }
 `;
+
+export const UPDATE_BIO = gql`
+  mutation UpdateBio($bio: String!) {
+    updateBio(bio: $bio) {
+      bio
+    }
+  }
+`;
+
+export const UPDATE_LOCATION = gql`
+  mutation UpdateLocation($location: String!) {
+    updateLocation(location: $location) {
+      location
+    }
+  }
+`;
+
+export const UPDATE_PROFILE = gql`
+  mutation UpdateProfile(
+    $fullName: String!
+    $username: String!
+    $location: String!
+    $bio: String!
+  ) {
+    updateProfile(
+      fullName: $fullName
+      username: $username
+      location: $location
+      bio: $bio
+    ) {
+      _id
+      username
+      avatar
+      fullName
+      email
+      password
+      isOnline
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const ADD_EXPERIENCE = gql`
+  mutation AddExperience($input: ExperienceInput) {
+    addExperience(input: $input) {
+      experiences {
+        _id
+        jobTitle
+        institute
+        startDate
+        endDate
+      }
+    }
+  }
+`;

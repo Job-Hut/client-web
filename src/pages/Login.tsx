@@ -48,17 +48,19 @@ export default function Login() {
         },
         accessToken: data.login?.access_token,
       });
-      // debugger;
+
+      toast({
+        title: "Success",
+        description: "Logged in successfully",
+      });
 
       nav("/");
     } catch (error) {
       toast({
         title: "Failed",
-        description: "Invalid email or password",
+        description: (error as Error).message || "Invalid email or password",
         variant: "destructive",
       });
-      // ! Handle error
-      console.error(error);
     }
   };
 

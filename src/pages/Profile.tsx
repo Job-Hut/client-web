@@ -1,6 +1,6 @@
 import Navbar from "@/components/ui/Navbar";
 import { Mail, User, Edit3 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useNavigate } from "react-router-dom";
 import { GET_APPLICATIONS, GET_AUTHENTICATED_USER } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
@@ -120,7 +120,7 @@ export default function ProfilePage() {
             <div className="mt-2 divide-y divide-gray-300 text-gray-700">
               {userData?.getAuthenticatedUser?.profile?.experiences?.map(
                 (experience: Experience) => (
-                  <div key={experience._id} className="py-2">
+                  <div key={experience._id} className="py-4">
                     <p className="font-bold">{experience.jobTitle}</p>
                     <p>{experience.institute}</p>
                     <p className="mt-2 text-sm italic">
@@ -141,7 +141,7 @@ export default function ProfilePage() {
             <div className="mt-2 divide-y divide-gray-300 text-gray-700">
               {userData?.getAuthenticatedUser?.profile?.education?.map(
                 (education: Education) => (
-                  <div key={education._id} className="py-2">
+                  <div key={education._id} className="py-4">
                     <p className="font-bold">{education.name}</p>
                     <p>{education.institute}</p>
                     <p className="mt-2 text-sm italic">
@@ -162,16 +162,15 @@ export default function ProfilePage() {
                 0 && <p>No education history available</p>}
               {userData?.getAuthenticatedUser?.profile?.licenses?.map(
                 (license: License) => (
-                  <div key={license._id} className="py-2">
+                  <div key={license._id} className="py-4">
                     <p className="font-bold">{license.name}</p>
                     <p>{license.issuedBy}</p>
                     <p className="mt-2 text-sm italic">
                       {dayjs(license.issuedAt).format("MMM YYYY")} -{" "}
                       {dayjs(license.expiryDate).format("MMM YYYY")}
                     </p>
-
-                    <p className="mt-2">
-                      <span className="text-primary">License Number:</span>{" "}
+                    <p className="">
+                      <span className="text-primary">Credential ID:</span>{" "}
                       {license._id}
                     </p>
                   </div>

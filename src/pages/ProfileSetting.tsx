@@ -1,14 +1,17 @@
 import Navbar from "@/components/ui/Navbar";
 import { Edit3 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@apollo/client";
-import { UPDATE_AVATAR } from "@/lib/mutation";
+import { UPDATE_AVATAR, UPDATE_PROFILE } from "@/lib/mutation";
 import { GET_AUTHENTICATED_USER } from "@/lib/queries";
+import dayjs from "dayjs";
+import { Education, Experience, License } from "@/lib/types";
+import AddCareerModal from "@/components/ui/CreateCareerModal";
 
 export default function ProfileSetting() {
   const [isEditImageModalOpen, setEditImageModalOpen] = useState(false);
@@ -44,6 +47,9 @@ export default function ProfileSetting() {
   const [updateAvatarMutation, { loading: updateAvatarLoading }] =
     useMutation(UPDATE_AVATAR);
 
+  const [updateProfile, { loading: updateProfileLoading }] =
+    useMutation(UPDATE_PROFILE);
+
   const updateAvatarHandler = async () => {
     try {
       if (avatar) {
@@ -66,11 +72,42 @@ export default function ProfileSetting() {
     }
   };
 
+  const updateUserProfile = async () => {
+    try {
+      await updateProfile({
+        variables: {
+          username,
+          fullName,
+          location: `${city} ${country}`,
+          bio,
+        },
+      });
+
+      toast({
+        title: "Success",
+        description: "Profile updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     if (userData) {
       setUsername(userData.getAuthenticatedUser.username);
       setFullName(userData.getAuthenticatedUser.fullName);
       setEmail(userData.getAuthenticatedUser.email);
+      setBio(userData.getAuthenticatedUser.profile.bio);
+      setCountry(
+        userData.getAuthenticatedUser.profile.location?.split(" ")[1] || "",
+      );
+      setCity(
+        userData.getAuthenticatedUser.profile.location?.split(" ")[0] || "",
+      );
     }
   }, [userData]);
 
@@ -83,8 +120,7 @@ export default function ProfileSetting() {
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">
           Profile Setting
         </h1>
-
-        <form>
+        <div>
           {/* Avatar */}
           <div className="relative mb-6 flex justify-center">
             <Avatar className="relative h-24 w-24 rounded-full border-4 border-[#EDE1F4] shadow-md">
@@ -96,7 +132,6 @@ export default function ProfileSetting() {
                 alt="User avatar"
                 className="h-full w-full rounded-full object-cover"
               />
-              <AvatarFallback>JD</AvatarFallback>
 
               {/* Edit image */}
               <button
@@ -148,8 +183,11 @@ export default function ProfileSetting() {
             name="summary"
             placeholder="Bio/Summary"
             className="mb-6 h-24 w-full resize-none rounded-lg border border-primary p-4"
-          />
-
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+          >
+            {bio}
+          </Textarea>
           {/* Location Section */}
           <div className="mb-4 rounded-lg border border-primary bg-background p-4 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
@@ -164,6 +202,8 @@ export default function ProfileSetting() {
                   placeholder="Country"
                   type="text"
                   inputSize={"small"}
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
                 />
               </div>
               <div className="flex justify-between">
@@ -174,6 +214,8 @@ export default function ProfileSetting() {
                   placeholder="City / State"
                   type="text"
                   inputSize={"small"}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                 />
               </div>
             </div>
@@ -187,29 +229,23 @@ export default function ProfileSetting() {
                 + Add
               </Button>
             </div>
-            <div className="space-y-2 border-b border-gray-200 text-gray-700">
-              <div className="flex gap-4">
-                {/* Delete button */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="primary"
-                  stroke="background"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-circle-minus"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M8 12h8" />
-                </svg>
-                <div className="flex flex-1 flex-col">
-                  <p>Part-time programmer</p>
-                  <p>Hacktiv8</p>
-                  <p className="text-sm italic">Aug 2024 - Nov 2024</p>
-                </div>
+            <div>
+              {/* Career  Card */}
+              {userData?.getAuthenticatedUser?.profile?.experiences?.length ===
+                0 && <p>No career history available</p>}
+              <div className="mt-2 divide-y divide-gray-300 text-gray-700">
+                {userData?.getAuthenticatedUser?.profile?.experiences?.map(
+                  (experience: Experience) => (
+                    <div key={experience._id} className="py-4">
+                      <p className="font-bold">{experience.jobTitle}</p>
+                      <p>{experience.institute}</p>
+                      <p className="mt-2 text-sm italic">
+                        {dayjs(experience.startDate).format("MMM YYYY")} -{" "}
+                        {dayjs(experience.endDate).format("MMM YYYY")}
+                      </p>
+                    </div>
+                  ),
+                )}
               </div>
             </div>
           </div>
@@ -222,29 +258,23 @@ export default function ProfileSetting() {
                 + Add
               </Button>
             </div>
-            <div className="space-y-2 border-b border-gray-200 text-gray-700">
-              <div className="flex gap-4">
-                {/* Delete button */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="primary"
-                  stroke="background"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-circle-minus"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M8 12h8" />
-                </svg>
-                <div className="flex flex-1 flex-col">
-                  <p>Sekolah Tinggi Bajak Laut</p>
-                  <p>S1 IT</p>
-                  <p className="text-sm italic">Aug 2024 - Nov 2024</p>
-                </div>
+            <div>
+              {/* Education Card */}
+              {userData?.getAuthenticatedUser?.profile?.education?.length ===
+                0 && <p>No career history available</p>}
+              <div className="mt-2 divide-y divide-gray-300 text-gray-700">
+                {userData?.getAuthenticatedUser?.profile?.education?.map(
+                  (experience: Education) => (
+                    <div key={experience._id} className="py-4">
+                      <p className="font-bold">{experience.name}</p>
+                      <p>{experience.institute}</p>
+                      <p className="mt-2 text-sm italic">
+                        {dayjs(experience.startDate).format("MMM YYYY")} -{" "}
+                        {dayjs(experience.endDate).format("MMM YYYY")}
+                      </p>
+                    </div>
+                  ),
+                )}
               </div>
             </div>
           </div>
@@ -259,40 +289,38 @@ export default function ProfileSetting() {
                 + Add
               </Button>
             </div>
-            <div className="space-y-2 border-b border-gray-200 text-gray-700">
-              <div className="flex gap-4">
-                {/* Delete button */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="primary"
-                  stroke="background"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-circle-minus"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M8 12h8" />
-                </svg>
-                <div className="flex flex-1 flex-col">
-                  <p>Introduction to JavaScript</p>
-                  <p>Udemy</p>
-                  <p className="text-sm italic">Valid until: No expiry</p>
-                </div>
+            <div>
+              {/* License/Certification Card */}
+              {userData?.getAuthenticatedUser?.profile?.education?.length ===
+                0 && <p>No career history available</p>}
+              <div className="mt-2 divide-y divide-gray-300 text-gray-700">
+                {userData?.getAuthenticatedUser?.profile?.licenses?.map(
+                  (license: License) => (
+                    <div key={license._id} className="py-4">
+                      <p className="font-bold">{license.name}</p>
+                      <p>{license.issuedBy}</p>
+                      <p className="mt-2 text-sm italic">
+                        {dayjs(license.issuedAt).format("MMM YYYY")} -{" "}
+                        {dayjs(license.expiryDate).format("MMM YYYY")}
+                      </p>
+                    </div>
+                  ),
+                )}
               </div>
             </div>
           </div>
 
           {/* Save Button */}
           <div className="mb-40 flex justify-center">
-            <button className="hover:bg-primary-dark w-3/4 rounded-full bg-primary py-2 font-bold text-white shadow-md transition">
+            <button
+              className="hover:bg-primary-dark w-3/4 rounded-full bg-primary py-2 font-bold text-white shadow-md transition"
+              onClick={() => updateUserProfile()}
+              disabled={updateProfileLoading}
+            >
               Save
             </button>
           </div>
-        </form>
+        </div>
       </div>
 
       {/* Edit image modal */}
@@ -338,73 +366,7 @@ export default function ProfileSetting() {
 
       {/* Add career modal */}
       {isAddCareerModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-            <button
-              onClick={closeAddCareerModal}
-              className="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
-              aria-label="Close"
-            >
-              &times;
-            </button>
-            <h2 className="mb-4 text-xl font-semibold text-gray-800">
-              Add Career History
-            </h2>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Job Title
-              </label>
-              <Input
-                id="jobTitle"
-                name="jobTitle"
-                placeholder="Job Title"
-                type="text"
-                inputSize={"small"}
-              />
-
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Company
-              </label>
-              <Input
-                id="company"
-                name="company"
-                placeholder="Company"
-                type="text"
-                inputSize={"small"}
-              />
-
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Duration
-              </label>
-              <div className="flex gap-2">
-                <Input
-                  id="startDate"
-                  name="startDate"
-                  placeholder="Start Date (e.g., Aug 2024)"
-                  type="text"
-                  inputSize={"small"}
-                  className="flex-1"
-                />
-                <Input
-                  id="endDate"
-                  name="endDate"
-                  placeholder="End Date (e.g., Nov 2024)"
-                  type="text"
-                  inputSize={"small"}
-                  className="flex-1"
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="hover:bg-primary-dark mt-4 w-full rounded-md bg-primary py-2 font-semibold text-white shadow-sm"
-                onClick={closeAddCareerModal}
-              >
-                Add Career
-              </Button>
-            </form>
-          </div>
-        </div>
+        <AddCareerModal closeAddCareerModal={closeAddCareerModal} />
       )}
 
       {/* Add education modal */}
