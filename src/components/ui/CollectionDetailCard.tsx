@@ -1,18 +1,22 @@
 import { Card, CardTitle, CardDescription } from "./card";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
+import type { Application } from "@/lib/types";
 
-type CardProps = React.ComponentProps<typeof Card>;
+type CardProps = React.ComponentProps<typeof Card> & {
+  application: Application;
+};
 
 export default function CollectionDetailCard({
   className,
+  application,
   ...props
 }: CardProps) {
   return (
     <Card
       className={cn(
         "flex flex-col justify-center overflow-hidden rounded-lg",
-        "w-full msm:p-2 md:p-4 my-4",
+        "my-4 w-full msm:p-2 md:p-4",
         "shadow-sm",
         className,
       )}
@@ -23,7 +27,7 @@ export default function CollectionDetailCard({
         <Button
           variant={"secondary"}
           className={cn(
-            "pointer-events-none w-1/3 sm:w-1/2 rounded-full px-2 py-1 text-xs font-bold text-[#D39269]",
+            "pointer-events-none w-1/3 rounded-full px-2 py-1 text-xs font-bold text-[#D39269] sm:w-1/2",
             "sm:text-sm md:text-base",
             className,
           )}
@@ -31,11 +35,11 @@ export default function CollectionDetailCard({
           Due Tomorrow
         </Button>
         <CardDescription className="text-xs font-bold text-black sm:text-sm md:text-base">
-          Airbnb
+          {application.organizationName}
         </CardDescription>
         <div className="flex w-full items-center justify-between">
           <CardTitle className="text-xs sm:text-sm md:text-base">
-            Backend Developer
+            {application.jobTitle}
           </CardTitle>
           {/* Company's logo */}
           <svg

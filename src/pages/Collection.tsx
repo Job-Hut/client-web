@@ -10,7 +10,7 @@ export default function Collection() {
   const navigate = useNavigate();
 
   // list collection dari back end
-  const { data } = useQuery(gql`
+  const { data, loading, error } = useQuery(gql`
     query GetAllCollection {
       getAllCollection {
         _id
@@ -41,6 +41,14 @@ export default function Collection() {
       >
         New Collection
       </Button>
+
+      {/* Loading Indicator */}
+      {loading && <p className="mt-8 text-center text-xl">Loading...</p>}
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-error mt-8 text-center text-xl">{error.message}</p>
+      )}
 
       {/* CollectionList Grid */}
       <div className="mt-6 flex w-11/12 flex-col gap-4 pb-48 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
