@@ -46,11 +46,19 @@ export default function ProfileSetting() {
 
   const { data: userData } = useQuery(GET_AUTHENTICATED_USER);
 
-  const [updateAvatarMutation, { loading: updateAvatarLoading }] =
-    useMutation(UPDATE_AVATAR);
+  const [updateAvatarMutation, { loading: updateAvatarLoading }] = useMutation(
+    UPDATE_AVATAR,
+    {
+      refetchQueries: ["GetAuthenticatedUser"],
+    },
+  );
 
-  const [updateProfile, { loading: updateProfileLoading }] =
-    useMutation(UPDATE_PROFILE);
+  const [updateProfile, { loading: updateProfileLoading }] = useMutation(
+    UPDATE_PROFILE,
+    {
+      refetchQueries: ["GetAuthenticatedUser"],
+    },
+  );
 
   const updateAvatarHandler = async () => {
     try {
