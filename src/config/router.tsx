@@ -18,6 +18,7 @@ import BulkInsertApplication from "@/pages/BulkInsertApplication";
 import Profile from "@/pages/Profile";
 import GuardAuth from "@/components/ui/GuardAuth";
 import GuardGuest from "@/components/ui/GuardGuest";
+import ProfileSetting from "@/pages/ProfileSetting";
 
 const router = createBrowserRouter([
   {
@@ -123,6 +124,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <Profile />,
+  },
+  {
+    path: "/profile-setting",
+    element: <ProfileSetting />,
   },
 ]);
 

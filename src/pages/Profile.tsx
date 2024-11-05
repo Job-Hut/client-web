@@ -1,8 +1,11 @@
 import Navbar from "@/components/ui/Navbar";
-import { Mail, Phone, User } from "lucide-react";
+import { Mail, Phone, User, Edit3 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
+    const navigate = useNavigate();
+
   return (
     <div className="font-poppins relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar */}
@@ -11,7 +14,16 @@ export default function ProfilePage() {
       {/* Profile Header */}
       <div className="w-full p-4 md:mt-28 md:max-w-2xl lg:max-w-4xl">
         {/* Basic Info */}
-        <div className="mb-4 flex flex-col items-center space-y-3">
+        <div className="relative mb-4 flex flex-col items-center space-y-3">
+          {/* Edit Button */}
+          <button 
+            className="absolute top-0 right-0 p-2 bg-primary rounded-full shadow-lg text-background hover:bg-primary-dark transition"
+            aria-label="Edit Profile"
+            onClick={()=>navigate("/profile-setting")}
+          >
+            <Edit3 className="h-5 w-5" />
+          </button>
+
           {/* Avatar */}
           <Avatar className="h-24 w-24 rounded-full border-4 border-[#EDE1F4] shadow-md">
             <AvatarImage
