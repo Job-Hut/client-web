@@ -4,13 +4,82 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { gql, useMutation, useQuery } from "@apollo/client";
+
+const UPDATE_AVATAR = gql`
+  mutation UpdateAvatar($avatar: Upload!) {
+    updateAvatar(avatar: $avatar) {
+      _id
+    }
+  }
+`;
+
+const GET_USER = gql`
+  query GetAuthenticatedUser {
+    getAuthenticatedUser {
+      _id
+      username
+      avatar
+      fullName
+      email
+      profile {
+        _id
+        bio
+        location
+        createdAt
+        updatedAt
+        experiences {
+          _id
+          jobTitle
+          institute
+          startDate
+          endDate
+        }
+        education {
+          _id
+          name
+          institute
+          startDate
+          endDate
+        }
+        licenses {
+          _id
+          number
+          name
+          issuedBy
+          issuedAt
+          expiryDate
+        }
+      }
+      collections {
+        _id
+        name
+      }
+      isOnline
+      createdAt
+      updatedAt
+    }
+  }
+`;
 
 export default function ProfileSetting() {
   const [isEditImageModalOpen, setEditImageModalOpen] = useState(false);
   const [isAddCareerModalOpen, setAddCareerModalOpen] = useState(false);
   const [isAddEducationModalOpen, setAddEducationModalOpen] = useState(false);
   const [isAddLicenseModalOpen, setAddLicenseModalOpen] = useState(false);
+
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+
+  const { toast } = useToast();
 
   const openEditImageModal = () => setEditImageModalOpen(true);
   const closeEditImageModal = () => setEditImageModalOpen(false);
@@ -23,6 +92,41 @@ export default function ProfileSetting() {
 
   const openAddLicenseModal = () => setAddLicenseModalOpen(true);
   const closeAddLicenseModal = () => setAddLicenseModalOpen(false);
+
+  const { data: userData } = useQuery(GET_USER);
+
+  const [updateAvatarMutation, { loading: updateAvatarLoading }] =
+    useMutation(UPDATE_AVATAR);
+
+  const updateAvatarHandler = async () => {
+    try {
+      if (avatar) {
+        await updateAvatarMutation({
+          variables: {
+            avatar,
+          },
+        });
+        toast({
+          title: "Success",
+          description: "Avatar updated successfully",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (userData) {
+      setUsername(userData.getAuthenticatedUser.username);
+      setFullName(userData.getAuthenticatedUser.fullName);
+      setEmail(userData.getAuthenticatedUser.email);
+    }
+  }, [userData]);
 
   return (
     <div className="font-poppins relative flex min-h-screen w-full flex-col items-center bg-secondary">
@@ -39,9 +143,12 @@ export default function ProfileSetting() {
           <div className="relative mb-6 flex justify-center">
             <Avatar className="relative h-24 w-24 rounded-full border-4 border-[#EDE1F4] shadow-md">
               <AvatarImage
-                src="https://github.com/shadcn.png"
+                src={
+                  userData?.getAuthenticatedUser?.avatar ||
+                  "https://github.com/shadcn"
+                }
                 alt="User avatar"
-                className="rounded-full"
+                className="h-full w-full rounded-full object-cover"
               />
               <AvatarFallback>JD</AvatarFallback>
 
@@ -65,6 +172,8 @@ export default function ProfileSetting() {
               placeholder="Username"
               type="text"
               inputSize={"small"}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <Input
               id="fullName"
@@ -72,13 +181,8 @@ export default function ProfileSetting() {
               placeholder="Full Name"
               type="text"
               inputSize={"small"}
-            />
-            <Input
-              id="phoneNumber"
-              name="phoneNumber"
-              placeholder="Phone Number"
-              type="number"
-              inputSize={"small"}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
             />
             <Input
               id="email"
@@ -86,6 +190,8 @@ export default function ProfileSetting() {
               placeholder="Email"
               type="email"
               inputSize={"small"}
+              value={email}
+              readOnly
             />
           </div>
 
@@ -145,9 +251,9 @@ export default function ProfileSetting() {
                   viewBox="0 0 24 24"
                   fill="primary"
                   stroke="background"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="lucide lucide-circle-minus"
                 >
                   <circle cx="12" cy="12" r="10" />
@@ -180,9 +286,9 @@ export default function ProfileSetting() {
                   viewBox="0 0 24 24"
                   fill="primary"
                   stroke="background"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="lucide lucide-circle-minus"
                 >
                   <circle cx="12" cy="12" r="10" />
@@ -217,9 +323,9 @@ export default function ProfileSetting() {
                   viewBox="0 0 24 24"
                   fill="primary"
                   stroke="background"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="lucide lucide-circle-minus"
                 >
                   <circle cx="12" cy="12" r="10" />
@@ -257,7 +363,7 @@ export default function ProfileSetting() {
             <h2 className="mb-4 text-xl font-semibold text-gray-800">
               Upload New Avatar
             </h2>
-            <form onSubmit={(e) => e.preventDefault()}>
+            <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Select Image
               </label>
@@ -265,17 +371,21 @@ export default function ProfileSetting() {
                 type="file"
                 accept="image/*"
                 className="block w-full rounded-md border border-gray-300 p-2"
+                name="avatar"
+                onChange={(e) => setAvatar(e.target.files?.[0] ?? null)}
               />
               <Button
                 type="submit"
                 className="hover:bg-primary-dark mt-4 w-full rounded-md bg-primary py-2 font-semibold text-white shadow-sm"
-                onClick={() => {
+                onClick={async () => {
+                  await updateAvatarHandler();
                   closeEditImageModal();
                 }}
+                disabled={updateAvatarLoading}
               >
                 Upload
               </Button>
-            </form>
+            </div>
           </div>
         </div>
       )}
@@ -474,9 +584,10 @@ export default function ProfileSetting() {
               </div>
 
               <Button
-                type="submit"
                 className="hover:bg-primary-dark mt-4 w-full rounded-md bg-primary py-2 font-semibold text-white shadow-sm"
-                onClick={closeAddLicenseModal}
+                onClick={() => {
+                  closeAddLicenseModal();
+                }}
               >
                 Add License / Certification
               </Button>

@@ -139,7 +139,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile-setting",
-    element: <ProfileSetting />,
+    element: (
+      <GuardAuth>
+        <ProfileSetting />,
+      </GuardAuth>
+    ),
   },
 ]);
 
