@@ -12,6 +12,7 @@ import GroupChat from "@/pages/GroupChat";
 import ViewMembers from "@/pages/ViewMembers";
 import Jobs from "@/pages/Jobs";
 import BulkInsertApplication from "@/pages/BulkInsertApplication";
+import Profile from "@/pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
   {
     path: "/insert-applications-to-collection/:_id",
     element: <BulkInsertApplication />
+  },
+  {
+    path: "/profile",
+    element: <Profile />
   }
 ]);
 
