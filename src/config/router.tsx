@@ -74,19 +74,31 @@ const router = createBrowserRouter([
   },
   {
     path: "/create-collection",
-    element: <CreateCollection />,
+    element: (
+      <GuardAuth>
+        <CreateCollection />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/collections/:_id",
-    element: <CollectionDetail />,
+    element: (
+      <GuardAuth>
+        <CollectionDetail />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/invite-user/:_id",
     element: <InviteToGroup />,
   },
   {
-    path: "/group-chat",
-    element: <GroupChat />,
+    path: "/group-chat/:_id",
+    element: (
+      <GuardAuth>
+        <GroupChat />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/view-joined-members/:_id",

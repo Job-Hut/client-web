@@ -5,6 +5,19 @@ export interface AuthContextType {
   logout: () => void;
 }
 
+export interface User {
+  _id: string;
+  username: string;
+  avatar: string;
+  fullName: string;
+  email: string;
+  password: string;
+  // profile: Profile;
+  collections: Collection[];
+  isOnline: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 export interface Collection {
   _id: string;
   name?: string | null;
@@ -36,7 +49,8 @@ export interface Application {
 }
 
 export interface Message {
-  senderId: string;
+  _id: string;
+  senderId: User;
   content: string;
   createdAt: string;
   updatedAt: string;

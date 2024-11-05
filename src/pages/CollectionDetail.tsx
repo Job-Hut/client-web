@@ -41,12 +41,6 @@ export default function CollectionDetail() {
           }
           createdAt
           updatedAt
-          chat {
-            senderId
-            content
-            createdAt
-            updatedAt
-          }
         }
       }
     `,
@@ -301,7 +295,7 @@ export default function CollectionDetail() {
               </button>
               <button
                 className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
-                onClick={() => navigate("/group-chat")}
+                onClick={() => navigate(`/group-chat/${_id}`)}
               >
                 Open Group Chat
               </button>

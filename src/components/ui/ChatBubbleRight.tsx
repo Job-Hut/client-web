@@ -1,27 +1,28 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Card, CardDescription } from "./card";
+import { Message } from "@/lib/types";
 
-export default function ChatBubbleRight() {
+type ChatBubbleRightProps = {
+  message: Message;
+};
+
+export default function ChatBubbleRight({ message }: ChatBubbleRightProps) {
   return (
-    <div className="flex items-start space-x-3">
+    <div className="flex items-start space-x-3 self-end">
       {/* Chat Bubble */}
       <Card className="flex max-w-[80%] flex-col rounded-lg border border-primary bg-background p-4 shadow-md">
-        <CardDescription className="mb-1 font-semibold text-primary">
-          username
+        <CardDescription className="mb-1 self-end font-semibold text-primary">
+          {message.senderId?.username}
         </CardDescription>
         <CardDescription className="text-primary">
-          The React Framework - created and maintained by @vercel. Lorem ipsum
-          dolor sit amet, consectetur adipisicing elit. Minima quam modi totam?
-          Blanditiis, ex totam? Quia ad explicabo temporibus aliquam et
-          doloribus cumque recusandae a doloremque aut, ipsum velit nesciunt
-          placeat officiis quas.
+          {message.content}
         </CardDescription>
       </Card>
 
       {/* Avatar */}
       <Avatar className="h-8 w-8 self-start">
         <AvatarImage
-          src="https://github.com/shadcn.png"
+          src={message.senderId?.avatar || `https://github.com/shadcn.png`}
           className="rounded-full"
         />
         <AvatarFallback>CN</AvatarFallback>

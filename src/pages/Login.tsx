@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input, InputPassword } from "@/components/ui/input";
 import useAuth from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
 import { gql, useMutation } from "@apollo/client";
 
 import { Lock, Mail } from "lucide-react";
@@ -12,6 +13,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const { toast } = useToast();
 
   const { login } = useAuth();
 
@@ -50,6 +52,11 @@ export default function Login() {
 
       nav("/");
     } catch (error) {
+      toast({
+        title: "Failed",
+        description: "Invalid email or password",
+        variant: "destructive",
+      });
       // ! Handle error
       console.error(error);
     }
