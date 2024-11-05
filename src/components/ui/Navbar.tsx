@@ -5,7 +5,7 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const [slash, path] = pathname.split("/");
   return (
-    <div className="w-full">
+    <div className="w-full z-50">
       <nav className="fixed hidden w-full bg-primary py-8 text-primary-foreground md:block">
         <div className="mx-auto max-w-screen-xl px-10">
           <ul className="flex justify-between">

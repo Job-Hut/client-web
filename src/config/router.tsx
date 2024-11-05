@@ -17,6 +17,10 @@ import Applications from "@/pages/Applications";
 import BulkInsertApplication from "@/pages/BulkInsertApplication";
 import Profile from "@/pages/Profile";
 import NotFoundPage from "@/pages/NotFoundPage";
+import GuardAuth from "@/components/ui/GuardAuth";
+import GuardGuest from "@/components/ui/GuardGuest";
+import ProfileSetting from "@/pages/ProfileSetting";
+
 
 const router = createBrowserRouter([
   {
@@ -25,43 +29,79 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Home />,
+    element: (
+      <GuardAuth>
+        <Home />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <GuardGuest>
+        <Register />,
+      </GuardGuest>
+    ),
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <GuardGuest>
+        <Login />,
+      </GuardGuest>
+    ),
   },
   {
     path: "/collections",
-    element: <Collection />,
+    element: (
+      <GuardAuth>
+        <Collection />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/applications/:_id",
-    element: <ApplicationDetail />,
+    element: (
+      <GuardAuth>
+        <ApplicationDetail />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/applications/:_id/edit",
-    element: <ApplicationForm />,
+    element: (
+      <GuardAuth>
+        <ApplicationForm />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/create-collection",
-    element: <CreateCollection />,
+    element: (
+      <GuardAuth>
+        <CreateCollection />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/collections/:_id",
-    element: <CollectionDetail />,
+    element: (
+      <GuardAuth>
+        <CollectionDetail />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/invite-user/:_id",
     element: <InviteToGroup />,
   },
   {
-    path: "/group-chat",
-    element: <GroupChat />,
+    path: "/group-chat/:_id",
+    element: (
+      <GuardAuth>
+        <GroupChat />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/view-joined-members/:_id",
@@ -73,11 +113,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/jobs",
-    element: <Jobs />,
+    element: (
+      <GuardAuth>
+        <Jobs />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/applications",
-    element: <Applications />,
+    element: (
+      <GuardAuth>
+        <Applications />,
+      </GuardAuth>
+    ),
   },
   {
     path: "/insert-applications-to-collection/:_id",
@@ -85,7 +133,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: (
+      <GuardAuth>
+        <Profile />,
+      </GuardAuth>
+    ),
+  },
+  {
+    path: "/profile-setting",
+    element: <ProfileSetting />,
   },
 ]);
 
