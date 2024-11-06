@@ -50,7 +50,10 @@ export default function UserCard({
   return (
     <div className="my-[5px] w-full">
       <Card className="flex w-full items-center justify-between rounded-lg border border-primary p-4 shadow-lg">
-        <div className="flex items-center gap-x-4">
+        <div
+          className="flex items-center gap-x-4"
+          title={user.isOnline ? "Online" : "Offline"}
+        >
           {/* Avatar */}
           <Avatar className="h-10 w-10">
             <AvatarImage

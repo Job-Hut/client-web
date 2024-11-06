@@ -16,12 +16,10 @@ export default function ViewMembers() {
     },
   });
 
-  console.log(_id);
-  console.log(data);
-
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar */}
+
       <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
         <button
           className="text-lg"

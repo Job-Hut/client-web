@@ -5,6 +5,7 @@ import { Application, User } from "@/lib/types";
 import Navbar from "@/components/ui/Navbar";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 import { Edit3 } from "lucide-react";
+
 import { GET_AUTHENTICATED_USER, GET_COLLECTION_DETAIL } from "@/lib/queries";
 import { useEffect, useState } from "react";
 import { SUBSCRIBE_USER_PRESENCE } from "@/lib/subscription";
@@ -12,6 +13,7 @@ import { SUBSCRIBE_USER_PRESENCE } from "@/lib/subscription";
 export default function CollectionDetail() {
   const { _id } = useParams();
 
+  const navigate = useNavigate();
   const [members, setMembers] = useState<User[]>([]);
 
   const { data: user } = useQuery(GET_AUTHENTICATED_USER);
@@ -70,8 +72,6 @@ export default function CollectionDetail() {
       });
     }
   }, [user, data]);
-
-  const navigate = useNavigate();
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
@@ -216,19 +216,13 @@ export default function CollectionDetail() {
                   <span className="font-semibold text-primary">
                     Joined Members:
                   </span>{" "}
-                  <span>{members.length}</span> <span>People</span>
+                  <span>{members.length}</span> <span>Personnel</span>
                 </p>
-                <button
-                  className="rounded-full bg-primary px-4 py-1.5 text-background"
-                  onClick={() => navigate(`/view-joined-members/${_id}`)}
-                >
-                  View
-                </button>
               </div>
             </div>
 
-            {/* Online Members Section */}
-            <div className="flex flex-col items-start gap-3">
+            {/* Online members */}
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -240,12 +234,12 @@ export default function CollectionDetail() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-users"
+                  className="lucide lucide-user-check"
                 >
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <path d="M17 21v-2a4 4 0 0 0-3-3.87" />
                   <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  <polyline points="22 11 20 13 18 11" />
                 </svg>
 
                 <p className="text-sm sm:text-base md:text-lg">
@@ -259,82 +253,75 @@ export default function CollectionDetail() {
                       }).length
                     }
                   </span>{" "}
-                  <span>People</span>
+                  <span>Personnel</span>
                 </p>
                 <button
                   className="rounded-full bg-primary px-4 py-1.5 text-background"
-                  onClick={() => navigate(`/view-online-members/${_id}`)}
+                  onClick={() => navigate(`/view-joined-members/${_id}`)}
                 >
                   View
                 </button>
               </div>
-
-              {/* Display up to 3 avatars */}
-              <div className="mt-2 flex w-full items-center sm:justify-start">
-                {members
-                  .filter((member: User) => {
-                    return member.isOnline > 0;
-                  })
-
-                  .map((member: User, index: number) => {
-                    if (index < 3) {
-                      return (
-                        <div
-                          key={index}
-                          className="m-2 flex flex-col items-center"
-                        >
-                          <div className="relative">
-                            {/* Avatar */}
-                            <img
-                              src={
-                                member.avatar ||
-                                "https://ui-avatars.com/api/?name=" +
-                                  member.username
-                              }
-                              alt="User Avatar"
-                              className="h-10 w-10 rounded-full shadow-md"
-                            />
-                            {
-                              // eslint-disable-next-line no-unsafe-optional-chaining
-                              member.isOnline && (
-                                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
-                              )
-                            }
-                          </div>
-                          {/* Username */}
-                          <p className="mt-1 text-xs font-medium text-gray-700">
-                            {member.username}
-                          </p>
-                        </div>
-                      );
-                    }
-                  })}
-              </div>
             </div>
-
-            {/* Buttons for group chat, invite user, insert applcation */}
-            <div className="flex gap-4 pt-4">
-              <button
-                className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
-                onClick={() => navigate(`/invite-user/${_id}`)}
-              >
-                Invite User
-              </button>
-              <button
-                className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
-                onClick={() => navigate(`/group-chat/${_id}`)}
-              >
-                Open Group Chat
-              </button>
-              <button
-                className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
-                onClick={() =>
-                  navigate("/insert-applications-to-collection/:_id")
-                }
-              >
-                Insert Application
-              </button>
+            <div className="mt-2 flex w-full items-center sm:justify-start">
+              {members
+                .filter((member: User) => {
+                  return member.isOnline > 0;
+                })
+                .slice(0, 3)
+                .map((member: User, index: number) => {
+                  return (
+                    <div key={index} className="m-2 flex flex-col items-center">
+                      <div className="relative">
+                        {/* Avatar */}
+                        <img
+                          src={
+                            member.avatar ||
+                            "https://ui-avatars.com/api/?name=" +
+                              member.username
+                          }
+                          alt="User Avatar"
+                          className="h-10 w-10 rounded-full shadow-md"
+                        />
+                        {
+                          // eslint-disable-next-line no-unsafe-optional-chaining
+                          member.isOnline && (
+                            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
+                          )
+                        }
+                      </div>
+                      {/* Username */}
+                      <p className="mt-1 text-xs font-medium text-gray-700">
+                        {member.username}
+                      </p>
+                    </div>
+                  );
+                })}
             </div>
+          </div>
+
+          {/* Buttons for group chat, invite user, insert applcation */}
+          <div className="flex gap-4 pt-4">
+            <button
+              className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+              onClick={() => navigate(`/invite-user/${_id}`)}
+            >
+              Invite User
+            </button>
+            <button
+              className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
+              onClick={() => navigate(`/group-chat/${_id}`)}
+            >
+              Open Group Chat
+            </button>
+            <button
+              className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+              onClick={() =>
+                navigate("/insert-applications-to-collection/:_id")
+              }
+            >
+              Insert Application
+            </button>
           </div>
 
           {/* Main Content */}
