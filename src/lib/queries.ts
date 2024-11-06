@@ -86,3 +86,69 @@ export const GET_JOBS = gql`
     }
   }
 `;
+
+export const GET_COLLECTION_DETAIL = gql`
+  query GetCollectionById($id: ID!) {
+    getCollectionById(id: $id) {
+      _id
+      name
+      description
+      ownerId {
+        _id
+        avatar
+        username
+        isOnline
+      }
+      sharedWith {
+        _id
+        avatar
+        username
+        isOnline
+      }
+      applications {
+        _id
+        ownerId
+        collectionId
+        jobTitle
+        description
+        organizationName
+        organizationAddress
+      }
+      createdAt
+      updatedAt
+      chat {
+        content
+        createdAt
+        updatedAt
+        senderId {
+          username
+          avatar
+          fullName
+          isOnline
+          createdAt
+          updatedAt
+          _id
+        }
+        _id
+      }
+    }
+  }
+`;
+
+export const GET_ALL_USERS = gql`
+  query GetUsers {
+    getAllUsers {
+      _id
+      username
+      avatar
+      fullName
+      email
+      createdAt
+      updatedAt
+      isOnline
+      collections {
+        _id
+      }
+    }
+  }
+`;

@@ -14,7 +14,7 @@ export interface User {
   password: string;
   // profile: Profile;
   collections: Collection[];
-  isOnline: boolean;
+  isOnline: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -60,6 +60,7 @@ export interface Message {
 export interface Task {
   _id: string;
   title: string;
+  stage: string;
   description: string;
   completed: boolean;
   dueDate: Date;

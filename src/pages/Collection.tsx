@@ -21,7 +21,6 @@ export default function Collection() {
         _id
         name
         description
-        ownerId
         createdAt
         updatedAt
         applications {
@@ -45,6 +44,12 @@ export default function Collection() {
       {/* Error Message */}
       {error && (
         <p className="text-error mt-8 text-center text-xl">{error.message}</p>
+      )}
+
+      {data?.getallCollection?.length == 0 && (
+        <p className="mt-8 text-center">
+          You have no applications at this moment
+        </p>
       )}
 
       {/* CollectionList Grid */}

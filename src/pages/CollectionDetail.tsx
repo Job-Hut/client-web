@@ -1,75 +1,77 @@
 import CollectionDetailCard from "@/components/ui/CollectionDetailCard";
-import { useNavigate, useParams } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
-import { Application } from "@/lib/types";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useQuery, useSubscription } from "@apollo/client";
+import { Application, User } from "@/lib/types";
 import Navbar from "@/components/ui/Navbar";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 import { Edit3 } from "lucide-react";
-import { User } from "@/lib/types";
 
-const GET_AUTHENTICATED_USER = gql`
-  query GetAuthenticatedUser {
-    getAuthenticatedUser {
-      _id
-      avatar
-      username
-      isOnline
-    }
-  }
-`;
+import { GET_AUTHENTICATED_USER, GET_COLLECTION_DETAIL } from "@/lib/queries";
+import { useEffect, useState } from "react";
+import { SUBSCRIBE_USER_PRESENCE } from "@/lib/subscription";
 
 export default function CollectionDetail() {
   const { _id } = useParams();
 
-  const { data: authData } = useQuery(GET_AUTHENTICATED_USER);
-  const { data, loading, error } = useQuery(
-    gql`
-      query GetCollectionById($id: ID!) {
-        getCollectionById(id: $id) {
-          _id
-          name
-          description
-          ownerId
-          sharedWith {
-            _id
-            avatar
-            username
-            isOnline
-          }
-          applications {
-            _id
-            ownerId
-            collectionId
-            jobTitle
-            description
-            organizationName
-            organizationAddress
-          }
-          createdAt
-          updatedAt
-        }
-      }
-    `,
-    {
-      variables: { id: _id },
-    },
-  );
-
-  let sharedWith = data?.getCollectionById?.sharedWith || [];
-  const authenticatedUser = authData?.getAuthenticatedUser;
-
-  if (
-    authenticatedUser &&
-    !sharedWith.some((user: User) => user._id === authenticatedUser._id)
-  ) {
-    sharedWith = [authenticatedUser, ...sharedWith];
-  }
-
-  const prioritizedUsers = sharedWith
-    .sort((a: User, b: User) => Number(b.isOnline) - Number(a.isOnline))
-    .slice(0, 3);
-
   const navigate = useNavigate();
+  const [members, setMembers] = useState<User[]>([]);
+
+  const { data: user } = useQuery(GET_AUTHENTICATED_USER);
+
+  const { data, loading, error } = useQuery(GET_COLLECTION_DETAIL, {
+    variables: { id: _id },
+    fetchPolicy: "no-cache",
+  });
+
+  const { data: userOnline } = useSubscription(SUBSCRIBE_USER_PRESENCE, {
+    variables: { collectionId: _id },
+  });
+
+  useEffect(() => {
+    if (data) {
+      if (data?.getCollectionById?.sharedWith) {
+        setMembers([
+          // eslint-disable-next-line no-unsafe-optional-chaining
+          ...data?.getCollectionById?.sharedWith.map((member: User) => {
+            return member;
+          }),
+          data?.getCollectionById?.ownerId,
+        ]);
+      }
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (userOnline) {
+      setMembers((prev) => {
+        return prev.map((member) => {
+          if (member._id === userOnline.userPresence._id) {
+            return {
+              ...member,
+              isOnline: userOnline.userPresence.isOnline,
+            };
+          }
+          return member;
+        });
+      });
+    }
+  }, [userOnline]);
+
+  useEffect(() => {
+    if (user && data) {
+      setMembers((prev) => {
+        return prev.map((member) => {
+          if (member._id === user?.getAuthenticatedUser._id) {
+            return {
+              ...member,
+              isOnline: 1,
+            };
+          }
+          return member;
+        });
+      });
+    }
+  }, [user, data]);
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
@@ -77,7 +79,7 @@ export default function CollectionDetail() {
       <Navbar />
 
       {/* Navbar for smaller screen */}
-      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
+      <div className="font-poppins fixed left-0 right-0 top-0 z-[100] flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
         <button
           className="text-lg"
           aria-label="Go back"
@@ -214,7 +216,7 @@ export default function CollectionDetail() {
                   <span className="font-semibold text-primary">
                     Joined Members:
                   </span>{" "}
-                  {data?.getCollectionById?.sharedWith.length + 1} Personnel
+                  <span>{members.length}</span> <span>Personnel</span>
                 </p>
               </div>
             </div>
@@ -239,12 +241,20 @@ export default function CollectionDetail() {
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   <polyline points="22 11 20 13 18 11" />
                 </svg>
+
                 <p className="text-sm sm:text-base md:text-lg">
                   <span className="font-semibold text-primary">
                     Online Members:
                   </span>{" "}
-                  {data?.getCollectionById?.sharedWith?.filter((user: User) => user.isOnline).length + 1} Personnel
-                  </p>
+                  <span>
+                    {
+                      members.filter((member: User) => {
+                        return member.isOnline == 1;
+                      }).length
+                    }
+                  </span>{" "}
+                  <span>Personnel</span>
+                </p>
                 <button
                   className="rounded-full bg-primary px-4 py-1.5 text-background"
                   onClick={() => navigate(`/view-joined-members/${_id}`)}
@@ -253,63 +263,65 @@ export default function CollectionDetail() {
                 </button>
               </div>
             </div>
-
-            {/* Show online members */}
-            <div className="mt-2 flex w-full items-center justify-center sm:justify-start">
-              {prioritizedUsers.map((user: User, index: number) => (
-                <div
-                  key={user._id || `placeholder-${index}`}
-                  className="m-2 flex flex-col items-center"
-                >
-                  <div className="relative">
-                    {/* Avatar */}
-                    <img
-                      src={user.avatar || "https://via.placeholder.com/40"}
-                      alt={
-                        user.username
-                          ? `${user.username} Avatar`
-                          : "Placeholder Avatar"
-                      }
-                      className="h-10 w-10 rounded-full shadow-md"
-                    />
-                    {/* Online/Offline Indicator */}
-                    <span
-                      className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background ${
-                        user.isOnline ? "bg-green-500" : "bg-gray-400"
-                      }`}
-                    ></span>
-                  </div>
-                  {/* Username */}
-                  <p className="mt-1 text-xs font-medium text-gray-700">
-                    {user.username || "Placeholder"}
-                  </p>
-                </div>
-              ))}
+            <div className="mt-2 flex w-full items-center sm:justify-start">
+              {members
+                .filter((member: User) => {
+                  return member.isOnline > 0;
+                })
+                .slice(0, 3)
+                .map((member: User, index: number) => {
+                  return (
+                    <div key={index} className="m-2 flex flex-col items-center">
+                      <div className="relative">
+                        {/* Avatar */}
+                        <img
+                          src={
+                            member.avatar ||
+                            "https://ui-avatars.com/api/?name=" +
+                              member.username
+                          }
+                          alt="User Avatar"
+                          className="h-10 w-10 rounded-full shadow-md"
+                        />
+                        {
+                          // eslint-disable-next-line no-unsafe-optional-chaining
+                          member.isOnline && (
+                            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
+                          )
+                        }
+                      </div>
+                      {/* Username */}
+                      <p className="mt-1 text-xs font-medium text-gray-700">
+                        {member.username}
+                      </p>
+                    </div>
+                  );
+                })}
             </div>
+          </div>
 
-            {/* Buttons for group chat, invite user, insert applcation */}
-            <div className="flex gap-4 pt-4">
-              <button
-                className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
-                onClick={() => navigate("/invite-user/:_id")}
-              >
-                Invite User
-              </button>
-              <button
-                className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
-                onClick={() => navigate(`/group-chat/${_id}`)}
-              >
-                Open Group Chat
-              </button>
-              <button
-                className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
-                onClick={() =>
-                  navigate("/insert-applications-to-collection/:_id")
-                }
-              >
-                Insert Application
-              </button>
-            </div>
+          {/* Buttons for group chat, invite user, insert applcation */}
+          <div className="flex gap-4 pt-4">
+            <button
+              className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+              onClick={() => navigate(`/invite-user/${_id}`)}
+            >
+              Invite User
+            </button>
+            <button
+              className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
+              onClick={() => navigate(`/group-chat/${_id}`)}
+            >
+              Open Group Chat
+            </button>
+            <button
+              className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+              onClick={() =>
+                navigate("/insert-applications-to-collection/:_id")
+              }
+            >
+              Insert Application
+            </button>
           </div>
 
           {/* Main Content */}
@@ -322,10 +334,12 @@ export default function CollectionDetail() {
           <div className="mb-20 mt-6 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
             {data?.getCollectionById?.applications?.map(
               (application: Application) => (
-                <CollectionDetailCard
-                  key={application._id}
-                  application={application}
-                />
+                <Link to={`/applications/${application._id}`}>
+                  <CollectionDetailCard
+                    key={application._id}
+                    application={application}
+                  />
+                </Link>
               ),
             )}
           </div>

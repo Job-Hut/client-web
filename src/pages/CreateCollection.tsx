@@ -23,7 +23,6 @@ export default function CreateCollection() {
         _id
         name
         description
-        ownerId
         createdAt
         updatedAt
       }
