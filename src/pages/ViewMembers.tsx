@@ -1,8 +1,23 @@
 import UserCard from "@/components/ui/UserCard";
-import { useNavigate } from "react-router-dom";
+import { GET_COLLECTION_DETAIL } from "@/lib/queries";
+import { User } from "@/lib/types";
+import { useQuery } from "@apollo/client";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function ViewMembers() {
   const navigate = useNavigate();
+
+  const { _id } = useParams();
+
+  console.log("Test");
+  const { data, loading, error } = useQuery(GET_COLLECTION_DETAIL, {
+    variables: {
+      id: _id,
+    },
+  });
+
+  console.log(_id);
+  console.log(data);
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
@@ -36,20 +51,24 @@ export default function ViewMembers() {
         </h2>
       </div>
 
-      {/* Users Container */}
-      <div className="mt-20 w-11/12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:w-8/12 xl:grid-cols-4">
-        <UserCard
-          user={{
-            username: "John Doe",
-            isInvited: true,
-          }}
-        />
-        <UserCard
-          user={{
-            username: "Jane Smith",
-            isInvited: true,
-          }}
-        />
+      <div className="mt-20 grid w-11/12 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:w-8/12 xl:grid-cols-4">
+        {loading && <p>Loading...</p>}
+
+        {error && <p>Error: {error.message}</p>}
+        {data?.getCollectionById && (
+          <>
+            {/* Collection Name */}
+
+            <UserCard
+              key={data?.getCollectionById.ownerId._id}
+              user={data?.getCollectionById.ownerId}
+              collectionId={_id!}
+            />
+            {data?.getCollectionById?.sharedWith?.map((user: User) => (
+              <UserCard key={user._id} user={user} collectionId={_id!} />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

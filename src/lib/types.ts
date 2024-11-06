@@ -14,7 +14,7 @@ export interface User {
   password: string;
   // profile: Profile;
   collections: Collection[];
-  isOnline: boolean;
+  isOnline: number;
   createdAt: Date;
   updatedAt: Date;
 }

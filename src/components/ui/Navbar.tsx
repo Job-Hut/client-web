@@ -5,7 +5,7 @@ import { Avatar } from "./avatar";
 
 export default function Navbar() {
   const { pathname } = useLocation();
-  const [path] = pathname.split("/");
+  const [_, path] = pathname.split("/");
   const { data: userData } = useQuery(GET_AUTHENTICATED_USER);
   return (
     <div className="z-50 w-full">

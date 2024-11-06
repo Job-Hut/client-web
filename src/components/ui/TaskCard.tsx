@@ -1,11 +1,11 @@
-import { EllipsisVertical } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "./input";
-import { Textarea } from "./textarea";
+
 import { Button } from "./button";
 import { Task } from "@/lib/types";
 import dayjs from "dayjs";
@@ -13,6 +13,11 @@ import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import {
+  GENERATE_TASKS_WITH_AI,
+  REMOVE_TASK_WITH_APPLICATION,
+  UPDATE_TASK,
+} from "@/lib/mutation";
 
 type CardProps = React.ComponentProps<typeof Card> & {
   tasks: Task[];
@@ -42,19 +47,8 @@ export default function TaskCard({
     }
   `);
 
-  const [generateTasksMutation] = useMutation(
-    gql`
-      mutation GetTasksGeneratedByAi($id: ID!) {
-        getTasksGeneratedByAi(_id: $id) {
-          title
-          description
-          dueDate
-          createdAt
-          updatedAt
-          completed
-        }
-      }
-    `,
+  const [generateTasksMutation, { loading }] = useMutation(
+    GENERATE_TASKS_WITH_AI,
     {
       variables: {
         id: applicationId,
@@ -62,9 +56,12 @@ export default function TaskCard({
     },
   );
 
+  const [deleteTaskMutation] = useMutation(REMOVE_TASK_WITH_APPLICATION);
+  const [updateTaskMutation] = useMutation(UPDATE_TASK);
+
   const handleAddTask = async () => {
     try {
-      if (!input.title || !input.description || !input.dueDate) {
+      if (!input.title || !input.dueDate) {
         return;
       }
       await addTaskMutation({
@@ -90,7 +87,56 @@ export default function TaskCard({
 
   const generateTasks = async () => {
     try {
-      await generateTasksMutation();
+      await generateTasksMutation({
+        refetchQueries: ["GetApplicationById"],
+      });
+      toast({
+        title: "Tasks generated",
+        description: "Tasks have been generated successfully",
+      });
+      navigate(`/applications/${applicationId}`);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          (error as Error).message || "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async (taskId: string) => {
+    try {
+      await deleteTaskMutation({
+        variables: {
+          applicationId,
+          taskId,
+        },
+        refetchQueries: ["GetApplicationById"],
+      });
+      navigate(`/applications/${applicationId}`);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          (error as Error).message || "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUpdateTask = async (taskId: string, completed: boolean) => {
+    try {
+      await updateTaskMutation({
+        variables: {
+          applicationId,
+          taskId,
+          input: {
+            completed,
+          },
+        },
+        refetchQueries: ["GetApplicationById"],
+      });
       navigate(`/applications/${applicationId}`);
     } catch (error) {
       toast({
@@ -134,7 +180,13 @@ export default function TaskCard({
                   className="flex items-center justify-between border-b-2 pb-4 last-of-type:border-none last-of-type:pb-0"
                 >
                   <div className="flex items-center gap-2 text-xs leading-none">
-                    <Checkbox id={task.title} />
+                    <Checkbox
+                      id={task.title}
+                      checked={task.completed}
+                      onCheckedChange={() => {
+                        handleUpdateTask(task._id, !task.completed);
+                      }}
+                    />
                     <div className="flex flex-col gap-2">
                       <label htmlFor={task.title} className="font-bold">
                         {task.title}
@@ -143,7 +195,9 @@ export default function TaskCard({
                     </div>
                   </div>
                   <div>
-                    <EllipsisVertical />
+                    <Button onClick={() => handleDelete(task._id)}>
+                      <TrashIcon />
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -167,15 +221,6 @@ export default function TaskCard({
                 onChange={(e) => setInput({ ...input, title: e.target.value })}
                 required
               />
-              <Textarea
-                placeholder="Brief description"
-                className="border border-primary"
-                value={input.description}
-                onChange={(e) =>
-                  setInput({ ...input, description: e.target.value })
-                }
-                required
-              />
               <Input
                 placeholder="Deadline"
                 type="date"
@@ -188,7 +233,11 @@ export default function TaskCard({
               />
               <div className="flex w-full flex-col gap-2">
                 <Button onClick={() => handleAddTask()}>Add New Task</Button>
-                <Button type="button" onClick={() => generateTasks()}>
+                <Button
+                  type="button"
+                  onClick={() => generateTasks()}
+                  disabled={loading}
+                >
                   Generate with AI
                 </Button>
               </div>

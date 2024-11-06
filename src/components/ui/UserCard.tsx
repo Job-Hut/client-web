@@ -1,41 +1,81 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Card, CardDescription } from "./card";
-
-type User = {
-  username: string;
-  avatarUrl?: string;
-  isInvited: boolean;
-};
+import { User } from "@/lib/types";
+import { useState } from "react";
+import { useMutation } from "@apollo/client";
+import { INVITE_USER_TO_COLLECTION } from "@/lib/mutation";
+import { useToast } from "@/hooks/use-toast";
 
 type UserCardProps = {
   user: User;
+  collectionId: string;
+  invited?: boolean;
 };
 
-export default function UserCard({ user }: UserCardProps) {
-  const { username, avatarUrl, isInvited } = user;
+export default function UserCard({
+  user,
+  collectionId,
+  invited = true,
+}: UserCardProps) {
+  const [isInvited, setIsInvited] = useState(invited);
+
+  const { toast } = useToast();
+
+  const [inviteMutation] = useMutation(INVITE_USER_TO_COLLECTION);
+
+  const handleInvite = async () => {
+    try {
+      setIsInvited(true);
+      await inviteMutation({
+        variables: {
+          collectionId,
+          userIds: [user._id],
+        },
+      });
+      toast({
+        title: "User invited",
+        description: `${user.username} has been invited to the group.`,
+      });
+    } catch (error) {
+      console.error(error);
+      setIsInvited(false);
+      toast({
+        title: "Error",
+        description: "Failed to invite user",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
-    <div className="w-full my-[5px]">
-      <Card className="flex items-center justify-between p-4 rounded-lg border border-primary shadow-lg w-full">
-        {/* Avatar */}
-        <Avatar className="w-10 h-10">
-          <AvatarImage
-            src={avatarUrl || "https://github.com/shadcn.png"}
-            alt={`${username}'s avatar`}
-            className="rounded-full"
-          />
-          <AvatarFallback>{username.charAt(0).toUpperCase()}</AvatarFallback>
-        </Avatar>
+    <div className="my-[5px] w-full">
+      <Card className="flex w-full items-center justify-between rounded-lg border border-primary p-4 shadow-lg">
+        <div className="flex items-center gap-x-4">
+          {/* Avatar */}
+          <Avatar className="h-10 w-10">
+            <AvatarImage
+              src={
+                user.avatar ||
+                `https://api.dicebear.com/9.x/initials/svg?seed=${user.username}`
+              }
+              alt={`${user.username}'s avatar`}
+              className="rounded-full"
+            />
+            <AvatarFallback>
+              {user.username.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
 
-        {/* Username */}
-        <CardDescription className="flex-1 text-center font-semibold text-black">
-          {username}
-        </CardDescription>
-
+          {/* Username */}
+          <CardDescription className="flex-1 text-center font-semibold text-black">
+            {user.username}
+          </CardDescription>
+        </div>
         {!isInvited && (
           <button
             aria-label="Invite user"
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+            className="rounded-full bg-gray-100 p-2 hover:bg-gray-200"
+            onClick={handleInvite}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

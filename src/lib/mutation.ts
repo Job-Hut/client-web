@@ -180,3 +180,111 @@ export const DELETE_LICENSE = gql`
     }
   }
 `;
+
+export const ADD_APPLICATIONS_TO_COLLECTION = gql`
+  mutation AddApplicationsToCollection(
+    $collectionId: ID!
+    $applicationIds: [ID!]!
+  ) {
+    addApplicationsToCollection(
+      collectionId: $collectionId
+      applicationIds: $applicationIds
+    ) {
+      _id
+      name
+      applications {
+        _id
+        collectionId
+        jobTitle
+        description
+        organizationName
+        organizationAddress
+        organizationLogo
+        location
+        salary
+        type
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const INVITE_USER_TO_COLLECTION = gql`
+  mutation AddUsersToCollection($collectionId: ID!, $userIds: [ID!]!) {
+    addUsersToCollection(collectionId: $collectionId, userIds: $userIds) {
+      _id
+    }
+  }
+`;
+
+export const GENERATE_TASKS_WITH_AI = gql`
+  mutation GetTasksGeneratedByAi($id: ID!) {
+    getTasksGeneratedByAi(_id: $id) {
+      title
+      description
+      dueDate
+      createdAt
+      updatedAt
+      completed
+    }
+  }
+`;
+
+export const REMOVE_TASK_WITH_APPLICATION = gql`
+  mutation RemoveTaskFromApplication($applicationId: ID!, $taskId: ID!) {
+    removeTaskFromApplication(applicationId: $applicationId, taskId: $taskId) {
+      _id
+      ownerId
+      collectionId
+      jobTitle
+      description
+      organizationName
+      organizationAddress
+      organizationLogo
+      location
+      salary
+      type
+      startDate
+      endDate
+      createdAt
+      updatedAt
+      tasks {
+        _id
+        title
+        description
+        completed
+        dueDate
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const UPDATE_TASK = gql`
+  mutation UpdateTaskInApplication(
+    $applicationId: ID!
+    $taskId: ID!
+    $input: TaskInput
+  ) {
+    updateTaskInApplication(
+      applicationId: $applicationId
+      taskId: $taskId
+      task: $input
+    ) {
+      _id
+      tasks {
+        _id
+        title
+        description
+        completed
+        dueDate
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;

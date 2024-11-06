@@ -21,7 +21,6 @@ export default function Collection() {
         _id
         name
         description
-        ownerId
         createdAt
         updatedAt
         applications {

@@ -1,25 +1,6 @@
-import { createContext, useEffect } from "react";
-import { gql, useMutation } from "@apollo/client";
-import useAuth from "@/hooks/use-auth";
-
-const UPDATE_USER_PRESENCE = gql`
-  mutation UpdateUserPresence($isOnline: Boolean!) {
-    updateUserPresence(isOnline: $isOnline) {
-      _id
-      username
-      avatar
-      fullName
-      email
-      password
-      collections {
-        _id
-      }
-      isOnline
-      createdAt
-      updatedAt
-    }
-  }
-`;
+import { createContext } from "react";
+import { useSubscription } from "@apollo/client";
+import { SUBSCRIBE_USER_PRESENCE } from "@/lib/subscription";
 
 const OnlinePresenceContext = createContext(null);
 
@@ -28,37 +9,7 @@ export const OnlinePresenceProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { user } = useAuth();
-
-  const [updateUserPresence] = useMutation(UPDATE_USER_PRESENCE);
-
-  useEffect(() => {
-    const setOnline = () =>
-      updateUserPresence({ variables: { isOnline: true } });
-    const setOffline = () =>
-      updateUserPresence({ variables: { isOnline: false } });
-
-    if (user) {
-      setOnline();
-
-      window.addEventListener("online", setOnline);
-      window.addEventListener("offline", setOffline);
-      window.addEventListener("beforeunload", setOffline);
-    }
-
-    return () => {
-      if (user) {
-        setOffline();
-        window.removeEventListener("online", setOnline);
-        window.removeEventListener("offline", setOffline);
-        window.removeEventListener("beforeunload", setOffline);
-      }
-    };
-  }, [updateUserPresence]);
-
-  if (!user) {
-    return children;
-  }
+  useSubscription(SUBSCRIBE_USER_PRESENCE);
 
   return (
     <OnlinePresenceContext.Provider value={null}>

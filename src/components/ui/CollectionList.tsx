@@ -79,9 +79,12 @@ export default function CollectionList({
   ...props
 }: CardProps) {
   const navigate = useNavigate();
+  console.log(collection);
 
   return (
-    <div className={cn("w-full gap-2.5 rounded-lg bg-background p-2", "h-auto")}>
+    <div
+      className={cn("w-full gap-2.5 rounded-lg bg-background p-2", "h-auto")}
+    >
       {/* Collection card linked to the detail page */}
       <Link to={`/collections/${collection._id}`}>
         <Card
@@ -113,8 +116,10 @@ export default function CollectionList({
       </Link>
 
       <Button
-        className="mt-2 w-full px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm md:text-base bg-background text-primary hover:text-background font-bold"
-        onClick={() => navigate(`/insert-applications-to-collection/${collection._id}`)}
+        className="mt-2 w-full bg-background px-2 py-1 text-xs font-bold text-primary hover:text-background sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
+        onClick={() =>
+          navigate(`/insert-applications-to-collection/${collection._id}`)
+        }
       >
         + Application
       </Button>

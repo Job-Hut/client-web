@@ -105,7 +105,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/view-joined-members/:_id",
-    element: <ViewMembers />,
+    element: (
+      <GuardAuth>
+        <ViewMembers />
+      </GuardAuth>
+    ),
   },
   {
     path: "/view-online-members/:_id",
@@ -161,8 +165,8 @@ const router = createBrowserRouter([
       <GuardAuth>
         <EditCollection />,
       </GuardAuth>
-    )
-  }
+    ),
+  },
 ]);
 
 export default router;

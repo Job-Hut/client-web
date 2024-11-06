@@ -1,44 +1,57 @@
 import CollectionDetailCard from "@/components/ui/CollectionDetailCard";
 import { useNavigate, useParams } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
-import { Application } from "@/lib/types";
+import { useQuery, useSubscription } from "@apollo/client";
+import { Application, User } from "@/lib/types";
 import Navbar from "@/components/ui/Navbar";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 import { Edit3 } from "lucide-react";
+import { GET_COLLECTION_DETAIL } from "@/lib/queries";
+import { useEffect, useState } from "react";
+import { SUBSCRIBE_USER_PRESENCE } from "@/lib/subscription";
 
 export default function CollectionDetail() {
   const { _id } = useParams();
 
-  const { data, loading, error } = useQuery(
-    gql`
-      query GetCollectionById($id: ID!) {
-        getCollectionById(id: $id) {
-          _id
-          name
-          description
-          ownerId
-          sharedWith {
-            _id
-            username
-          }
-          applications {
-            _id
-            ownerId
-            collectionId
-            jobTitle
-            description
-            organizationName
-            organizationAddress
-          }
-          createdAt
-          updatedAt
-        }
+  const [members, setMembers] = useState<User[]>([]);
+
+  const { data, loading, error } = useQuery(GET_COLLECTION_DETAIL, {
+    variables: { id: _id },
+    fetchPolicy: "no-cache",
+  });
+
+  const { data: userOnline } = useSubscription(SUBSCRIBE_USER_PRESENCE, {
+    variables: { collectionId: _id },
+  });
+
+  useEffect(() => {
+    if (data) {
+      if (data?.getCollectionById?.sharedWith) {
+        setMembers([
+          // eslint-disable-next-line no-unsafe-optional-chaining
+          ...data?.getCollectionById?.sharedWith,
+          data?.getCollectionById?.ownerId,
+        ]);
       }
-    `,
-    {
-      variables: { id: _id },
-    },
-  );
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (userOnline) {
+      setMembers((prev) => {
+        return prev.map((member) => {
+          if (member._id === userOnline.userPresence._id) {
+            return {
+              ...member,
+              isOnline: userOnline.userPresence.isOnline,
+            };
+          }
+          return member;
+        });
+      });
+
+      console.log(userOnline);
+    }
+  }, [userOnline]);
 
   const navigate = useNavigate();
 
@@ -231,11 +244,11 @@ export default function CollectionDetail() {
                   <span className="font-semibold text-primary">
                     Joined Members:
                   </span>{" "}
-                  {data?.getCollectionById?.sharedWith?.length}
+                  <span>{members.length}</span> <span>People</span>
                 </p>
                 <button
                   className="rounded-full bg-primary px-4 py-1.5 text-background"
-                  onClick={() => navigate("/view-joined-members/:_id")}
+                  onClick={() => navigate(`/view-joined-members/${_id}`)}
                 >
                   View
                 </button>
@@ -262,11 +275,19 @@ export default function CollectionDetail() {
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
+
                 <p className="text-sm sm:text-base md:text-lg">
                   <span className="font-semibold text-primary">
                     Online Members:
                   </span>{" "}
-                  2 people
+                  <span>
+                    {
+                      members.filter((member: User) => {
+                        return member.isOnline;
+                      }).length
+                    }
+                  </span>{" "}
+                  <span>People</span>
                 </p>
                 <button
                   className="rounded-full bg-primary px-4 py-1.5 text-background"
@@ -278,24 +299,43 @@ export default function CollectionDetail() {
 
               {/* Display up to 3 avatars */}
               <div className="mt-2 flex w-full items-center justify-center sm:justify-start">
-                {[...Array(3)].map((_, index) => (
-                  <div key={index} className="m-2 flex flex-col items-center">
-                    <div className="relative">
-                      {/* Avatar */}
-                      <img
-                        src="https://via.placeholder.com/40"
-                        alt="User Avatar"
-                        className="h-10 w-10 rounded-full shadow-md"
-                      />
-                      {/* Online Indicator */}
-                      <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
-                    </div>
-                    {/* Username */}
-                    <p className="mt-1 text-xs font-medium text-gray-700">
-                      Username{index + 1}
-                    </p>
-                  </div>
-                ))}
+                {members
+                  .filter((member: User) => {
+                    return member.isOnline > 0;
+                  })
+                  .map((member: User, index: number) => {
+                    if (index < 3) {
+                      return (
+                        <div
+                          key={index}
+                          className="m-2 flex flex-col items-center"
+                        >
+                          <div className="relative">
+                            {/* Avatar */}
+                            <img
+                              src={
+                                member.avatar ||
+                                "https://ui-avatars.com/api/?name=" +
+                                  member.username
+                              }
+                              alt="User Avatar"
+                              className="h-10 w-10 rounded-full shadow-md"
+                            />
+                            {
+                              // eslint-disable-next-line no-unsafe-optional-chaining
+                              member.isOnline && (
+                                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
+                              )
+                            }
+                          </div>
+                          {/* Username */}
+                          <p className="mt-1 text-xs font-medium text-gray-700">
+                            {member.username}
+                          </p>
+                        </div>
+                      );
+                    }
+                  })}
               </div>
             </div>
 
