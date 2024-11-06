@@ -9,15 +9,11 @@ export default function ViewMembers() {
 
   const { _id } = useParams();
 
-  console.log("Test");
   const { data, loading, error } = useQuery(GET_COLLECTION_DETAIL, {
     variables: {
       id: _id,
     },
   });
-
-  console.log(_id);
-  console.log(data);
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
@@ -64,9 +60,11 @@ export default function ViewMembers() {
               user={data?.getCollectionById.ownerId}
               collectionId={_id!}
             />
-            {data?.getCollectionById?.sharedWith?.map((user: User) => (
-              <UserCard key={user._id} user={user} collectionId={_id!} />
-            ))}
+            {data?.getCollectionById?.sharedWith
+              ?.filter((user: User) => user.isOnline == 1)
+              .map((user: User) => (
+                <UserCard key={user._id} user={user} collectionId={_id!} />
+              ))}
           </>
         )}
       </div>

@@ -22,6 +22,7 @@ import {
 type CardProps = React.ComponentProps<typeof Card> & {
   tasks: Task[];
   applicationId?: string;
+  applicationStage: string;
   children?: React.ReactNode;
 };
 
@@ -29,6 +30,7 @@ export default function TaskCard({
   className,
   applicationId,
   tasks = [],
+  applicationStage,
   ...props
 }: CardProps) {
   const [input, setInput] = useState({
@@ -71,6 +73,7 @@ export default function TaskCard({
             title: input.title,
             description: input.description,
             dueDate: input.dueDate,
+            stage: applicationStage,
           },
         },
       });
@@ -174,33 +177,35 @@ export default function TaskCard({
               </CardDescription>
             </div>
             <div className="flex flex-col gap-4">
-              {tasks.map((task, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between border-b-2 pb-4 last-of-type:border-none last-of-type:pb-0"
-                >
-                  <div className="flex items-center gap-2 text-xs leading-none">
-                    <Checkbox
-                      id={task.title}
-                      checked={task.completed}
-                      onCheckedChange={() => {
-                        handleUpdateTask(task._id, !task.completed);
-                      }}
-                    />
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor={task.title} className="font-bold">
-                        {task.title}
-                      </label>
-                      <p>{dayjs(task.dueDate).format("DD/MM/YYYY")},</p>
+              {tasks
+                .filter((task) => task.stage == applicationStage)
+                .map((task, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between border-b-2 pb-4 last-of-type:border-none last-of-type:pb-0"
+                  >
+                    <div className="flex items-center gap-2 text-xs leading-none">
+                      <Checkbox
+                        id={task.title}
+                        checked={task.completed}
+                        onCheckedChange={() => {
+                          handleUpdateTask(task._id, !task.completed);
+                        }}
+                      />
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor={task.title} className="font-bold">
+                          {task.title}
+                        </label>
+                        <p>{dayjs(task.dueDate).format("DD/MM/YYYY")},</p>
+                      </div>
+                    </div>
+                    <div>
+                      <Button onClick={() => handleDelete(task._id)}>
+                        <TrashIcon />
+                      </Button>
                     </div>
                   </div>
-                  <div>
-                    <Button onClick={() => handleDelete(task._id)}>
-                      <TrashIcon />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </TabsContent>

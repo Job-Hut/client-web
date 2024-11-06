@@ -1,11 +1,11 @@
 import CollectionDetailCard from "@/components/ui/CollectionDetailCard";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useSubscription } from "@apollo/client";
 import { Application, User } from "@/lib/types";
 import Navbar from "@/components/ui/Navbar";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 import { Edit3 } from "lucide-react";
-import { GET_COLLECTION_DETAIL } from "@/lib/queries";
+import { GET_AUTHENTICATED_USER, GET_COLLECTION_DETAIL } from "@/lib/queries";
 import { useEffect, useState } from "react";
 import { SUBSCRIBE_USER_PRESENCE } from "@/lib/subscription";
 
@@ -13,6 +13,8 @@ export default function CollectionDetail() {
   const { _id } = useParams();
 
   const [members, setMembers] = useState<User[]>([]);
+
+  const { data: user } = useQuery(GET_AUTHENTICATED_USER);
 
   const { data, loading, error } = useQuery(GET_COLLECTION_DETAIL, {
     variables: { id: _id },
@@ -28,7 +30,9 @@ export default function CollectionDetail() {
       if (data?.getCollectionById?.sharedWith) {
         setMembers([
           // eslint-disable-next-line no-unsafe-optional-chaining
-          ...data?.getCollectionById?.sharedWith,
+          ...data?.getCollectionById?.sharedWith.map((member: User) => {
+            return member;
+          }),
           data?.getCollectionById?.ownerId,
         ]);
       }
@@ -48,10 +52,24 @@ export default function CollectionDetail() {
           return member;
         });
       });
-
-      console.log(userOnline);
     }
   }, [userOnline]);
+
+  useEffect(() => {
+    if (user && data) {
+      setMembers((prev) => {
+        return prev.map((member) => {
+          if (member._id === user?.getAuthenticatedUser._id) {
+            return {
+              ...member,
+              isOnline: 1,
+            };
+          }
+          return member;
+        });
+      });
+    }
+  }, [user, data]);
 
   const navigate = useNavigate();
 
@@ -237,7 +255,7 @@ export default function CollectionDetail() {
                   <span>
                     {
                       members.filter((member: User) => {
-                        return member.isOnline;
+                        return member.isOnline == 1;
                       }).length
                     }
                   </span>{" "}
@@ -252,11 +270,12 @@ export default function CollectionDetail() {
               </div>
 
               {/* Display up to 3 avatars */}
-              <div className="mt-2 flex w-full items-center justify-center sm:justify-start">
+              <div className="mt-2 flex w-full items-center sm:justify-start">
                 {members
                   .filter((member: User) => {
                     return member.isOnline > 0;
                   })
+
                   .map((member: User, index: number) => {
                     if (index < 3) {
                       return (
@@ -297,7 +316,7 @@ export default function CollectionDetail() {
             <div className="flex gap-4 pt-4">
               <button
                 className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
-                onClick={() => navigate("/invite-user/:_id")}
+                onClick={() => navigate(`/invite-user/${_id}`)}
               >
                 Invite User
               </button>
@@ -328,10 +347,12 @@ export default function CollectionDetail() {
           <div className="mb-20 mt-6 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
             {data?.getCollectionById?.applications?.map(
               (application: Application) => (
-                <CollectionDetailCard
-                  key={application._id}
-                  application={application}
-                />
+                <Link to={`/applications/${application._id}`}>
+                  <CollectionDetailCard
+                    key={application._id}
+                    application={application}
+                  />
+                </Link>
               ),
             )}
           </div>

@@ -21,6 +21,7 @@ import GuardAuth from "@/components/ui/GuardAuth";
 import GuardGuest from "@/components/ui/GuardGuest";
 import ProfileSetting from "@/pages/ProfileSetting";
 import EditCollection from "@/pages/EditCollection";
+import ViewMembersOnline from "@/pages/ViewMembersOnline";
 
 const router = createBrowserRouter([
   {
@@ -113,7 +114,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/view-online-members/:_id",
-    element: <ViewMembers />,
+    element: (
+      <GuardAuth>
+        <ViewMembersOnline />
+      </GuardAuth>
+    ),
   },
   {
     path: "/jobs",

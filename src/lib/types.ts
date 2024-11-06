@@ -60,6 +60,7 @@ export interface Message {
 export interface Task {
   _id: string;
   title: string;
+  stage: string;
   description: string;
   completed: boolean;
   dueDate: Date;

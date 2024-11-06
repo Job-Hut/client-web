@@ -18,9 +18,35 @@ import TaskCard from "@/components/ui/TaskCard";
 import ApplicationStatus from "@/components/ui/ApplicationStatus";
 import { Link, useParams } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
+import { useState } from "react";
+
+const applicationStages = [
+  {
+    value: "submitted",
+    label: "Submitted",
+  },
+  {
+    value: "interview",
+    label: "Interview",
+  },
+  {
+    value: "offerLetter",
+    label: "Offer Letter",
+  },
+  {
+    value: "success",
+    label: "Success",
+  },
+  {
+    value: "rejected",
+    label: "Rejected",
+  },
+];
 
 export default function ApplicationDetail() {
   const { _id } = useParams();
+
+  const stageState = useState("submitted");
 
   const { data } = useQuery(
     gql`
@@ -47,6 +73,7 @@ export default function ApplicationDetail() {
             description
             completed
             dueDate
+            stage
             createdAt
             updatedAt
           }
@@ -86,7 +113,10 @@ export default function ApplicationDetail() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
           <div className="flex flex-col justify-between gap-2.5 rounded-lg bg-card p-2 shadow-md lg:w-1/2">
             <div className="flex w-full flex-col items-start justify-between gap-4 rounded-lg bg-application-submitted p-4">
-              <ApplicationStatus />
+              <ApplicationStatus
+                applicationStages={applicationStages}
+                stageState={stageState}
+              />
               <div className="flex items-center gap-3">
                 <img
                   className="h-8 w-8 rounded-full bg-[#FF5A5F] object-cover"
@@ -126,6 +156,7 @@ export default function ApplicationDetail() {
             className="lg:w-full"
             tasks={data?.getApplicationById?.tasks}
             applicationId={_id}
+            applicationStage={stageState[0]}
           />
         </div>
       </div>

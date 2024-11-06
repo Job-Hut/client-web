@@ -22,10 +22,12 @@ export default function ChatBubbleRight({ message }: ChatBubbleRightProps) {
       {/* Avatar */}
       <Avatar className="h-8 w-8 self-start">
         <AvatarImage
-          src={message.senderId?.avatar || `https://github.com/shadcn.png`}
+          src={
+            message.senderId?.avatar ||
+            `https://api.dicebear.com/9.x/initials/svg?seed=${message.senderId.username}`
+          }
           className="rounded-full"
         />
-        <AvatarFallback>CN</AvatarFallback>
       </Avatar>
     </div>
   );

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import useAuth from "@/hooks/use-auth";
 import { Message } from "@/lib/types";
 import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/ui/Navbar";
+import { GET_COLLECTION_DETAIL } from "@/lib/queries";
 
 export default function GroupChat() {
   const { _id } = useParams();
@@ -19,47 +19,10 @@ export default function GroupChat() {
   const [messages, setMessages] = useState<Message[]>([]);
 
   // Get Collection Data By ID
-  const { data } = useQuery(
-    gql`
-      query GetCollectionById($id: ID!) {
-        getCollectionById(id: $id) {
-          _id
-          name
-          description
-          ownerId
-          sharedWith {
-            _id
-            username
-          }
-          applications {
-            _id
-            ownerId
-            collectionId
-            jobTitle
-            description
-            organizationName
-            organizationAddress
-          }
-          createdAt
-          updatedAt
-          chat {
-            _id
-            senderId {
-              _id
-              avatar
-              username
-            }
-            content
-            createdAt
-            updatedAt
-          }
-        }
-      }
-    `,
-    {
-      variables: { id: _id },
-    },
-  );
+  const { data } = useQuery(GET_COLLECTION_DETAIL, {
+    variables: { id: _id },
+    fetchPolicy: "network-only",
+  });
 
   // Watch or Observe for the incoming message
   const { data: newMessage } = useSubscription(
@@ -112,6 +75,7 @@ export default function GroupChat() {
   // Set initial messages to state
   useEffect(() => {
     if (data) {
+      console.log(data);
       setMessages(data.getCollectionById.chat);
     }
   }, [data]);
@@ -155,7 +119,7 @@ export default function GroupChat() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex flex-1 flex-col space-y-4 overflow-y-auto p-4 mt-20">
+      <div className="mt-20 flex flex-1 flex-col space-y-4 overflow-y-auto p-4">
         {messages.map((message: Message) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
