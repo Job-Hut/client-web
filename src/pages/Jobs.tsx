@@ -1,21 +1,13 @@
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/ui/Navbar";
 
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { Job } from "@/lib/types";
 
 import { Input } from "@/components/ui/input";
 import BottomNavigation from "@/components/ui/BottomNavigation";
-import {
-  AnchorIcon,
-  DollarSign,
-  LinkIcon,
-  MapPinIcon,
-  MapPinnedIcon,
-  PinIcon,
-  Search,
-} from "lucide-react";
+import { DollarSign, LinkIcon, MapPinnedIcon, Search } from "lucide-react";
 import { GET_AUTHENTICATED_USER, GET_JOBS } from "@/lib/queries";
 
 export default function Jobs() {

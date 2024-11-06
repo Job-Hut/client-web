@@ -4,6 +4,7 @@ import { Input } from "./input";
 import { useMutation } from "@apollo/client";
 import { ADD_EXPERIENCE } from "@/lib/mutation";
 import { useToast } from "@/hooks/use-toast";
+import { XIcon } from "lucide-react";
 
 type Props = {
   closeAddCareerModal: () => void;
@@ -49,75 +50,86 @@ export default function AddCareerModal({ closeAddCareerModal }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-        <button
-          onClick={closeAddCareerModal}
+        <Button
           className="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
-          aria-label="Close"
+          onClick={closeAddCareerModal}
+          variant="outline"
         >
-          &times;
-        </button>
+          <XIcon size={16} />
+        </Button>
+
         <h2 className="mb-4 text-xl font-semibold text-gray-800">
           Add Career History
         </h2>
         <form onSubmit={handleAddCareer}>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            Job Title
-          </label>
-          <Input
-            id="jobTitle"
-            name="jobTitle"
-            placeholder="Job Title"
-            type="text"
-            inputSize={"small"}
-            onChange={(e) => setJobTitle(e.target.value)}
-            value={jobTitle}
-            required
-          />
-
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            Company
-          </label>
-          <Input
-            id="company"
-            name="company"
-            placeholder="Company"
-            type="text"
-            inputSize={"small"}
-            onChange={(e) => setCompany(e.target.value)}
-            value={company}
-            required
-          />
-
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            Duration
-          </label>
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <label htmlFor="">Start</label>
+          <div className="space-y-2">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Job Title
+              </label>
               <Input
-                id="startDate"
-                name="startDate"
-                placeholder="Start Date (e.g., Aug 2024)"
-                type="date"
+                id="jobTitle"
+                name="jobTitle"
+                placeholder="Job Title"
+                type="text"
                 inputSize={"small"}
-                className="flex-1"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                onChange={(e) => setJobTitle(e.target.value)}
+                value={jobTitle}
                 required
               />
             </div>
-            <div className="flex-1">
-              <label htmlFor="">End</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Company
+              </label>
               <Input
-                id="endDate"
-                name="endDate"
-                placeholder="End Date (e.g., Nov 2024)"
-                type="date"
+                id="company"
+                name="company"
+                placeholder="Company"
+                type="text"
                 inputSize={"small"}
-                className="flex-1"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                onChange={(e) => setCompany(e.target.value)}
+                value={company}
+                required
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Duration
+              </label>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <label htmlFor="" className="text-xs">
+                    Start
+                  </label>
+                  <Input
+                    id="startDate"
+                    name="startDate"
+                    placeholder="Start Date (e.g., Aug 2024)"
+                    type="date"
+                    inputSize={"small"}
+                    className="flex-1"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <label htmlFor="" className="text-xs">
+                    End
+                  </label>
+                  <Input
+                    id="endDate"
+                    name="endDate"
+                    placeholder="End Date (e.g., Nov 2024)"
+                    type="date"
+                    inputSize={"small"}
+                    className="flex-1"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 import Navbar from "@/components/ui/Navbar";
-import { Edit3, PencilIcon } from "lucide-react";
+import { Edit3, PencilIcon, SaveIcon } from "lucide-react";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -494,10 +494,14 @@ export default function ProfileSetting() {
                 {userData?.getAuthenticatedUser?.profile?.experiences?.map(
                   (experience: Experience) => (
                     <div key={experience._id} className="py-4">
-                      <div className="flex justify-between">
-                        <p className="font-bold">{experience.jobTitle}</p>
+                      <div className="m-0 flex items-start justify-between">
+                        <div>
+                          <p className="font-bold">{experience.jobTitle}</p>
+                          <p>{experience.institute}</p>
+                        </div>
                         <Button
                           variant="outline"
+                          className="h-10 w-10"
                           onClick={() => {
                             setEditCareerInput({
                               id: experience._id,
@@ -513,10 +517,9 @@ export default function ProfileSetting() {
                             setEditCareerModalOpen(true);
                           }}
                         >
-                          <PencilIcon size={16} />
+                          <PencilIcon size={10} />
                         </Button>
                       </div>
-                      <p>{experience.institute}</p>
                       <p className="mt-2 text-sm italic">
                         {dayjs(experience.startDate).format("MMM YYYY")} -{" "}
                         {dayjs(experience.endDate).format("MMM YYYY")}
@@ -545,9 +548,14 @@ export default function ProfileSetting() {
                   (education: Education) => (
                     <div key={education._id} className="py-4">
                       <div className="flex justify-between">
-                        <p className="font-bold">{education.name}</p>
+                        <div>
+                          <p className="font-bold">{education.name}</p>
+
+                          <p>{education.institute}</p>
+                        </div>
                         <Button
                           variant="outline"
+                          className="h-10 w-10"
                           onClick={() => {
                             setEditEducationInput({
                               id: education._id,
@@ -566,7 +574,6 @@ export default function ProfileSetting() {
                           <PencilIcon size={16} />
                         </Button>
                       </div>
-                      <p>{education.institute}</p>
                       <p className="mt-2 text-sm italic">
                         {dayjs(education.startDate).format("MMM YYYY")} -{" "}
                         {dayjs(education.endDate).format("MMM YYYY")}
@@ -633,14 +640,15 @@ export default function ProfileSetting() {
           </div>
 
           {/* Save Button */}
-          <div className="mb-40 flex justify-center">
-            <button
-              className="hover:bg-primary-dark w-3/4 rounded-full bg-primary py-2 font-bold text-white shadow-md transition"
+          <div className="mb-40 flex w-full justify-end">
+            <Button
+              className="hover:bg-primary-dark bg-primary py-2 font-bold text-white shadow-md transition"
               onClick={() => updateUserProfileHandler()}
               disabled={updateProfileLoading}
             >
+              <SaveIcon />
               Save
-            </button>
+            </Button>
           </div>
         </div>
       </div>
