@@ -49,7 +49,7 @@ export default function ProfilePage() {
           </Avatar>
 
           {/* Name */}
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="text-lg font-bold text-gray-800">
             {userData?.getAuthenticatedUser.fullName}
           </h1>
 
@@ -99,16 +99,16 @@ export default function ProfilePage() {
             </div>
             <div className="mt-2 text-gray-700">
               <p className="flex justify-between">
-                <span>Country</span>
-                <span className="font-medium">
+                <span className="text-sm">Country</span>
+                <span className="text-sm">
                   {userData?.getAuthenticatedUser?.profile?.location?.split(
                     " ",
                   )[1] || "No country available"}
                 </span>
               </p>
               <p className="flex justify-between">
-                <span>City / State</span>
-                <span className="font-medium">
+                <span className="text-sm">City / State</span>
+                <span className="text-sm">
                   {userData?.getAuthenticatedUser?.profile?.location?.split(
                     " ",
                   )[0] || "No city/state available"}
@@ -121,7 +121,7 @@ export default function ProfilePage() {
           <div className="mt-4 rounded-lg bg-background p-4 shadow-md">
             <h3 className="font-bold text-primary">Career History</h3>
             {userData?.getAuthenticatedUser?.profile?.experiences?.length ===
-              0 && <p>No career history available</p>}
+              0 && <p className="text-sm mt-2">No career history available</p>}
             <div className="mt-2 divide-y divide-gray-300 text-gray-700">
               {userData?.getAuthenticatedUser?.profile?.experiences?.map(
                 (experience: Experience) => (
@@ -142,7 +142,7 @@ export default function ProfilePage() {
           <div className="mt-4 rounded-lg bg-background p-4 shadow-md">
             <h3 className="font-bold text-primary">Education History</h3>
             {userData?.getAuthenticatedUser?.profile?.education?.length ===
-              0 && <p>No education history available</p>}
+              0 && <p className="text-sm mt-2">No education history available</p>}
             <div className="mt-2 divide-y divide-gray-300 text-gray-700">
               {userData?.getAuthenticatedUser?.profile?.education?.map(
                 (education: Education) => (
@@ -164,7 +164,7 @@ export default function ProfilePage() {
             <h3 className="font-bold text-primary">License / Certification</h3>
             <div className="mt-2 text-gray-700">
               {userData?.getAuthenticatedUser?.profile?.education?.length ===
-                0 && <p>No education history available</p>}
+                0 && <p className="text-sm mt-2">No education history available</p>}
               {userData?.getAuthenticatedUser?.profile?.licenses?.map(
                 (license: License) => (
                   <div key={license._id} className="py-4">

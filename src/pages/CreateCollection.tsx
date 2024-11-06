@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
+import { Label } from "@radix-ui/react-label";
 
 // Form validation schema
 const FormSchema = z.object({
@@ -75,9 +76,9 @@ export default function CreateCollection() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-secondary">
+    <div className="flex min-h-screen flex-col gap-2 bg-secondary">
       {/* <Navbar /> */}
-      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
+      <div className="flex w-full items-center justify-between bg-black p-4 text-background md:justify-center">
         <button
           className="text-lg"
           aria-label="Go back"
@@ -107,46 +108,55 @@ export default function CreateCollection() {
       </div>
 
       {/* Main Container with Top Padding */}
-      <div className="mb-20 flex w-full flex-col items-center px-4 pb-10 mt-12 sm:max-w-screen-sm">
-        {/* Header */}
-        <div className="mb-8 mt-6 flex flex-col items-center text-center">
-          <h1 className="font-poppins text-3xl font-bold text-primary">
-            Create Collection
-          </h1>
-          <p className="font-poppins text-primary">Let the new journey begin</p>
-        </div>
-
+      <div className="flex w-full flex-col items-center px-4 pb-10 sm:max-w-screen-sm">
         {/* Form */}
-        <div className="w-full rounded-lg bg-background p-6 shadow-md">
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="mt-4 w-full space-y-5 rounded-md bg-background px-4 py-5 shadow-md">
+          <h2 className="border-b-2 border-primary pb-5 text-center text-lg font-bold">
+            Create New Collection
+          </h2>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-3"
+          >
             {/* Name field */}
-            <Input
-              id="name"
-              placeholder="Name"
-              type="text"
-              inputSize={"small"}
-              {...form.register("name")}
-            />
+            <div className="flex flex-col">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Name
+              </Label>
+              <Input
+                id="name"
+                placeholder="Name"
+                type="text"
+                inputSize={"small"}
+                {...form.register("name")}
+              />
+            </div>
+
             {/* Description Field */}
-            <Textarea
-              id="description"
-              placeholder="Description"
-              className="border-primary"
-              {...form.register("description")}
-            />
+            <div className="flex flex-col">
+              <Label htmlFor="description" className="text-sm font-medium">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                placeholder="Description"
+                className="border-primary"
+                {...form.register("description")}
+              />
+            </div>
 
             {/* Save and Cancel Buttons */}
             <div className="space-y-4">
               <Button
                 type="submit"
-                className="w-full rounded-md bg-primary py-3 font-semibold text-background"
+                className="w-full rounded-md bg-primary py-3 font-medium text-background"
                 onClick={form.handleSubmit(onSubmit)}
               >
                 Save
               </Button>
               <Button
                 type="button"
-                className="w-full rounded-md bg-secondary py-3 font-semibold text-primary hover:text-background"
+                className="w-full rounded-md bg-secondary gap-2 font-semibold text-primary hover:text-background"
                 onClick={handleCancel}
               >
                 Cancel

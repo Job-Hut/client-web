@@ -22,7 +22,7 @@ export default function BottomNavigation() {
       nav("/applications/create");
     }
 
-    if (pathname === "/collections") {
+    if (pathname.startsWith("/collections")) {
       nav("/create-collection");
     }
   };

@@ -31,7 +31,6 @@ export default function CollectionDetail() {
     if (data) {
       if (data?.getCollectionById?.sharedWith) {
         setMembers([
-          // eslint-disable-next-line no-unsafe-optional-chaining
           ...data?.getCollectionById?.sharedWith.map((member: User) => {
             return member;
           }),
@@ -103,7 +102,7 @@ export default function CollectionDetail() {
           </svg>
         </button>
 
-        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-semibold sm:text-lg">
+        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-medium sm:text-lg text-center">
           {data?.getCollectionById?.name} Collection
         </h2>
 
@@ -144,10 +143,10 @@ export default function CollectionDetail() {
       {data?.getCollectionById && (
         <>
           {/*  Top Container */}
-          <div className="mt-10 w-[90%] max-w-screen-md space-y-4 rounded-lg bg-background p-4 shadow-md md:mt-28 md:max-w-screen-lg lg:max-w-screen-lg">
+          <div className="mt-4 py-5 w-[90%] max-w-screen-md space-y-4 rounded-lg bg-background p-4 shadow-md md:mt-28 md:max-w-screen-lg lg:max-w-screen-lg">
             {/* Title and Status */}
-            <div className="flex items-center md:flex-row md:justify-between">
-              <h1 className="text-center text-2xl font-semibold md:text-left">
+            <div className="flex items-center justify-between md:flex-row underline">
+              <h1 className="text-center text-medium font-semibold md:text-left">
                 {data?.getCollectionById?.name} Collection
               </h1>
               {/* Edit button */}
@@ -180,7 +179,7 @@ export default function CollectionDetail() {
                 <line x1="12" x2="12" y1="8" y2="8" />
               </svg>
               <div>
-                <h3 className="text-lg font-semibold text-primary">
+                <h3 className="text-medium font-semibold text-primary">
                   Description
                 </h3>
                 <p className="text-sm text-muted-foreground sm:text-base md:text-lg">
@@ -218,6 +217,12 @@ export default function CollectionDetail() {
                   </span>{" "}
                   <span>{members.length}</span> <span>Personnel</span>
                 </p>
+                <button
+                  className="rounded-md bg-primary px-4 py-1.5 text-background text-sm font-medium"
+                  onClick={() => navigate(`/view-online-members/${_id}`)}
+                >
+                  View
+                </button>
               </div>
             </div>
 
@@ -256,7 +261,7 @@ export default function CollectionDetail() {
                   <span>Personnel</span>
                 </p>
                 <button
-                  className="rounded-full bg-primary px-4 py-1.5 text-background"
+                  className="rounded-md bg-primary px-4 py-1.5 text-background text-sm font-medium"
                   onClick={() => navigate(`/view-joined-members/${_id}`)}
                 >
                   View
@@ -284,7 +289,6 @@ export default function CollectionDetail() {
                           className="h-10 w-10 rounded-full shadow-md"
                         />
                         {
-                          // eslint-disable-next-line no-unsafe-optional-chaining
                           member.isOnline && (
                             <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
                           )
@@ -303,21 +307,21 @@ export default function CollectionDetail() {
           {/* Buttons for group chat, invite user, insert applcation */}
           <div className="flex gap-4 pt-4">
             <button
-              className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+              className="hover:bg-primary-dark hidden flex-1 rounded-md bg-primary py-2 px-4 text-sm font-semibold text-background transition md:block md:text-lg"
               onClick={() => navigate(`/invite-user/${_id}`)}
             >
               Invite User
             </button>
             <button
-              className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
+              className="hover:bg-secondary-dark flex-1 rounded-md bg-background py-2 px-4 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
               onClick={() => navigate(`/group-chat/${_id}`)}
             >
               Open Group Chat
             </button>
             <button
-              className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+              className="hover:bg-primary-dark hidden flex-1 rounded-md bg-primary py-2 px-4 text-sm font-semibold text-background transition md:block md:text-lg"
               onClick={() =>
-                navigate("/insert-applications-to-collection/:_id")
+                navigate(`/insert-applications-to-collection/${_id}`)
               }
             >
               Insert Application
@@ -325,13 +329,13 @@ export default function CollectionDetail() {
           </div>
 
           {/* Main Content */}
-          <h1 className="mt-10 text-center text-2xl font-bold text-primary">
+          <h1 className="mt-6 text-center text-2xl font-bold text-primary">
             Applications
           </h1>
           <hr className="my-4 w-[90%] border-t-2 border-primary" />
 
           {/* Applications */}
-          <div className="mb-20 mt-6 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+          <div className="mb-20 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
             {data?.getCollectionById?.applications?.map(
               (application: Application) => (
                 <Link to={`/applications/${application._id}`}>

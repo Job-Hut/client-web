@@ -52,8 +52,7 @@ export default function BulkInsertApplication() {
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar */}
-      <Navbar />
-      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
+      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 font-medium text-background shadow-md">
         <button
           className="text-lg"
           aria-label="Go back"
@@ -82,24 +81,26 @@ export default function BulkInsertApplication() {
         </h2>
       </div>
 
-      {data?.getAllApplication
-        .filter((application: Application) => {
-          return !application.collectionId;
-        })
-        .map((application: Application) => (
-          <InsertApplicationCard
-            key={application._id}
-            application={application}
-            addToApplications={addToApplications}
-            removeFromApplications={removeFromApplications}
-          />
-        )).length == 0 && (
-        <div className="flex h-full w-full items-center justify-center">
-          <p className="mt-16 text-lg font-semibold">
-            You have not make any application yet
-          </p>
-        </div>
-      )}
+      <div className="mx-auto mt-6 flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+        {data?.getAllApplication
+          .filter((application: Application) => {
+            return !application.collectionId;
+          })
+          .map((application: Application) => (
+            <InsertApplicationCard
+              key={application._id}
+              application={application}
+              addToApplications={addToApplications}
+              removeFromApplications={removeFromApplications}
+            />
+          )).length == 0 && (
+          <div className="flex h-full w-full items-center justify-center">
+            <p className="mt-16 text-lg font-semibold">
+              You have not make any application yet
+            </p>
+          </div>
+        )}
+      </div>
 
       <div className="mt-10 flex w-11/12 flex-col gap-4 pb-10 md:mt-28 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         {loading ? (
@@ -120,7 +121,7 @@ export default function BulkInsertApplication() {
         )}
       </div>
       <Button
-        className="mb-20 w-11/12 max-w-sm rounded-full"
+        className="mb-20 w-11/12 max-w-sm rounded-md"
         disabled={saveLoading}
         onClick={() => handleSave()}
       >

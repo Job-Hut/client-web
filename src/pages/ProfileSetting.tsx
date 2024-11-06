@@ -1,4 +1,3 @@
-import Navbar from "@/components/ui/Navbar";
 import { Edit3, PencilIcon, SaveIcon } from "lucide-react";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
@@ -24,8 +23,10 @@ import AddCareerModal from "@/components/ui/AddCareerModal";
 import AddEducationModal from "@/components/ui/AddEducationmodal";
 import AddLicenseModal from "@/components/ui/AddLicenseModal";
 import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileSetting() {
+  const navigate = useNavigate();
   const [isEditImageModalOpen, setEditImageModalOpen] = useState(false);
   const [isAddCareerModalOpen, setAddCareerModalOpen] = useState(false);
   const [isAddEducationModalOpen, setAddEducationModalOpen] = useState(false);
@@ -348,10 +349,37 @@ export default function ProfileSetting() {
   return (
     <div className="font-poppins relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar */}
-      <Navbar />
+      <div className="flex w-full items-center justify-between bg-black p-4 text-background md:justify-center">
+        <button
+          className="text-lg"
+          aria-label="Go back"
+          onClick={() => navigate(`/profile`)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-circle-arrow-left"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M16 12H8" />
+            <path d="m12 8-4 4 4 4" />
+          </svg>
+        </button>
+
+        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-semibold sm:text-lg">
+          Profile Setting
+        </h2>
+      </div>
 
       <div className="w-full p-4 md:mt-28 md:max-w-2xl lg:max-w-3xl">
-        <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">
+        <h1 className="mb-6 hidden text-center text-2xl font-bold text-gray-800 md:block">
           Profile Setting
         </h1>
         <div>
@@ -434,7 +462,7 @@ export default function ProfileSetting() {
           </div>
 
           {/* Bio/Summary Section */}
-          <h2 className="mb-2 text-lg font-semibold text-primary">About Me</h2>
+          <h2 className="mb-2 text-sm font-medium text-primary">About Me</h2>
           <Textarea
             id="summary"
             name="summary"
@@ -448,11 +476,11 @@ export default function ProfileSetting() {
           {/* Location Section */}
           <div className="mb-4 rounded-lg border border-primary bg-background p-4 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h3 className="font-bold text-primary">Location</h3>
+              <h3 className="text-md font-bold text-primary">Location</h3>
             </div>
             <div className="space-y-2 text-gray-700">
               <div className="flex justify-between">
-                <span>Country</span>
+                <span className="text-sm">Country</span>
                 <Input
                   id="country"
                   name="country"
@@ -464,7 +492,7 @@ export default function ProfileSetting() {
                 />
               </div>
               <div className="flex justify-between">
-                <span>City / State</span>
+                <span className="text-sm">City / State</span>
                 <Input
                   id="city"
                   name="city"
@@ -481,7 +509,7 @@ export default function ProfileSetting() {
           {/* Career History Section */}
           <div className="mb-4 rounded-lg border border-primary bg-background p-4 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h3 className="font-bold text-primary">Career History</h3>
+              <h3 className="text-md font-bold text-primary">Career History</h3>
               <Button onClick={openAddCareerModal} type="button">
                 + Add
               </Button>
@@ -489,7 +517,7 @@ export default function ProfileSetting() {
             <div>
               {/* Career  Card */}
               {userData?.getAuthenticatedUser?.profile?.experiences?.length ===
-                0 && <p>No career history available</p>}
+                0 && <p className="text-sm">No career history available</p>}
               <div className="mt-2 divide-y divide-gray-300 text-gray-700">
                 {userData?.getAuthenticatedUser?.profile?.experiences?.map(
                   (experience: Experience) => (
@@ -534,7 +562,7 @@ export default function ProfileSetting() {
           {/* Education Section */}
           <div className="mb-4 rounded-lg border border-primary bg-background p-4 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h3 className="font-bold text-primary">Education</h3>
+              <h3 className="text-md font-bold text-primary">Education</h3>
               <Button type="button" onClick={openAddEducationModal}>
                 + Add
               </Button>
@@ -542,7 +570,7 @@ export default function ProfileSetting() {
             <div>
               {/* Education Card */}
               {userData?.getAuthenticatedUser?.profile?.education?.length ===
-                0 && <p>No educations available</p>}
+                0 && <p className="text-sm">No educations available</p>}
               <div className="mt-2 divide-y divide-gray-300 text-gray-700">
                 {userData?.getAuthenticatedUser?.profile?.education?.map(
                   (education: Education) => (
@@ -588,7 +616,7 @@ export default function ProfileSetting() {
           {/* License/Certification Section */}
           <div className="mb-6 rounded-lg border border-primary bg-background p-4 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h3 className="font-bold text-primary">
+              <h3 className="text-md font-bold text-primary">
                 License / Certification
               </h3>
               <Button type="button" onClick={openAddLicenseModal}>
@@ -598,7 +626,7 @@ export default function ProfileSetting() {
             <div>
               {/* License/Certification Card */}
               {userData?.getAuthenticatedUser?.profile?.licenses?.length ===
-                0 && <p>No licenses available</p>}
+                0 && <p className="text-sm">No licenses available</p>}
               <div className="mt-2 divide-y divide-gray-300 text-gray-700">
                 {userData?.getAuthenticatedUser?.profile?.licenses?.map(
                   (license: License) => (
@@ -640,9 +668,9 @@ export default function ProfileSetting() {
           </div>
 
           {/* Save Button */}
-          <div className="mb-40 flex w-full justify-end">
+          <div className="mb-10 flex w-full justify-end">
             <Button
-              className="hover:bg-primary-dark bg-primary py-2 font-bold text-white shadow-md transition"
+              className="hover:bg-primary-dark w-full bg-primary py-2 font-medium text-white shadow-md transition"
               onClick={() => updateUserProfileHandler()}
               disabled={updateProfileLoading}
             >
