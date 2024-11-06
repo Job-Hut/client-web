@@ -1,10 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Card, CardDescription } from "./card";
+import { Card } from "./card";
 
 type User = {
   username: string;
-  avatarUrl?: string;
+  avatar?: string;
   isInvited: boolean;
+  isOnline: boolean;
 };
 
 type UserCardProps = {
@@ -12,49 +13,33 @@ type UserCardProps = {
 };
 
 export default function UserCard({ user }: UserCardProps) {
-  const { username, avatarUrl, isInvited } = user;
+  const { username, avatar, isOnline } = user;
 
   return (
-    <div className="w-full my-[5px]">
-      <Card className="flex items-center justify-between p-4 rounded-lg border border-primary shadow-lg w-full">
-        {/* Avatar */}
-        <Avatar className="w-10 h-10">
-          <AvatarImage
-            src={avatarUrl || "https://github.com/shadcn.png"}
-            alt={`${username}'s avatar`}
-            className="rounded-full"
-          />
-          <AvatarFallback>{username.charAt(0).toUpperCase()}</AvatarFallback>
-        </Avatar>
+    <div className="my-[5px] w-full">
+      <Card className="flex items-center px-4 py-2 rounded-lg border border-primary shadow-lg w-full">
+        <div className="relative flex w-full items-center gap-4">
+          <div className="relative w-8 h-8">
+            <Avatar>
+              <AvatarImage
+                src={avatar || "https://github.com/shadcn.png"}
+                alt={`${username}'s avatar`}
+                className="rounded-full w-full h-full"
+              />
+              <AvatarFallback>{username.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            {/* Online/Offline Indicator */}
+            <span
+              className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background ${
+                isOnline ? "bg-green-500" : "bg-gray-400"
+              }`}
+              title={isOnline ? "Online" : "Offline"}
+            ></span>
+          </div>
 
-        {/* Username */}
-        <CardDescription className="flex-1 text-center font-semibold text-black">
-          {username}
-        </CardDescription>
-
-        {!isInvited && (
-          <button
-            aria-label="Invite user"
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="primary"
-              stroke="background"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-primary"
-            >
-              <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-              <path d="M8 12h8" />
-              <path d="M12 8v8" />
-            </svg>
-          </button>
-        )}
+          {/* Username */}
+          <p className="w-full text-md font-semibold text-primary flex-1">{username}</p>
+        </div>
       </Card>
     </div>
   );

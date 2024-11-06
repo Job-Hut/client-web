@@ -5,10 +5,23 @@ import { Application } from "@/lib/types";
 import Navbar from "@/components/ui/Navbar";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 import { Edit3 } from "lucide-react";
+import { User } from "@/lib/types";
+
+const GET_AUTHENTICATED_USER = gql`
+  query GetAuthenticatedUser {
+    getAuthenticatedUser {
+      _id
+      avatar
+      username
+      isOnline
+    }
+  }
+`;
 
 export default function CollectionDetail() {
   const { _id } = useParams();
 
+  const { data: authData } = useQuery(GET_AUTHENTICATED_USER);
   const { data, loading, error } = useQuery(
     gql`
       query GetCollectionById($id: ID!) {
@@ -19,7 +32,9 @@ export default function CollectionDetail() {
           ownerId
           sharedWith {
             _id
+            avatar
             username
+            isOnline
           }
           applications {
             _id
@@ -39,6 +54,20 @@ export default function CollectionDetail() {
       variables: { id: _id },
     },
   );
+
+  let sharedWith = data?.getCollectionById?.sharedWith || [];
+  const authenticatedUser = authData?.getAuthenticatedUser;
+
+  if (
+    authenticatedUser &&
+    !sharedWith.some((user: User) => user._id === authenticatedUser._id)
+  ) {
+    sharedWith = [authenticatedUser, ...sharedWith];
+  }
+
+  const prioritizedUsers = sharedWith
+    .sort((a: User, b: User) => Number(b.isOnline) - Number(a.isOnline))
+    .slice(0, 3);
 
   const navigate = useNavigate();
 
@@ -185,19 +214,13 @@ export default function CollectionDetail() {
                   <span className="font-semibold text-primary">
                     Joined Members:
                   </span>{" "}
-                  5 people
+                  {data?.getCollectionById?.sharedWith.length + 1} Personnel
                 </p>
-                <button
-                  className="rounded-full bg-primary px-4 py-1.5 text-background"
-                  onClick={() => navigate(`/view-joined-members/${_id}`)}
-                >
-                  View
-                </button>
               </div>
             </div>
 
-            {/* Online Members Section */}
-            <div className="flex flex-col items-start gap-3">
+            {/* Online members */}
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -209,48 +232,59 @@ export default function CollectionDetail() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-users"
+                  className="lucide lucide-user-check"
                 >
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <path d="M17 21v-2a4 4 0 0 0-3-3.87" />
                   <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  <polyline points="22 11 20 13 18 11" />
                 </svg>
                 <p className="text-sm sm:text-base md:text-lg">
                   <span className="font-semibold text-primary">
                     Online Members:
                   </span>{" "}
-                  2 people
-                </p>
+                  {data?.getCollectionById?.sharedWith?.filter((user: User) => user.isOnline).length + 1} Personnel
+                  </p>
                 <button
                   className="rounded-full bg-primary px-4 py-1.5 text-background"
-                  onClick={() => navigate(`/view-online-members/${_id}`)}
+                  onClick={() => navigate(`/view-joined-members/${_id}`)}
                 >
                   View
                 </button>
               </div>
+            </div>
 
-              {/* Display up to 3 avatars */}
-              <div className="mt-2 flex w-full items-center justify-center sm:justify-start">
-                {[...Array(3)].map((_, index) => (
-                  <div key={index} className="m-2 flex flex-col items-center">
-                    <div className="relative">
-                      {/* Avatar */}
-                      <img
-                        src="https://via.placeholder.com/40"
-                        alt="User Avatar"
-                        className="h-10 w-10 rounded-full shadow-md"
-                      />
-                      {/* Online Indicator */}
-                      <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
-                    </div>
-                    {/* Username */}
-                    <p className="mt-1 text-xs font-medium text-gray-700">
-                      Username{index + 1}
-                    </p>
+            {/* Show online members */}
+            <div className="mt-2 flex w-full items-center justify-center sm:justify-start">
+              {prioritizedUsers.map((user: User, index: number) => (
+                <div
+                  key={user._id || `placeholder-${index}`}
+                  className="m-2 flex flex-col items-center"
+                >
+                  <div className="relative">
+                    {/* Avatar */}
+                    <img
+                      src={user.avatar || "https://via.placeholder.com/40"}
+                      alt={
+                        user.username
+                          ? `${user.username} Avatar`
+                          : "Placeholder Avatar"
+                      }
+                      className="h-10 w-10 rounded-full shadow-md"
+                    />
+                    {/* Online/Offline Indicator */}
+                    <span
+                      className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background ${
+                        user.isOnline ? "bg-green-500" : "bg-gray-400"
+                      }`}
+                    ></span>
                   </div>
-                ))}
-              </div>
+                  {/* Username */}
+                  <p className="mt-1 text-xs font-medium text-gray-700">
+                    {user.username || "Placeholder"}
+                  </p>
+                </div>
+              ))}
             </div>
 
             {/* Buttons for group chat, invite user, insert applcation */}
