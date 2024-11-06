@@ -137,17 +137,17 @@ export default function CreateCollection() {
             />
 
             {/* Save and Cancel Buttons */}
-            <div className="space-y-4">
+            <div className="flex flex-col gap-2 md:flex-row md:gap-2">
               <Button
                 type="submit"
-                className="w-full rounded-full bg-primary py-3 font-semibold text-background"
+                className="w-full bg-primary py-3 font-semibold text-background"
                 onClick={form.handleSubmit(onSubmit)}
               >
                 Save
               </Button>
               <Button
                 type="button"
-                className="w-full rounded-full bg-secondary py-3 font-semibold text-primary hover:text-background"
+                className="w-full bg-secondary py-3 font-semibold text-primary hover:text-background"
                 onClick={handleCancel}
               >
                 Cancel

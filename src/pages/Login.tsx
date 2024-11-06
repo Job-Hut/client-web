@@ -74,7 +74,7 @@ export default function Login() {
             Welcome back! Let's track your application!
           </p>
         </div>
-        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-4">
+        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-2">
           <Input
             variant={"capsule-icon"}
             icon={<Mail color="black" width={16} />}
@@ -91,19 +91,21 @@ export default function Login() {
             onChange={(e) => setInput({ ...input, password: e.target.value })}
           />
 
-          <div className="flex w-full flex-col gap-2">
+          <div className="mt-4 flex w-full flex-col gap-2">
             <Button size={"mobile"} disabled={loading}>
               Login
             </Button>
-            <p className="text-center text-xs lg:text-base">
-              Do not have an account?{" "}
-              <Link
-                to={"/register"}
-                className="font-bold underline underline-offset-1"
-              >
-                Register
-              </Link>
-            </p>
+            <div className="flex items-center justify-center gap-1 text-center text-xs lg:text-base">
+              <p>Do not have an account? </p>
+              <div className="group w-fit">
+                <Link to={"/register"} className="font-bold">
+                  Register
+                </Link>
+                <div
+                  className={`transition-width mx-auto h-[1px] w-full bg-black duration-500 ease-out after:content-[""] group-hover:mx-auto group-hover:w-1/2`}
+                ></div>
+              </div>
+            </div>
           </div>
         </form>
       </div>

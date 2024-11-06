@@ -33,11 +33,11 @@ export default function Applications() {
   `);
 
   return (
-    <div className="flex min-h-screen flex-col bg-secondary pb-20">
+    <div className="flex min-h-screen flex-col bg-secondary pb-24">
       <Navbar />
       {loading && <p className="text-center">Loading...</p>}
       {error && <p className="text-center">Error: {error.message} </p>}
-      <div className="mx-auto flex w-11/12 flex-col gap-4 pb-20 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+      <div className="mx-auto mt-4 flex w-11/12 flex-col gap-4 pb-20 md:mt-8 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         {data?.getAllApplication?.map(
           (application: Application, iter: number) => (
             <Link

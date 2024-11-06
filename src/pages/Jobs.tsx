@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 import { DollarSign, LinkIcon, MapPinnedIcon, Search } from "lucide-react";
 import { GET_AUTHENTICATED_USER, GET_JOBS } from "@/lib/queries";
+import { Link } from "react-router-dom";
 
 export default function Jobs() {
   const [page, setPage] = useState(1);
@@ -45,7 +46,7 @@ export default function Jobs() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-secondary pb-10">
+    <div className="flex min-h-screen flex-col bg-secondary pb-20 md:h-full md:pb-0">
       <Navbar />
 
       <div className="mx-auto mt-4 flex w-11/12 max-w-screen-xl gap-2 md:pt-24 xl:px-10">
@@ -100,9 +101,13 @@ export default function Jobs() {
                       {job.source || "Not Specified"}
                     </a>
                   </div>
-                  <div className="flex w-full justify-end">
+                  <Link
+                    to={`/applications/create`}
+                    state={{ job }}
+                    className="flex w-full justify-end"
+                  >
                     <Button className="mt-6">Create Application</Button>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
