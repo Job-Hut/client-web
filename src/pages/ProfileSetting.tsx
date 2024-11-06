@@ -23,6 +23,7 @@ import { Education, Experience, License } from "@/lib/types";
 import AddCareerModal from "@/components/ui/AddCareerModal";
 import AddEducationModal from "@/components/ui/AddEducationmodal";
 import AddLicenseModal from "@/components/ui/AddLicenseModal";
+import { Label } from "@/components/ui/label";
 
 export default function ProfileSetting() {
   const [isEditImageModalOpen, setEditImageModalOpen] = useState(false);
@@ -64,6 +65,7 @@ export default function ProfileSetting() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
+  const [jobPrefs, setJobPrefs] = useState("");
 
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
@@ -91,12 +93,10 @@ export default function ProfileSetting() {
     },
   );
 
-  const [updateProfile, { loading: updateProfileLoading }] = useMutation(
-    UPDATE_PROFILE,
-    {
+  const [updateProfileMutation, { loading: updateProfileLoading }] =
+    useMutation(UPDATE_PROFILE, {
       refetchQueries: ["GetAuthenticatedUser"],
-    },
-  );
+    });
 
   const [updateExperience, { loading: updateExperienceLoading }] = useMutation(
     UPDATE_EXPERIENCE,
@@ -164,12 +164,13 @@ export default function ProfileSetting() {
 
   const updateUserProfileHandler = async () => {
     try {
-      await updateProfile({
+      await updateProfileMutation({
         variables: {
           username,
           fullName,
           location: `${city} ${country}`,
           bio,
+          jobPrefs: jobPrefs.split(",").map((jobPref) => jobPref.trim()),
         },
       });
 
@@ -327,6 +328,7 @@ export default function ProfileSetting() {
 
   useEffect(() => {
     if (userData) {
+      console.log(userData);
       setUsername(userData.getAuthenticatedUser.username);
       setFullName(userData.getAuthenticatedUser.fullName);
       setEmail(userData.getAuthenticatedUser.email);
@@ -336,6 +338,9 @@ export default function ProfileSetting() {
       );
       setCity(
         userData.getAuthenticatedUser.profile.location?.split(" ")[0] || "",
+      );
+      setJobPrefs(
+        userData.getAuthenticatedUser.profile.jobPrefs?.join(", ") || "",
       );
     }
   }, [userData]);
@@ -375,34 +380,57 @@ export default function ProfileSetting() {
           </div>
 
           {/* Contact Information */}
-          <div className="mb-6 space-y-4">
-            <Input
-              id="username"
-              name="username"
-              placeholder="Username"
-              type="text"
-              inputSize={"small"}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <Input
-              id="fullName"
-              name="fullName"
-              placeholder="Full Name"
-              type="text"
-              inputSize={"small"}
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-            <Input
-              id="email"
-              name="email"
-              placeholder="Email"
-              type="email"
-              inputSize={"small"}
-              value={email}
-              readOnly
-            />
+          <div className="mb-6 space-y-2">
+            <div>
+              <Label>Username</Label>
+              <Input
+                id="username"
+                name="username"
+                placeholder="Username"
+                type="text"
+                inputSize={"small"}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Full Name</Label>
+              <Input
+                id="fullName"
+                name="fullName"
+                placeholder="Full Name"
+                type="text"
+                inputSize={"small"}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Email</Label>
+              <Input
+                id="email"
+                name="email"
+                placeholder="Email"
+                type="email"
+                inputSize={"small"}
+                value={email}
+                readOnly
+              />
+            </div>
+            <div>
+              <Label htmlFor="jobPrefs">
+                Job Preferences (Separated by comma, e.g., Developer, Designer)
+              </Label>
+              <Input
+                id="jobPrefs"
+                name="jobPrefs"
+                placeholder="Job Preferences"
+                type="text"
+                inputSize={"small"}
+                value={jobPrefs}
+                onChange={(e) => setJobPrefs(e.target.value)}
+              />
+            </div>
           </div>
 
           {/* Bio/Summary Section */}

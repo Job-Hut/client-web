@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,7 +13,6 @@ import { Input } from "@/components/ui/input";
 const FormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   description: z.string().optional(),
-  visibility: z.enum(["Public", "Private"]),
 });
 
 export default function CreateCollection() {
@@ -44,6 +41,7 @@ export default function CreateCollection() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    console.log(data);
     try {
       // Call the mutation to create a collection
 
@@ -79,8 +77,8 @@ export default function CreateCollection() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-secondary">
-        <Navbar />
-        <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
+      <Navbar />
+      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
         <button
           className="text-lg"
           aria-label="Go back"
@@ -125,17 +123,17 @@ export default function CreateCollection() {
             {/* Name field */}
             <Input
               id="name"
-              name="name"
               placeholder="Name"
               type="text"
               inputSize={"small"}
+              {...form.register("name")}
             />
             {/* Description Field */}
             <Textarea
               id="description"
-              name="description"
               placeholder="Description"
               className="border-primary"
+              {...form.register("description")}
             />
 
             {/* Save and Cancel Buttons */}
@@ -143,6 +141,7 @@ export default function CreateCollection() {
               <Button
                 type="submit"
                 className="w-full rounded-full bg-primary py-3 font-semibold text-background"
+                onClick={form.handleSubmit(onSubmit)}
               >
                 Save
               </Button>

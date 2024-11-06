@@ -30,12 +30,14 @@ export const UPDATE_PROFILE = gql`
     $username: String!
     $location: String!
     $bio: String!
+    $jobPrefs: [String]
   ) {
     updateProfile(
       fullName: $fullName
       username: $username
       location: $location
       bio: $bio
+      jobPrefs: $jobPrefs
     ) {
       _id
       username
