@@ -22,7 +22,6 @@ import GuardGuest from "@/components/ui/GuardGuest";
 import ProfileSetting from "@/pages/ProfileSetting";
 import EditCollection from "@/pages/EditCollection";
 
-
 const router = createBrowserRouter([
   {
     path: "*",
@@ -125,6 +124,14 @@ const router = createBrowserRouter([
     element: (
       <GuardAuth>
         <Applications />,
+      </GuardAuth>
+    ),
+  },
+  {
+    path: "/applications/create",
+    element: (
+      <GuardAuth>
+        <ApplicationForm />,
       </GuardAuth>
     ),
   },
