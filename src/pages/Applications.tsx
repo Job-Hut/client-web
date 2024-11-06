@@ -8,6 +8,7 @@ import BottomNavigation from "@/components/ui/BottomNavigation";
 
 import { gql, useQuery } from "@apollo/client";
 import { Application } from "@/lib/types";
+import { formattedCurrency } from "@/utils/helper";
 
 export default function Applications() {
   const { data, loading, error } = useQuery(gql`
@@ -73,9 +74,7 @@ export default function Applications() {
                     <div className="flex items-center gap-2">
                       <Wallet width={16} />
                       <p>
-                        {application.salary
-                          ? application.salary
-                          : "Not specified"}
+                       {formattedCurrency(application.salary)}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

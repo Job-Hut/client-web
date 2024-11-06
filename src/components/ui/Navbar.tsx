@@ -2,6 +2,11 @@ import { GET_AUTHENTICATED_USER } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
 import { Link, useLocation } from "react-router-dom";
 import { Avatar } from "./avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function Navbar() {
   const { pathname } = useLocation();
@@ -27,17 +32,37 @@ export default function Navbar() {
               </li>
             </div>
             <li>
-              <Link to={"/profile"}>
-                <Avatar className="h-8 w-8">
-                  <img
-                    src={
-                      userData?.getAuthenticatedUser.avatar ||
-                      `https://avatar.iran.liara.run/username?username=${userData?.getAuthenticatedUser?.username}`
-                    }
-                    alt=""
-                  />
-                </Avatar>
-              </Link>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Avatar className="h-8 w-8">
+                    <img
+                      src={
+                        userData?.getAuthenticatedUser.avatar ||
+                        `https://avatar.iran.liara.run/username?username=${userData?.getAuthenticatedUser?.username}`
+                      }
+                      alt=""
+                      className="cursor-pointer"
+                    />
+                  </Avatar>
+                </PopoverTrigger>
+                <PopoverContent side="bottom" align="end">
+                  <div className="flex flex-col">
+                    <Link to={"/profile"}>
+                      <p>Profile</p>
+                    </Link>
+                    <p
+                     className="cursor-pointer"
+                      onClick={() => {
+                        localStorage.removeItem("access_token");
+                        localStorage.removeItem("user");
+                        window.location.reload();
+                      }}
+                    >
+                      Logout
+                    </p>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </li>
           </ul>
         </div>

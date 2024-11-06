@@ -75,8 +75,8 @@ export default function CreateCollection() {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center bg-secondary">
-      <Navbar />
+    <div className="flex min-h-screen flex-col items-center bg-secondary">
+      {/* <Navbar /> */}
       <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
         <button
           className="text-lg"
@@ -107,7 +107,7 @@ export default function CreateCollection() {
       </div>
 
       {/* Main Container with Top Padding */}
-      <div className="mb-20 flex w-full flex-col items-center px-4 pb-10 sm:mt-5 sm:max-w-screen-sm md:mt-24">
+      <div className="mb-20 flex w-full flex-col items-center px-4 pb-10 mt-12 sm:max-w-screen-sm">
         {/* Header */}
         <div className="mb-8 mt-6 flex flex-col items-center text-center">
           <h1 className="font-poppins text-3xl font-bold text-primary">
@@ -139,14 +139,14 @@ export default function CreateCollection() {
             <div className="space-y-4">
               <Button
                 type="submit"
-                className="w-full rounded-full bg-primary py-3 font-semibold text-background"
+                className="w-full rounded-md bg-primary py-3 font-semibold text-background"
                 onClick={form.handleSubmit(onSubmit)}
               >
                 Save
               </Button>
               <Button
                 type="button"
-                className="w-full rounded-full bg-secondary py-3 font-semibold text-primary hover:text-background"
+                className="w-full rounded-md bg-secondary py-3 font-semibold text-primary hover:text-background"
                 onClick={handleCancel}
               >
                 Cancel

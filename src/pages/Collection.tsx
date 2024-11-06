@@ -53,7 +53,7 @@ export default function Collection() {
       )}
 
       {/* CollectionList Grid */}
-      <div className="mx-auto mt-4 flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+      <div className="mx-auto mt-6 flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         {/* Display the Collections */}
         {data?.getAllCollection?.map((collection: Collection, iter: number) => (
           <CollectionList
