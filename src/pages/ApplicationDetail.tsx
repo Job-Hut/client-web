@@ -19,6 +19,7 @@ import ApplicationStatus from "@/components/ui/ApplicationStatus";
 import { Link, useParams } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { useState } from "react";
+import { formattedCurrency } from "@/utils/helper";
 
 const applicationStages = [
   {
@@ -135,7 +136,7 @@ export default function ApplicationDetail() {
               <div className="text-sm">
                 <div className="flex items-center gap-2">
                   <Wallet width={16} />
-                  <p>{data?.getApplicationById?.salary || "Not Specified"}</p>
+                  <p>{formattedCurrency(data?.getApplicationById?.salary) || "Not Specified"}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin width={16} />
