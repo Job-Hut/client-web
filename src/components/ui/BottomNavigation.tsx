@@ -8,15 +8,30 @@ import {
 } from "lucide-react";
 import Navicon from "./Navicon";
 import { Button } from "./button";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function BottomNavigation() {
   const { pathname } = useLocation();
+
+  const nav = useNavigate();
+
+  const handleClick = () => {
+    console.log("hehe");
+
+    if (pathname === "/applications") {
+      nav("/applications/create");
+    }
+
+    if (pathname === "/collections") {
+      nav("/create-collection");
+    }
+  };
+
   return (
     <>
       {pathname !== "/" && pathname !== "/jobs" && pathname !== "/profile" && (
         <div className="fixed bottom-28 left-1/2 mx-auto flex w-11/12 -translate-x-1/2 transform justify-end sm:w-8/12 md:hidden">
-          <Button variant={"floating"}>
+          <Button variant={"floating"} onClick={handleClick}>
             <Plus />
           </Button>
         </div>

@@ -38,7 +38,6 @@ export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-secondary">
       <Navbar />
-
       {loading && <p className="text-center">Loading...</p>}
       {error && <p className="text-center">Error: {error.message}</p>}
 
