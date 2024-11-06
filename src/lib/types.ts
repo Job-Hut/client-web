@@ -42,6 +42,7 @@ export interface Application {
   salary: number;
   type: string;
   tasks: Task[];
+  source: string;
   startDate: Date;
   endDate: Date;
   createdAt: Date;
@@ -76,4 +77,35 @@ export interface Job {
   salary?: string;
   source: string;
   sourceUrl: string;
+}
+
+export interface Experience {
+  _id: string;
+  jobTitle: string;
+  institute: string;
+  startDate: Date;
+  endDate?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface Education {
+  _id: string;
+  degree: string;
+  name: string;
+  institute: string;
+  startDate: Date;
+  endDate?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface License {
+  _id: string;
+  number: string;
+  name: string;
+  issuedBy: string;
+  issuedAt: Date;
+  expiryDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

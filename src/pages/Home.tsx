@@ -43,7 +43,7 @@ export default function Home() {
       {data?.getSortedByPriorityApplication && (
         <CardList applications={data?.getSortedByPriorityApplication} />
       )}
-      <BottomNavigation />s
+      <BottomNavigation />
     </div>
   );
 }

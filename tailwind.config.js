@@ -3,6 +3,9 @@ export default {
   darkMode: ["class"],
   content: ["./src/**/*.tsx"],
   theme: {
+    fontFamily: {
+      sans: ["Poppins", "sans-serif"],
+    },
     extend: {
       borderRadius: {
         lg: "var(--radius)",
