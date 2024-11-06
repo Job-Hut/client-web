@@ -27,7 +27,7 @@ export default function CollectionDetailCard({
         <Button
           variant={"secondary"}
           className={cn(
-            "pointer-events-none w-1/3 rounded-full px-2 py-1 text-xs font-bold text-[#D39269] sm:w-1/2",
+            "pointer-events-none w-1/2 rounded-full px-2 py-1 text-xs font-bold text-[#D39269] sm:w-1/2",
             "sm:text-sm md:text-base",
             className,
           )}

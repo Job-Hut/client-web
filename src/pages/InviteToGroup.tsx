@@ -1,12 +1,26 @@
 import UserCard from "@/components/ui/UserCard";
-import Navbar from "@/components/ui/Navbar";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useLazyQuery } from "@apollo/client";
-import { GET_ALL_USERS } from "@/lib/queries";
+import { useLazyQuery, gql } from "@apollo/client";
 import { User } from "@/lib/types";
 import { useEffect, useState } from "react";
+
+const GET_ALL_USERS = gql`
+query GetAllUsers($keyword: String) {
+  getAllUsers(keyword: $keyword) {
+    _id
+    username
+    avatar
+    fullName
+    email
+    password
+    isOnline
+    createdAt
+    updatedAt
+  }
+}
+`
 
 export default function InviteToGroup() {
   const navigate = useNavigate();
@@ -14,18 +28,20 @@ export default function InviteToGroup() {
 
   const [search, setSearch] = useState("");
 
-  const [usersQuery, { data }] = useLazyQuery(GET_ALL_USERS);
+  const [usersQuery, { data, loading, error }] = useLazyQuery(GET_ALL_USERS);
 
   useEffect(() => {
-    usersQuery();
-  }, []);
+    console.log(search, "<<search");
+    usersQuery({
+      variables: {
+        keyword: search,
+      },
+    });
+  }, [search, usersQuery]);
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar */}
-      <Navbar />
-
-      {/* Navbar for smaller screen */}
       <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
         <button
           className="text-lg"
@@ -55,7 +71,7 @@ export default function InviteToGroup() {
         </h2>
       </div>
 
-      <div className="min-h-screen w-full px-4 pb-20 pt-10 sm:px-[5%] md:px-[10%] md:pt-28 lg:px-[15%]">
+      <div className="min-h-screen w-full px-4 pb-20 pt-10 mt-10 py-5 sm:px-[5%] md:px-[10%] md:pt-28 lg:px-[15%]">
         <h1 className="mb-6 hidden text-center text-2xl font-semibold text-gray-800 md:block">
           Invite Users to Group
         </h1>
@@ -68,6 +84,9 @@ export default function InviteToGroup() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+        {loading && <p className="text-center">Loading...</p>}
+        {error && <p className="text-red-500">Error: {error.message}</p>}
+
         {/* Responsive Grid for User Cards */}
         <div className="grid w-full gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {data?.getAllUsers

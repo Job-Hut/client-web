@@ -66,7 +66,7 @@ export default function Collection() {
       </div>
       {/* Main Button */}
       <Button
-        className="mx-auto mb-28 mt-6 w-11/12 sm:max-w-screen-sm"
+        className="mx-auto mb-48 mt-6 w-11/12 sm:max-w-screen-sm"
         onClick={handleCreateCollection}
       >
         <Plus /> New Collection
