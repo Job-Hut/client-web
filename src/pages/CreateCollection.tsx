@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import Navbar from "@/components/ui/Navbar";
 import { useNavigate } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 import { useToast } from "@/hooks/use-toast";

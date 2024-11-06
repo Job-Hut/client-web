@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import InsertApplicationCard from "@/components/ui/InsertApplicationCard";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "@/components/ui/Navbar";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_APPLICATIONS, GET_COLLECTION_DETAIL } from "@/lib/queries";
 import { Application } from "@/lib/types";
