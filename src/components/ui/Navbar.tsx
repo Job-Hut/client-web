@@ -1,14 +1,18 @@
+import { GET_AUTHENTICATED_USER } from "@/lib/queries";
+import { useQuery } from "@apollo/client";
 import { CircleUserRound } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { Avatar } from "./avatar";
 
 export default function Navbar() {
   const { pathname } = useLocation();
   const [slash, path] = pathname.split("/");
+  const { data: userData } = useQuery(GET_AUTHENTICATED_USER);
   return (
-    <div className="w-full z-50">
+    <div className="z-50 w-full">
       <nav className="fixed hidden w-full bg-primary py-8 text-primary-foreground md:block">
         <div className="mx-auto max-w-screen-xl px-10">
-          <ul className="flex justify-between">
+          <ul className="flex items-center justify-between">
             <li>
               <Link to={"/"}>Logo</Link>
             </li>
@@ -25,7 +29,15 @@ export default function Navbar() {
             </div>
             <li>
               <Link to={"/profile"}>
-                <CircleUserRound />
+                <Avatar className="h-8 w-8">
+                  <img
+                    src={
+                      userData?.getAuthenticatedUser.avatar ||
+                      `https://avatar.iran.liara.run/username?username=${userData?.getAuthenticatedUser?.username}`
+                    }
+                    alt=""
+                  />
+                </Avatar>
               </Link>
             </li>
           </ul>
