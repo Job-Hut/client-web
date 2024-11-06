@@ -13,15 +13,22 @@ export default function Navbar() {
     localStorage.clear();
     window.location.reload();
   };
+
   return (
     <div className="z-50 w-full">
       <nav className="fixed hidden w-full bg-primary py-8 text-primary-foreground md:block">
         <div className="mx-auto max-w-screen-xl px-10">
           <ul className="flex items-center justify-between">
-            <li>
-              <Link to={"/"}>Logo</Link>
+            <li className="w-1/6">
+              <Link to={"/"}>
+                <img
+                  src="/logo/logo-long.svg"
+                  alt="JobHut logo"
+                  className="w-36"
+                />
+              </Link>
             </li>
-            <div className="flex gap-10">
+            <div className="flex w-4/6 justify-center gap-10">
               <li>
                 <Link to={"/jobs"}>Jobs</Link>
               </li>
@@ -32,7 +39,7 @@ export default function Navbar() {
                 <Link to={"/collections"}>Collections</Link>
               </li>
             </div>
-            <li>
+            <li className="flex w-1/6 justify-end">
               <Link to={"/profile"}>
                 <Avatar className="h-8 w-8">
                   <img

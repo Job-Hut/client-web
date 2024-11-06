@@ -12,18 +12,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export default function BottomNavigation() {
   const { pathname } = useLocation();
-
+  const fromPage = pathname;
   const nav = useNavigate();
 
   const handleClick = () => {
-    console.log("hehe");
-
     if (pathname === "/applications") {
-      nav("/applications/create");
+      nav("/applications/create", { state: { fromPage } });
     }
 
     if (pathname === "/collections") {
-      nav("/create-collection");
+      nav("/create-collection", { state: { fromPage } });
     }
   };
 

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 import { DollarSign, LinkIcon, MapPinnedIcon, Search } from "lucide-react";
 import { GET_AUTHENTICATED_USER, GET_JOBS } from "@/lib/queries";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Jobs() {
   const [page, setPage] = useState(1);
@@ -45,8 +45,9 @@ export default function Jobs() {
     });
   };
 
+  const { pathname: fromPage } = useLocation();
   return (
-    <div className="flex min-h-screen flex-col bg-secondary pb-20 md:h-full md:pb-0">
+    <div className="flex min-h-screen flex-col bg-secondary pb-28 md:h-full md:pb-0">
       <Navbar />
 
       <div className="mx-auto mt-4 flex w-11/12 max-w-screen-xl gap-2 md:pt-24 xl:px-10">
@@ -74,7 +75,7 @@ export default function Jobs() {
               key={`${job.title}-${iter}`}
             >
               <div className="flex w-full flex-col items-start justify-between gap-4 rounded-lg pb-0">
-                <div className="flex min-h-[6ch] w-full items-start items-center gap-6">
+                <div className="flex min-h-[6ch] w-full items-center gap-6">
                   <div>
                     <img
                       className="h-8 w-8 rounded-full bg-[#FF5A5F] object-cover"
@@ -103,7 +104,7 @@ export default function Jobs() {
                   </div>
                   <Link
                     to={`/applications/create`}
-                    state={{ job }}
+                    state={{ job, fromPage }}
                     className="flex w-full justify-end"
                   >
                     <Button className="mt-6">Create Application</Button>
