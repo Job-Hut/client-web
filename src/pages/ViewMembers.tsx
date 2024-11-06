@@ -1,3 +1,4 @@
+import Navbar from "@/components/ui/Navbar";
 import UserCard from "@/components/ui/UserCard";
 import { GET_COLLECTION_DETAIL } from "@/lib/queries";
 import { User } from "@/lib/types";

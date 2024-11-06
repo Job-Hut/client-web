@@ -22,7 +22,7 @@ export default function InviteToGroup() {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
-      {/* Navbar for bigger screen */}
+      {/* Navbar */}
       <Navbar />
 
       {/* Navbar for smaller screen */}
