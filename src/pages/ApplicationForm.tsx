@@ -14,7 +14,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { CircleArrowLeft, EllipsisVertical } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Application } from "@/lib/types";
+import { Application, Collection } from "@/lib/types";
 
 export default function ApplicationForm() {
   const location = useLocation();
@@ -25,9 +25,10 @@ export default function ApplicationForm() {
   if (paths.includes("create")) title = "Create New Application";
 
   const [input, setInput] = useState({
-    companyName: application?.organizationName || job?.company || "",
-    positionName: application?.jobTitle || job?.title || "",
-    jobDescription: application?.description || job?.description || "",
+    source: application?.source || "",
+    companyName: application?.organizationName || "",
+    positionName: application?.jobTitle || "",
+    jobDescription: application?.description || "",
     collection: application?.collectionId || "",
     type: application?.type || "",
     salary: application?.salary.toString() || job?.salary || "",
@@ -77,7 +78,6 @@ export default function ApplicationForm() {
       }
     }
   `);
-  console.log(data, "<<");
 
   const nav = useNavigate();
 
@@ -93,11 +93,9 @@ export default function ApplicationForm() {
         location: input.companyLocation,
         salary: Number(input.salary),
         type: input.type,
-        collectionId:
-          input.collection === "-" || input.collection === ""
-            ? null
-            : input.collection,
+        collectionId: !input.collection ? null : input.collection,
       };
+
       if (paths.includes("create"))
         await createApplicationMutation({ variables: { input: application } });
       else
@@ -183,7 +181,7 @@ export default function ApplicationForm() {
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {data?.getAllCollection.length !== 0 ? (
-                    data?.getAllCollection?.map((collection) => (
+                    data?.getAllCollection?.map((collection: Collection) => (
                       <SelectItem value={collection._id} key={collection._id}>
                         {collection.name}
                       </SelectItem>
@@ -244,6 +242,18 @@ export default function ApplicationForm() {
                 type="text"
                 inputSize={"small"}
                 value={input.companyLogo}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="source">Source</Label>
+              <Input
+                id="source"
+                name="source"
+                placeholder="Enter job vacancy source"
+                type="text"
+                inputSize={"small"}
+                value={input.source}
                 onChange={handleChange}
               />
             </div>

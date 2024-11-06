@@ -6,7 +6,7 @@ import { LogOut } from "lucide-react";
 
 export default function Navbar() {
   const { pathname } = useLocation();
-  const [slash, path] = pathname.split("/");
+  const [_, path] = pathname.split("/");
   const { data: userData } = useQuery(GET_AUTHENTICATED_USER);
 
   const handleLogOut = () => {
@@ -50,7 +50,7 @@ export default function Navbar() {
       </nav>
       <div className="relative flex w-full items-center justify-center bg-black p-4 text-background md:hidden">
         <h2 className="font-semibold capitalize">
-          {path ? path : "Upcoming Task"} List
+          {path ? path.split("-").join(" ") : "Upcoming Task"}
         </h2>
         {path === "profile" && (
           <div

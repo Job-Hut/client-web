@@ -14,33 +14,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-const applicationStages = [
-  {
-    value: "submitted",
-    label: "Submitted",
-  },
-  {
-    value: "interview",
-    label: "Interview",
-  },
-  {
-    value: "offerLetter",
-    label: "Offer Letter",
-  },
-  {
-    value: "success",
-    label: "Success",
-  },
-  {
-    value: "rejected",
-    label: "Rejected",
-  },
-];
-
-export default function ApplicationStatus() {
+export default function ApplicationStatus({ stageState, applicationStages }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("submitted");
+  const [value, setValue] = stageState;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

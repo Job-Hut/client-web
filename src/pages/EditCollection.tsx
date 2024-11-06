@@ -7,33 +7,47 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/ui/Navbar";
 import { useNavigate } from "react-router-dom";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 // Form validation schema
 const FormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   description: z.string().optional(),
-  visibility: z.enum(["Public", "Private"]),
 });
 
+const GET_COLLECTION_BY_ID = gql`
+  query GetCollectionById($id: ID!) {
+    getCollectionById(id: $id) {
+      _id
+      name
+      description
+    }
+  }
+`;
+
+const UPDATE_COLLECTION = gql`
+  mutation UpdateCollection($id: ID!, $input: CollectionInput) {
+    updateCollection(id: $id, input: $input) {
+      _id
+      description
+      name
+    }
+  }
+`;
+
 export default function EditCollection() {
-    const { _id } = useParams();
-  // Mutation to edit a collection
-//   const [createCollection] = useMutation(gql`
-//     mutation CreateCollection($input: CollectionInput) {
-//       createCollection(input: $input) {
-//         _id
-//         name
-//         description
-//         ownerId
-//         createdAt
-//         updatedAt
-//       }
-//     }
-//   `);
+  const { _id } = useParams();
+  const navigate = useNavigate();
+
+  const { data, loading, error } = useQuery(GET_COLLECTION_BY_ID, {
+    variables: { id: _id },
+  });
+
+  const [updateCollection] = useMutation(UPDATE_COLLECTION);
 
   const { toast } = useToast();
 
@@ -45,18 +59,39 @@ export default function EditCollection() {
     },
   });
 
+  {/* Loading Indicator */}
+  {
+    loading && <p className="mt-8 text-center text-xl">Loading...</p>;
+  }
+
+  {/* Error Message */}
+  {
+    error && (
+      <p className="text-error mt-8 text-center text-xl">{error.message}</p>
+    );
+  }
+
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        name: data.getCollectionById.name,
+        description: data.getCollectionById.description,
+      });
+    }
+  }, [data, form]);
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       // Call the mutation to edit a collection
-
-    //   await createCollection({
-    //     variables: {
-    //       input: {
-    //         name: data.name,
-    //         description: data.description,
-    //       },
-    //     },
-    //   });
+      await updateCollection({
+        variables: {
+          id: _id,
+          input: {
+            name: data.name,
+            description: data.description,
+          },
+        },
+      });
 
       toast({
         title: "Success",
@@ -73,49 +108,19 @@ export default function EditCollection() {
     }
   }
 
-  const navigate = useNavigate();
-
   const handleCancel = () => {
     navigate(`/collections/${_id}`);
   };
 
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-secondary">
-        <Navbar />
-        <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
-        <button
-          className="text-lg"
-          aria-label="Go back"
-          onClick={() => navigate(`/collections/${_id}`)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-circle-arrow-left"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M16 12H8" />
-            <path d="m12 8-4 4 4 4" />
-          </svg>
-        </button>
-
-        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-semibold sm:text-lg">
-          Edit Collection
-        </h2>
-      </div>
+      <Navbar />
 
       {/* Main Container with Top Padding */}
       <div className="mb-20 flex w-full flex-col items-center px-4 pb-10 sm:mt-5 sm:max-w-screen-sm md:mt-24">
         {/* Header */}
         <div className="mb-8 mt-6 flex flex-col items-center text-center">
-          <h1 className="hidden font-poppins text-3xl font-bold text-primary md:block">
+          <h1 className="font-poppins hidden text-3xl font-bold text-primary md:block">
             Edit Collection
           </h1>
         </div>
@@ -126,17 +131,17 @@ export default function EditCollection() {
             {/* Name field */}
             <Input
               id="name"
-              name="name"
               placeholder="Name"
               type="text"
               inputSize={"small"}
+              {...form.register("name")}
             />
             {/* Description Field */}
             <Textarea
               id="description"
-              name="description"
               placeholder="Description"
               className="border-primary"
+              {...form.register("description")}
             />
 
             {/* Save and Cancel Buttons */}

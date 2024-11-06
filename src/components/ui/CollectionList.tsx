@@ -15,6 +15,7 @@ export default function CollectionList({
   ...props
 }: CardProps) {
   const navigate = useNavigate();
+  console.log(collection);
 
   return (
     <div

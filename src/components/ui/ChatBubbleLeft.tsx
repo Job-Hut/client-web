@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Card, CardDescription } from "./card";
 import { Message } from "@/lib/types";
 
@@ -12,10 +12,9 @@ export default function ChatBubbleLeft({ message }: ChatBubbleLeftProps) {
       {/* Avatar */}
       <Avatar className="h-8 w-8 self-start">
         <AvatarImage
-          src="https://github.com/shadcn.png"
+          src={`https://api.dicebear.com/9.x/initials/svg?seed=${message.senderId.username}`}
           className="rounded-full"
         />
-        <AvatarFallback>CN</AvatarFallback>
       </Avatar>
 
       {/* Chat Bubble */}

@@ -1,100 +1,85 @@
 import CollectionDetailCard from "@/components/ui/CollectionDetailCard";
-import { useNavigate, useParams } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
-import { Application } from "@/lib/types";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useQuery, useSubscription } from "@apollo/client";
+import { Application, User } from "@/lib/types";
 import Navbar from "@/components/ui/Navbar";
 import BottomNavigation from "@/components/ui/BottomNavigation";
 import { Edit3 } from "lucide-react";
 
+import { GET_AUTHENTICATED_USER, GET_COLLECTION_DETAIL } from "@/lib/queries";
+import { useEffect, useState } from "react";
+import { SUBSCRIBE_USER_PRESENCE } from "@/lib/subscription";
+
 export default function CollectionDetail() {
   const { _id } = useParams();
 
-  const { data, loading, error } = useQuery(
-    gql`
-      query GetCollectionById($id: ID!) {
-        getCollectionById(id: $id) {
-          _id
-          name
-          description
-          ownerId
-          sharedWith {
-            _id
-            username
-          }
-          applications {
-            _id
-            ownerId
-            collectionId
-            jobTitle
-            description
-            organizationName
-            organizationAddress
-          }
-          createdAt
-          updatedAt
-        }
-      }
-    `,
-    {
-      variables: { id: _id },
-    },
-  );
-
   const navigate = useNavigate();
+  const [members, setMembers] = useState<User[]>([]);
+
+  const { data: user } = useQuery(GET_AUTHENTICATED_USER);
+
+  const { data, loading, error } = useQuery(GET_COLLECTION_DETAIL, {
+    variables: { id: _id },
+    fetchPolicy: "no-cache",
+  });
+
+  const { data: userOnline } = useSubscription(SUBSCRIBE_USER_PRESENCE, {
+    variables: { collectionId: _id },
+  });
+
+  useEffect(() => {
+    if (data) {
+      if (data?.getCollectionById?.sharedWith) {
+        setMembers([
+          // eslint-disable-next-line no-unsafe-optional-chaining
+          ...data?.getCollectionById?.sharedWith.map((member: User) => {
+            return member;
+          }),
+          data?.getCollectionById?.ownerId,
+        ]);
+      }
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (userOnline) {
+      setMembers((prev) => {
+        return prev.map((member) => {
+          if (member._id === userOnline.userPresence._id) {
+            return {
+              ...member,
+              isOnline: userOnline.userPresence.isOnline,
+            };
+          }
+          return member;
+        });
+      });
+    }
+  }, [userOnline]);
+
+  useEffect(() => {
+    if (user && data) {
+      setMembers((prev) => {
+        return prev.map((member) => {
+          if (member._id === user?.getAuthenticatedUser._id) {
+            return {
+              ...member,
+              isOnline: 1,
+            };
+          }
+          return member;
+        });
+      });
+    }
+  }, [user, data]);
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
-      {/* Navbar for bigger screen*/}
-      {/* <div className="w-full">
-        <nav className="fixed hidden w-full bg-primary py-8 text-primary-foreground md:block">
-          <div className="mx-auto max-w-screen-xl px-10">
-            <ul className="flex justify-between">
-              <li>
-                <Link to={"/"}>Logo</Link>
-              </li>
-              <div className="flex gap-10">
-                <li>
-                  <Link to={"/"}>Jobs</Link>
-                </li>
-                <li>
-                  <Link to={"/"}>Application</Link>
-                </li>
-                <li>
-                  <Link to={"/"}>Collections</Link>
-                </li>
-              </div>
-              <li>
-                <Link to={"/"}>
-                  <CircleUserRound />
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <div className="fixed bottom-28 left-1/2 mx-auto flex w-11/12 -translate-x-1/2 transform justify-end sm:w-8/12 md:hidden">
-          <Button
-            variant={"floating"}
-            onClick={() => navigate("/insert-applications-to-collection/:_id")}
-          >
-            <Plus />
-          </Button>
-        </div>
-        <nav className="fixed bottom-5 left-1/2 mx-auto flex w-11/12 -translate-x-1/2 transform justify-between overflow-hidden rounded-xl bg-card shadow-lg sm:w-8/12 md:hidden">
-          <Navicon icon={<Homeicon />} title="Home" route="/" />
-          <Navicon icon={<Briefcase />} title="Jobs" route="/jobs" />
-          <Navicon
-            icon={<NotepadText />}
-            title="Application"
-            route="/applications"
-          />
-          <Navicon icon={<Folder />} title="Collections" route="/collections" />
-          <Navicon icon={<User />} title="Profile" route="/profile" />
-        </nav>
-      </div> */}
+      {/* Navbar */}
       <Navbar />
 
       {/* Navbar for smaller screen */}
-      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
+      <div className="font-poppins fixed left-0 right-0 top-0 z-[100] flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
         <button
           className="text-lg"
           aria-label="Go back"
@@ -231,19 +216,13 @@ export default function CollectionDetail() {
                   <span className="font-semibold text-primary">
                     Joined Members:
                   </span>{" "}
-                  5 people
+                  <span>{members.length}</span> <span>Personnel</span>
                 </p>
-                <button
-                  className="rounded-full bg-primary px-4 py-1.5 text-background"
-                  onClick={() => navigate("/view-joined-members/:_id")}
-                >
-                  View
-                </button>
               </div>
             </div>
 
-            {/* Online Members Section */}
-            <div className="flex flex-col items-start gap-3">
+            {/* Online members */}
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -255,73 +234,94 @@ export default function CollectionDetail() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-users"
+                  className="lucide lucide-user-check"
                 >
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <path d="M17 21v-2a4 4 0 0 0-3-3.87" />
                   <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  <polyline points="22 11 20 13 18 11" />
                 </svg>
+
                 <p className="text-sm sm:text-base md:text-lg">
                   <span className="font-semibold text-primary">
                     Online Members:
                   </span>{" "}
-                  2 people
+                  <span>
+                    {
+                      members.filter((member: User) => {
+                        return member.isOnline == 1;
+                      }).length
+                    }
+                  </span>{" "}
+                  <span>Personnel</span>
                 </p>
                 <button
                   className="rounded-full bg-primary px-4 py-1.5 text-background"
-                  onClick={() => navigate("/view-online-members/:_id")}
+                  onClick={() => navigate(`/view-joined-members/${_id}`)}
                 >
                   View
                 </button>
               </div>
-
-              {/* Display up to 3 avatars */}
-              <div className="mt-2 flex w-full items-center justify-center sm:justify-start">
-                {[...Array(3)].map((_, index) => (
-                  <div key={index} className="m-2 flex flex-col items-center">
-                    <div className="relative">
-                      {/* Avatar */}
-                      <img
-                        src="https://via.placeholder.com/40"
-                        alt="User Avatar"
-                        className="h-10 w-10 rounded-full shadow-md"
-                      />
-                      {/* Online Indicator */}
-                      <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
+            </div>
+            <div className="mt-2 flex w-full items-center sm:justify-start">
+              {members
+                .filter((member: User) => {
+                  return member.isOnline > 0;
+                })
+                .slice(0, 3)
+                .map((member: User, index: number) => {
+                  return (
+                    <div key={index} className="m-2 flex flex-col items-center">
+                      <div className="relative">
+                        {/* Avatar */}
+                        <img
+                          src={
+                            member.avatar ||
+                            "https://ui-avatars.com/api/?name=" +
+                              member.username
+                          }
+                          alt="User Avatar"
+                          className="h-10 w-10 rounded-full shadow-md"
+                        />
+                        {
+                          // eslint-disable-next-line no-unsafe-optional-chaining
+                          member.isOnline && (
+                            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
+                          )
+                        }
+                      </div>
+                      {/* Username */}
+                      <p className="mt-1 text-xs font-medium text-gray-700">
+                        {member.username}
+                      </p>
                     </div>
-                    {/* Username */}
-                    <p className="mt-1 text-xs font-medium text-gray-700">
-                      Username{index + 1}
-                    </p>
-                  </div>
-                ))}
-              </div>
+                  );
+                })}
             </div>
+          </div>
 
-            {/* Buttons for group chat, invite user, insert applcation */}
-            <div className="flex gap-4 pt-4">
-              <button
-                className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
-                onClick={() => navigate("/invite-user/:_id")}
-              >
-                Invite User
-              </button>
-              <button
-                className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
-                onClick={() => navigate(`/group-chat/${_id}`)}
-              >
-                Open Group Chat
-              </button>
-              <button
-                className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
-                onClick={() =>
-                  navigate("/insert-applications-to-collection/:_id")
-                }
-              >
-                Insert Application
-              </button>
-            </div>
+          {/* Buttons for group chat, invite user, insert applcation */}
+          <div className="flex gap-4 pt-4">
+            <button
+              className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+              onClick={() => navigate(`/invite-user/${_id}`)}
+            >
+              Invite User
+            </button>
+            <button
+              className="hover:bg-secondary-dark flex-1 rounded-full bg-secondary py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
+              onClick={() => navigate(`/group-chat/${_id}`)}
+            >
+              Open Group Chat
+            </button>
+            <button
+              className="hover:bg-primary-dark hidden flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-background transition md:block md:text-lg"
+              onClick={() =>
+                navigate("/insert-applications-to-collection/:_id")
+              }
+            >
+              Insert Application
+            </button>
           </div>
 
           {/* Main Content */}
@@ -334,10 +334,12 @@ export default function CollectionDetail() {
           <div className="mb-20 mt-6 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
             {data?.getCollectionById?.applications?.map(
               (application: Application) => (
-                <CollectionDetailCard
-                  key={application._id}
-                  application={application}
-                />
+                <Link to={`/applications/${application._id}`}>
+                  <CollectionDetailCard
+                    key={application._id}
+                    application={application}
+                  />
+                </Link>
               ),
             )}
           </div>
