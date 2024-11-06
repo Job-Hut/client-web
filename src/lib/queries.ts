@@ -14,6 +14,7 @@ export const GET_AUTHENTICATED_USER = gql`
         location
         createdAt
         updatedAt
+        jobPrefs
         experiences {
           _id
           jobTitle
