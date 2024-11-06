@@ -70,3 +70,19 @@ export const GET_APPLICATIONS = gql`
     }
   }
 `;
+
+export const GET_JOBS = gql`
+  query GetJobs($page: Int!, $query: String!) {
+    getJobs(page: $page, query: $query) {
+      title
+      company
+      companyLogo
+      location
+      description
+      salary
+      source
+      sourceUrl
+      since
+    }
+  }
+`;
