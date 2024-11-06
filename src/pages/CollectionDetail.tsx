@@ -43,7 +43,7 @@ export default function CollectionDetail() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
+    <div className="sticky z-[100] flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar for bigger screen*/}
       {/* <div className="w-full">
         <nav className="fixed hidden w-full bg-primary py-8 text-primary-foreground md:block">
@@ -94,7 +94,7 @@ export default function CollectionDetail() {
       <Navbar />
 
       {/* Navbar for smaller screen */}
-      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
+      <div className="font-poppins fixed left-0 right-0 top-0 z-[100] flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
         <button
           className="text-lg"
           aria-label="Go back"
@@ -231,7 +231,7 @@ export default function CollectionDetail() {
                   <span className="font-semibold text-primary">
                     Joined Members:
                   </span>{" "}
-                  5 people
+                  {data?.getCollectionById?.sharedWith?.length}
                 </p>
                 <button
                   className="rounded-full bg-primary px-4 py-1.5 text-background"

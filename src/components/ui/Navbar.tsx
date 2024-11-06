@@ -1,12 +1,11 @@
 import { GET_AUTHENTICATED_USER } from "@/lib/queries";
 import { useQuery } from "@apollo/client";
-import { CircleUserRound } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Avatar } from "./avatar";
 
 export default function Navbar() {
   const { pathname } = useLocation();
-  const [slash, path] = pathname.split("/");
+  const [path] = pathname.split("/");
   const { data: userData } = useQuery(GET_AUTHENTICATED_USER);
   return (
     <div className="z-50 w-full">
@@ -45,7 +44,7 @@ export default function Navbar() {
       </nav>
       <div className="flex w-full items-center justify-center bg-black p-4 text-background md:hidden">
         <h2 className="font-semibold capitalize">
-          {path ? path : "Upcoming Task"} List
+          {path ? path.split("-").join(" ") : "Upcoming Task"}
         </h2>
       </div>
     </div>

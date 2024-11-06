@@ -42,6 +42,12 @@ export default function Home() {
       {loading && <p className="text-center">Loading...</p>}
       {error && <p className="text-center">Error: {error.message}</p>}
 
+      {data?.getSortedByPriorityApplication?.length == 0 && (
+        <p className="mt-8 text-center">
+          There is no upcoming task at this moment
+        </p>
+      )}
+
       {data?.getSortedByPriorityApplication && (
         <CardList applications={data?.getSortedByPriorityApplication} />
       )}

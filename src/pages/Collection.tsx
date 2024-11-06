@@ -47,6 +47,12 @@ export default function Collection() {
         <p className="text-error mt-8 text-center text-xl">{error.message}</p>
       )}
 
+      {data?.getallCollection?.length == 0 && (
+        <p className="mt-8 text-center">
+          You have no applications at this moment
+        </p>
+      )}
+
       {/* CollectionList Grid */}
       <div className="mx-auto mt-4 flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         {/* Display the Collections */}
