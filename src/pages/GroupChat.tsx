@@ -81,7 +81,8 @@ export default function GroupChat() {
   }, [data]);
 
   // Send message to server
-  const sendMessage = async () => {
+  const sendMessage = async (e) => {
+    e.preventDefault();
     sendMessageMutation();
     setMessage("");
   };
@@ -131,7 +132,7 @@ export default function GroupChat() {
       </div>
 
       {/* Input Area */}
-      <div className="flex items-center border-t border-primary bg-background p-4">
+      <form className="flex items-center border-t border-primary bg-background p-4">
         <Input
           placeholder="Start chatting here..."
           className="mr-2 flex-1 rounded-full border-primary"
@@ -140,11 +141,11 @@ export default function GroupChat() {
         />
         <Button
           className="rounded-full bg-black px-4 py-2 text-background"
-          onClick={() => sendMessage()}
+          onClick={(e) => sendMessage(e)}
         >
           Send
         </Button>
-      </div>
+      </form>
     </div>
   );
 }

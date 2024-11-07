@@ -22,6 +22,9 @@ export default function BottomNavigation() {
     if (pathname === "/collections") {
       nav("/create-collection", { state: { fromPage } });
     }
+    if (pathname.startsWith("/collections/")) {
+      nav("/applications/create", { state: { fromPage } });
+    }
   };
 
   return (

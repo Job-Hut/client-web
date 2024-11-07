@@ -101,7 +101,7 @@ export default function BulkInsertApplication() {
         )}
       </div>
 
-      <div className="mt-10 flex w-11/12 flex-col gap-4 pb-10 md:mt-28 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+      <div className="mt-10 flex w-11/12 flex-col gap-4 md:mt-28 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
         {loading ? (
           <p>Loading...</p>
         ) : (
