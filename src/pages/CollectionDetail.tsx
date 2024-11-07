@@ -1,5 +1,5 @@
 import CollectionDetailCard from "@/components/ui/CollectionDetailCard";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useSubscription } from "@apollo/client";
 import { Application, User } from "@/lib/types";
 import Navbar from "@/components/ui/Navbar";
@@ -72,6 +72,7 @@ export default function CollectionDetail() {
     }
   }, [user, data]);
 
+  const { pathname: fromPage } = useLocation();
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar */}
@@ -336,7 +337,10 @@ export default function CollectionDetail() {
           <div className="mb-24 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
             {data?.getCollectionById?.applications?.map(
               (application: Application) => (
-                <Link to={`/applications/${application._id}`}>
+                <Link
+                  to={`/applications/${application._id}`}
+                  state={{ fromPage }}
+                >
                   <CollectionDetailCard
                     key={application._id}
                     application={application}

@@ -62,7 +62,7 @@ export default function UserCard({
                 `https://api.dicebear.com/9.x/initials/svg?seed=${user.username}`
               }
               alt={`${user.username}'s avatar`}
-              className="rounded-full"
+              className="h-full w-full rounded-full"
             />
             <AvatarFallback>
               {user.username.charAt(0).toUpperCase()}
