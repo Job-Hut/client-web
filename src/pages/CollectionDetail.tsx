@@ -1,14 +1,89 @@
 import CollectionDetailCard from "@/components/ui/CollectionDetailCard";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useQuery, useSubscription } from "@apollo/client";
+import { Application, User } from "@/lib/types";
+import Navbar from "@/components/ui/Navbar";
+import BottomNavigation from "@/components/ui/BottomNavigation";
+import { Edit3 } from "lucide-react";
+
+import { GET_AUTHENTICATED_USER, GET_COLLECTION_DETAIL } from "@/lib/queries";
+import { useEffect, useState } from "react";
+import { SUBSCRIBE_USER_PRESENCE } from "@/lib/subscription";
 
 export default function CollectionDetail() {
+  const { _id } = useParams();
+
+  const navigate = useNavigate();
+  const [members, setMembers] = useState<User[]>([]);
+
+  const { data: user } = useQuery(GET_AUTHENTICATED_USER);
+
+  const { data, loading, error } = useQuery(GET_COLLECTION_DETAIL, {
+    variables: { id: _id },
+    fetchPolicy: "no-cache",
+  });
+
+  const { data: userOnline } = useSubscription(SUBSCRIBE_USER_PRESENCE, {
+    variables: { collectionId: _id },
+  });
+
+  useEffect(() => {
+    if (data) {
+      if (data?.getCollectionById?.sharedWith) {
+        setMembers([
+          ...data?.getCollectionById?.sharedWith.map((member: User) => {
+            return member;
+          }),
+          data?.getCollectionById?.ownerId,
+        ]);
+      }
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (userOnline) {
+      setMembers((prev) => {
+        return prev.map((member) => {
+          if (member._id === userOnline.userPresence._id) {
+            return {
+              ...member,
+              isOnline: userOnline.userPresence.isOnline,
+            };
+          }
+          return member;
+        });
+      });
+    }
+  }, [userOnline]);
+
+  useEffect(() => {
+    if (user && data) {
+      setMembers((prev) => {
+        return prev.map((member) => {
+          if (member._id === user?.getAuthenticatedUser._id) {
+            return {
+              ...member,
+              isOnline: 1,
+            };
+          }
+          return member;
+        });
+      });
+    }
+  }, [user, data]);
+
   return (
-    <div className="flex w-full flex-col items-center justify-center">
-      {/* Header */}
-      <div className="flex w-full items-center justify-between bg-black p-4 text-background">
-        {/* Back button */}
-        <button className="text-lg" aria-label="Go back">
+    <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Navbar for smaller screen */}
+      <div className="font-poppins fixed left-0 right-0 top-0 z-[100] flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
+        <button
+          className="text-lg"
+          aria-label="Go back"
+          onClick={() => navigate("/collections")}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -26,31 +101,255 @@ export default function CollectionDetail() {
             <path d="m12 8-4 4 4 4" />
           </svg>
         </button>
-        <h2 className="font-semibold">Remote Job Collection</h2>
-        {/* Online users count with tooltip */}
-        {/* ! TODO: later inject how many users online here */}
+
+        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-medium sm:text-lg text-center">
+          {data?.getCollectionById?.name} Collection
+        </h2>
+
+        {/* Invite */}
         <div
           className="flex items-center gap-2"
-          title="5 online"
-          aria-label="5 users online"
+          onClick={() => navigate(`/invite-user/${_id}`)}
         >
-          <img
-            src="https://github.com/shadcn.png"
-            alt="Online users"
-            className="h-6 w-6 rounded-full"
-          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-user-plus cursor-pointer"
+            aria-label="Invite user"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" x2="19" y1="8" y2="14" />
+            <line x1="22" x2="16" y1="11" y2="11" />
+          </svg>
         </div>
       </div>
 
-      {/* Invite button */}
-      <div className="flex w-[350px] justify-end">
-        <Button className={cn("bg-[#88D1FF] text-primary")}>Invite</Button>
-      </div>
-      <CollectionDetailCard />
-      <CollectionDetailCard />
-      <Button className="mb-[20px] w-[350px] rounded-full">
-        Add Application
-      </Button>
+      {/* Loading Indicator */}
+      {loading && <p className="mt-8 text-center text-xl">Loading...</p>}
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-error mt-8 text-center text-xl">{error.message}</p>
+      )}
+
+      {data?.getCollectionById && (
+        <>
+          {/*  Top Container */}
+          <div className="mt-4 py-5 w-[90%] max-w-screen-md space-y-4 rounded-lg bg-background p-4 shadow-md md:mt-28 md:max-w-screen-lg lg:max-w-screen-lg">
+            {/* Title and Status */}
+            <div className="flex items-center justify-between md:flex-row underline">
+              <h1 className="text-center text-medium font-semibold md:text-left">
+                {data?.getCollectionById?.name} Collection
+              </h1>
+              {/* Edit button */}
+              <button
+                className="hover:text-primary-dark ml-4 p-1 text-primary"
+                onClick={() => navigate(`/edit-collection/${_id}`)}
+                aria-label="Edit Collection"
+              >
+                <Edit3 className="h-5 w-5" />
+              </button>
+            </div>
+
+            <hr className="my-4 hidden border-t-2 border-secondary md:block" />
+            {/* Description */}
+            <div className="flex items-start gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-info"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" x2="12" y1="16" y2="12" />
+                <line x1="12" x2="12" y1="8" y2="8" />
+              </svg>
+              <div>
+                <h3 className="text-medium font-semibold text-primary">
+                  Description
+                </h3>
+                <p className="text-sm text-muted-foreground sm:text-base md:text-lg">
+                  {data?.getCollectionById?.description || "No description"}
+                </p>
+              </div>
+            </div>
+
+            <hr className="my-2 border-muted" />
+
+            {/* Members Section */}
+            {/* Joined members section */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-user-check"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-3-3.87" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  <polyline points="22 11 20 13 18 11" />
+                </svg>
+                <p className="text-sm sm:text-base md:text-lg">
+                  <span className="font-semibold text-primary">
+                    Joined Members:
+                  </span>{" "}
+                  <span>{members.length}</span> <span>Personnel</span>
+                </p>
+                <button
+                  className="rounded-md bg-primary px-4 py-1.5 text-background text-sm font-medium"
+                  onClick={() => navigate(`/view-online-members/${_id}`)}
+                >
+                  View
+                </button>
+              </div>
+            </div>
+
+            {/* Online members */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-user-check"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-3-3.87" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  <polyline points="22 11 20 13 18 11" />
+                </svg>
+
+                <p className="text-sm sm:text-base md:text-lg">
+                  <span className="font-semibold text-primary">
+                    Online Members:
+                  </span>{" "}
+                  <span>
+                    {
+                      members.filter((member: User) => {
+                        return member.isOnline == 1;
+                      }).length
+                    }
+                  </span>{" "}
+                  <span>Personnel</span>
+                </p>
+                <button
+                  className="rounded-md bg-primary px-4 py-1.5 text-background text-sm font-medium"
+                  onClick={() => navigate(`/view-joined-members/${_id}`)}
+                >
+                  View
+                </button>
+              </div>
+            </div>
+            <div className="mt-2 flex w-full items-center sm:justify-start">
+              {members
+                .filter((member: User) => {
+                  return member.isOnline > 0;
+                })
+                .slice(0, 3)
+                .map((member: User, index: number) => {
+                  return (
+                    <div key={index} className="m-2 flex flex-col items-center">
+                      <div className="relative">
+                        {/* Avatar */}
+                        <img
+                          src={
+                            member.avatar ||
+                            "https://ui-avatars.com/api/?name=" +
+                              member.username
+                          }
+                          alt="User Avatar"
+                          className="h-10 w-10 rounded-full shadow-md"
+                        />
+                        {
+                          member.isOnline && (
+                            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
+                          )
+                        }
+                      </div>
+                      {/* Username */}
+                      <p className="mt-1 text-xs font-medium text-gray-700">
+                        {member.username}
+                      </p>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+
+          {/* Buttons for group chat, invite user, insert applcation */}
+          <div className="flex gap-4 pt-4">
+            <button
+              className="hover:bg-primary-dark hidden flex-1 rounded-md bg-primary py-2 px-4 text-sm font-semibold text-background transition md:block md:text-lg"
+              onClick={() => navigate(`/invite-user/${_id}`)}
+            >
+              Invite User
+            </button>
+            <button
+              className="hover:bg-secondary-dark flex-1 rounded-md bg-background py-2 px-4 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
+              onClick={() => navigate(`/group-chat/${_id}`)}
+            >
+              Open Group Chat
+            </button>
+            <button
+              className="hover:bg-primary-dark hidden flex-1 rounded-md bg-primary py-2 px-4 text-sm font-semibold text-background transition md:block md:text-lg"
+              onClick={() =>
+                navigate(`/insert-applications-to-collection/${_id}`)
+              }
+            >
+              Insert Application
+            </button>
+          </div>
+
+          {/* Main Content */}
+          <h1 className="mt-6 text-center text-2xl font-bold text-primary">
+            Applications
+          </h1>
+          <hr className="my-4 w-[90%] border-t-2 border-primary" />
+
+          {/* Applications */}
+          <div className="mb-20 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+            {data?.getCollectionById?.applications?.map(
+              (application: Application) => (
+                <Link to={`/applications/${application._id}`}>
+                  <CollectionDetailCard
+                    key={application._id}
+                    application={application}
+                  />
+                </Link>
+              ),
+            )}
+          </div>
+        </>
+      )}
+      <BottomNavigation />
     </div>
   );
 }

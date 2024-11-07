@@ -22,7 +22,7 @@ const wsLink = new GraphQLWsLink(
     connectionParams: {
       headers: {
         authorization: localStorage.getItem("access_token")
-          ? `Bearer ${localStorage.getItem("access_token")}`
+          ? `Bearer ${localStorage.getItem("access_token")?.replace(/^"|"$/g, "")}`
           : "",
       },
     },

@@ -4,22 +4,25 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 
-const inputVariants = cva("w-full border border-primary text-sm", {
-  variants: {
-    variant: {
-      default: "rounded-sm",
-      "capsule-icon": "rounded-full ",
+const inputVariants = cva(
+  "w-full border border-primary text-xs placeholder:text-xs",
+  {
+    variants: {
+      variant: {
+        default: "rounded-md",
+        "capsule-icon": "rounded-md ",
+      },
+      inputSize: {
+        default: "px-2 py-2",
+        small: "px-2 py-2",
+      },
     },
-    inputSize: {
-      default: "px-5 py-4",
-      small: "px-2 py-2",
+    defaultVariants: {
+      variant: "default",
+      inputSize: "default",
     },
   },
-  defaultVariants: {
-    variant: "default",
-    inputSize: "default",
-  },
-});
+);
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>,
@@ -39,7 +42,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(inputVariants({ variant, inputSize }), {
-            "px-14": variant === "capsule-icon",
+            "px-11": variant === "capsule-icon",
           })}
           ref={ref}
           {...props}
@@ -70,7 +73,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
           onClick={handleVisibility}
           className="absolute right-4 top-1/2 -translate-y-1/2 transform hover:cursor-pointer"
         >
-          {isVisible ? <Eye /> : <EyeOff />}
+          {isVisible ? <Eye width={16} /> : <EyeOff width={16} />}
         </div>
       </div>
     );

@@ -1,39 +1,46 @@
 import { Card, CardTitle, CardDescription } from "./card";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
+import type { Application } from "@/lib/types";
 
-type CardProps = React.ComponentProps<typeof Card>;
+type CardProps = React.ComponentProps<typeof Card> & {
+  application: Application;
+};
 
 export default function CollectionDetailCard({
   className,
+  application,
   ...props
 }: CardProps) {
   return (
     <Card
       className={cn(
-        "flex flex-col justify-center overflow-hidden rounded-md",
-        "h-[154px] w-[350px] p-3 my-[10px]",
-        "border border-primary",
+        "flex flex-col justify-center overflow-hidden rounded-lg",
+        "my-4 w-full msm:p-2 md:p-4",
+        "shadow-sm",
         className,
       )}
       {...props}
     >
       {/* Top container */}
-      <div className="flex w-full flex-col space-y-1 rounded-md bg-[#FFE1CC] p-2">
+      <div className="flex w-full flex-col space-y-1 rounded-lg bg-[#FFE1CC] p-3">
         <Button
           variant={"secondary"}
           className={cn(
-            "pointer-events-none w-1/3 rounded-full px-2 py-1 text-xs font-bold text-[#D39269]",
+            "pointer-events-none w-1/2 rounded-full px-2 py-1 text-xs font-bold text-[#D39269] sm:w-1/2",
+            "sm:text-sm md:text-base",
             className,
           )}
         >
           Due Tomorrow
         </Button>
-        <CardDescription className="text-sm font-bold text-primary">
-          Airbnb
+        <CardDescription className="text-xs font-bold text-black sm:text-sm md:text-base">
+          {application.organizationName}
         </CardDescription>
         <div className="flex w-full items-center justify-between">
-          <CardTitle className="text-sm">Backend Developer</CardTitle>
+          <CardTitle className="text-xs sm:text-sm md:text-base">
+            {application.jobTitle}
+          </CardTitle>
           {/* Company's logo */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -42,9 +49,9 @@ export default function CollectionDetailCard({
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="lucide lucide-building-2"
           >
             <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
@@ -59,16 +66,16 @@ export default function CollectionDetailCard({
       </div>
 
       {/* Task Todo */}
-      <CardDescription className="mt-2 text-xs font-semibold">
+      <CardDescription className="mt-2 text-xs font-semibold sm:text-sm md:text-base">
         Task Todo:
       </CardDescription>
 
-      {/* Application created date + Add application button */}
-      <div className="mt-1 flex items-center justify-between">
-        <CardDescription className="text-xs font-semibold text-primary">
+      {/* Application created date + Task description */}
+      <div className="mt-1 flex w-full items-center justify-between">
+        <CardDescription className="text-xs font-semibold text-black sm:text-sm md:text-base">
           Submit Updated Portfolio
         </CardDescription>
-        <CardDescription className="text-xs font-semibold text-primary">
+        <CardDescription className="text-xs font-semibold text-black sm:text-sm md:text-base">
           23/10/24
         </CardDescription>
       </div>

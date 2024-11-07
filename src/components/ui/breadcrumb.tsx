@@ -18,6 +18,8 @@ const BreadcrumbList = React.forwardRef<
   React.ComponentPropsWithoutRef<"ol">
 >(({ className, ...props }, ref) => (
   <ol
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     ref={ref}
     className={cn(
       "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
@@ -51,6 +53,8 @@ const BreadcrumbLink = React.forwardRef<
 
   return (
     <Comp
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       ref={ref}
       className={cn("transition-colors hover:text-foreground", className)}
       {...(to ? { to } : { href: props.href })}
