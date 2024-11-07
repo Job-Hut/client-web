@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import useAuth from "@/hooks/use-auth";
 import { Message } from "@/lib/types";
 import { useNavigate } from "react-router-dom";
@@ -81,7 +81,7 @@ export default function GroupChat() {
   }, [data]);
 
   // Send message to server
-  const sendMessage = async (e) => {
+  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     sendMessageMutation();
     setMessage("");
@@ -132,17 +132,17 @@ export default function GroupChat() {
       </div>
 
       {/* Input Area */}
-      <form className="flex items-center border-t border-primary bg-background p-4">
+      <form
+        onSubmit={sendMessage}
+        className="flex items-center border-t border-primary bg-background p-4"
+      >
         <Input
           placeholder="Start chatting here..."
           className="mr-2 flex-1 rounded-full border-primary"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <Button
-          className="rounded-full bg-black px-4 py-2 text-background"
-          onClick={(e) => sendMessage(e)}
-        >
+        <Button className="rounded-full bg-black px-4 py-2 text-background">
           Send
         </Button>
       </form>
