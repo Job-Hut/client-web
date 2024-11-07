@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Card, CardDescription } from "./card";
 import { Message } from "@/lib/types";
 
