@@ -9,7 +9,7 @@ import { Input } from "./input";
 import { Button } from "./button";
 import { Task } from "@/lib/types";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -61,7 +61,8 @@ export default function TaskCard({
   const [deleteTaskMutation] = useMutation(REMOVE_TASK_WITH_APPLICATION);
   const [updateTaskMutation] = useMutation(UPDATE_TASK);
 
-  const handleAddTask = async () => {
+  const handleAddTask = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       if (!input.title || !input.dueDate) {
         return;
@@ -77,7 +78,7 @@ export default function TaskCard({
           },
         },
       });
-      navigate(`/applications/${applicationId}`);
+      window.location.reload();
     } catch (error) {
       toast({
         title: "Error",
@@ -177,35 +178,33 @@ export default function TaskCard({
               </CardDescription>
             </div>
             <div className="flex flex-col gap-4">
-              {tasks
-                .filter((task) => task.stage == applicationStage)
-                .map((task, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between border-b-2 pb-4 last-of-type:border-none last-of-type:pb-0"
-                  >
-                    <div className="flex items-center gap-2 text-xs leading-none">
-                      <Checkbox
-                        id={task.title}
-                        checked={task.completed}
-                        onCheckedChange={() => {
-                          handleUpdateTask(task._id, !task.completed);
-                        }}
-                      />
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor={task.title} className="font-bold">
-                          {task.title}
-                        </label>
-                        <p>{dayjs(task.dueDate).format("DD/MM/YYYY")},</p>
-                      </div>
-                    </div>
-                    <div>
-                      <Button onClick={() => handleDelete(task._id)}>
-                        <TrashIcon />
-                      </Button>
+              {tasks.map((task, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between border-b-2 pb-4 last-of-type:border-none last-of-type:pb-0"
+                >
+                  <div className="flex items-center gap-2 text-xs leading-none">
+                    <Checkbox
+                      id={task.title}
+                      checked={task.completed}
+                      onCheckedChange={() => {
+                        handleUpdateTask(task._id, !task.completed);
+                      }}
+                    />
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor={task.title} className="font-bold">
+                        {task.title}
+                      </label>
+                      <p>{dayjs(task.dueDate).format("DD/MM/YYYY")},</p>
                     </div>
                   </div>
-                ))}
+                  <div>
+                    <Button onClick={() => handleDelete(task._id)}>
+                      <TrashIcon />
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </TabsContent>
@@ -237,7 +236,7 @@ export default function TaskCard({
                 required
               />
               <div className="flex w-full flex-col gap-2">
-                <Button onClick={() => handleAddTask()}>Add New Task</Button>
+                <Button onClick={handleAddTask}>Add New Task</Button>
                 <Button
                   type="button"
                   onClick={() => generateTasks()}

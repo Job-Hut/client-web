@@ -32,7 +32,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <GuardAuth>
-        <Home />,
+        <Home />
       </GuardAuth>
     ),
   },
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
     path: "/register",
     element: (
       <GuardGuest>
-        <Register />,
+        <Register />
       </GuardGuest>
     ),
   },
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
     path: "/login",
     element: (
       <GuardGuest>
-        <Login />,
+        <Login />
       </GuardGuest>
     ),
   },
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     path: "/collections",
     element: (
       <GuardAuth>
-        <Collection />,
+        <Collection />
       </GuardAuth>
     ),
   },
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
     path: "/applications/:_id",
     element: (
       <GuardAuth>
-        <ApplicationDetail />,
+        <ApplicationDetail />
       </GuardAuth>
     ),
   },
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
     path: "/applications/:_id/edit",
     element: (
       <GuardAuth>
-        <ApplicationForm />,
+        <ApplicationForm />
       </GuardAuth>
     ),
   },
@@ -80,7 +80,7 @@ const router = createBrowserRouter([
     path: "/create-collection",
     element: (
       <GuardAuth>
-        <CreateCollection />,
+        <CreateCollection />
       </GuardAuth>
     ),
   },
@@ -88,7 +88,7 @@ const router = createBrowserRouter([
     path: "/collections/:_id",
     element: (
       <GuardAuth>
-        <CollectionDetail />,
+        <CollectionDetail />
       </GuardAuth>
     ),
   },
@@ -100,7 +100,7 @@ const router = createBrowserRouter([
     path: "/group-chat/:_id",
     element: (
       <GuardAuth>
-        <GroupChat />,
+        <GroupChat />
       </GuardAuth>
     ),
   },
@@ -124,7 +124,7 @@ const router = createBrowserRouter([
     path: "/jobs",
     element: (
       <GuardAuth>
-        <Jobs />,
+        <Jobs />
       </GuardAuth>
     ),
   },
@@ -132,7 +132,7 @@ const router = createBrowserRouter([
     path: "/applications",
     element: (
       <GuardAuth>
-        <Applications />,
+        <Applications />
       </GuardAuth>
     ),
   },
@@ -140,7 +140,7 @@ const router = createBrowserRouter([
     path: "/applications/create",
     element: (
       <GuardAuth>
-        <ApplicationForm />,
+        <ApplicationForm />
       </GuardAuth>
     ),
   },
@@ -152,7 +152,7 @@ const router = createBrowserRouter([
     path: "/profile",
     element: (
       <GuardAuth>
-        <Profile />,
+        <Profile />
       </GuardAuth>
     ),
   },
@@ -160,7 +160,7 @@ const router = createBrowserRouter([
     path: "/profile-setting",
     element: (
       <GuardAuth>
-        <ProfileSetting />,
+        <ProfileSetting />
       </GuardAuth>
     ),
   },
@@ -168,7 +168,7 @@ const router = createBrowserRouter([
     path: "/edit-collection/:_id",
     element: (
       <GuardAuth>
-        <EditCollection />,
+        <EditCollection />
       </GuardAuth>
     ),
   },

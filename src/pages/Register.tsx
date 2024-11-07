@@ -54,21 +54,25 @@ export default function Register() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col justify-between px-5 py-12 md:mx-auto md:w-3/4 lg:w-1/2 lg:justify-center">
-      <div>Logo</div>
+    <div className="flex min-h-screen flex-col items-center justify-center px-5 py-12 md:mx-auto md:w-3/4 lg:w-1/2 lg:justify-center">
+      <div>
+        <img
+          src="/logo/logo-square.svg"
+          alt="JobHut logo"
+          className="lg:32 mb-5 w-20 md:w-24"
+        />
+      </div>
       <div className="flex flex-col gap-4 md:gap-8 lg:gap-16">
-        <div className="flex flex-col gap-2 lg:text-center">
-          <h2 className="text-5xl font-bold text-collection-1 lg:text-6xl">
-            Register
-          </h2>
+        <div className="flex flex-col gap-2 text-center">
+          <h2 className="text-5xl font-bold lg:text-6xl">Register</h2>
           <p className="text-sm lg:text-base">
             Let's fill this form and create your account
           </p>
         </div>
-        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-4">
+        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-2">
           <Input
             variant={"capsule-icon"}
-            icon={<UserRound color="black" />}
+            icon={<UserRound color="black" width={16} />}
             placeholder="Fullname"
             type="text"
             value={input.fullname}
@@ -76,7 +80,7 @@ export default function Register() {
           />
           <Input
             variant={"capsule-icon"}
-            icon={<UserRound color="black" />}
+            icon={<UserRound color="black" width={16} />}
             placeholder="Username"
             type="text"
             value={input.username}
@@ -84,7 +88,7 @@ export default function Register() {
           />
           <Input
             variant={"capsule-icon"}
-            icon={<Mail color="black" />}
+            icon={<Mail color="black" width={16} />}
             placeholder="Email"
             type="email"
             value={input.email}
@@ -92,33 +96,35 @@ export default function Register() {
           />
           <InputPassword
             variant={"capsule-icon"}
-            icon={<Lock color="black" />}
+            icon={<Lock color="black" width={16} />}
             placeholder="Password"
             value={input.password}
             onChange={(e) => setInput({ ...input, password: e.target.value })}
           />
           <InputPassword
             variant={"capsule-icon"}
-            icon={<Lock color="black" />}
+            icon={<Lock color="black" width={16} />}
             placeholder="Password Confirmation"
             value={input.passwordConfirmation}
             onChange={(e) =>
               setInput({ ...input, passwordConfirmation: e.target.value })
             }
           />
-          <div className="flex w-full flex-col gap-2">
-            <Button variant={"roundAccent"} size={"mobile"} disabled={loading}>
+          <div className="mt-4 flex w-full flex-col gap-2">
+            <Button size={"mobile"} disabled={loading}>
               Create Account
             </Button>
-            <p className="text-center text-xs lg:text-base">
-              Already have an account?{" "}
-              <Link
-                to={"/login"}
-                className="font-bold text-collection-1 underline underline-offset-1"
-              >
-                Login
-              </Link>
-            </p>
+            <div className="flex items-center justify-center gap-1 text-center text-xs lg:text-base">
+              <p>Already have an account? </p>
+              <div className="group w-fit">
+                <Link to={"/login"} className="font-bold">
+                  Login
+                </Link>
+                <div
+                  className={`transition-width mx-auto h-[1px] w-full bg-black duration-500 ease-out after:content-[""] group-hover:mx-auto group-hover:w-1/2`}
+                ></div>
+              </div>
+            </div>
           </div>
         </form>
       </div>

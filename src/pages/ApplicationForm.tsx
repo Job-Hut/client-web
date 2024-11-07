@@ -19,21 +19,22 @@ import { Application, Collection } from "@/lib/types";
 export default function ApplicationForm() {
   const location = useLocation();
   const { application }: { application: Application } = location.state || {};
-  // console.log(application);
+  const { job } = location.state || {};
+  const { fromPage } = location.state || {};
   const paths = location.pathname.split("/");
   let title;
   if (paths.includes("create")) title = "Create New Application";
 
   const [input, setInput] = useState({
-    source: application?.source || "",
-    companyName: application?.organizationName || "",
-    positionName: application?.jobTitle || "",
-    jobDescription: application?.description || "",
+    source: application?.source || job?.sourceUrl || "",
+    companyName: application?.organizationName || job?.company || "",
+    positionName: application?.jobTitle || job?.title || "",
+    jobDescription: application?.description || job?.description || "",
     collection: application?.collectionId || "",
     type: application?.type || "",
-    salary: application?.salary.toString() || "",
-    companyLocation: application?.location || "",
-    companyLogo: application?.organizationLogo || "",
+    salary: application?.salary.toString() || job?.salary || "",
+    companyLocation: application?.location || job?.location || "",
+    companyLogo: application?.organizationLogo || job?.companyLogo || "",
   });
 
   const handleChange = (
@@ -94,6 +95,7 @@ export default function ApplicationForm() {
         salary: Number(input.salary),
         type: input.type,
         collectionId: !input.collection ? null : input.collection,
+        source: input.source,
       };
 
       if (paths.includes("create"))
@@ -115,15 +117,23 @@ export default function ApplicationForm() {
     }
   };
 
+  const handleBack = () => {
+    nav(`${fromPage}`);
+  };
+
   return (
     <div className="flex min-h-screen flex-col gap-2 bg-secondary pb-10">
       <div className="flex w-full items-center justify-between bg-black p-4 text-background">
-        <button title="Go back to previous page" aria-label="Go back">
+        <button
+          onClick={handleBack}
+          title="Go back to previous page"
+          aria-label="Go back"
+        >
           <CircleArrowLeft />
         </button>
         <h2 className="font-semibold">Application Form</h2>
         <button title="Additional options" aria-label="More options">
-          <EllipsisVertical />
+          <EllipsisVertical color="black" />
         </button>
       </div>
       <div className="mx-auto flex w-11/12 flex-col gap-4 md:grid md:max-w-screen-xl md:grid-cols-2 md:gap-4 md:pb-20 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">

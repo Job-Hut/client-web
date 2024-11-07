@@ -145,7 +145,7 @@ export default function CreateCollection() {
             </div>
 
             {/* Save and Cancel Buttons */}
-            <div className="space-y-4">
+            <div className="flex flex-col gap-2 md:flex-row md:gap-2">
               <Button
                 type="submit"
                 className="w-full rounded-md bg-primary py-3 font-medium text-background"
@@ -155,7 +155,7 @@ export default function CreateCollection() {
               </Button>
               <Button
                 type="button"
-                className="w-full rounded-md bg-secondary gap-2 font-semibold text-primary hover:text-background"
+                className="w-full gap-2 rounded-md bg-secondary font-semibold text-primary hover:text-background"
                 onClick={handleCancel}
               >
                 Cancel
