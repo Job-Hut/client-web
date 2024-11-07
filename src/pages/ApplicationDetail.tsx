@@ -85,14 +85,13 @@ export default function ApplicationDetail() {
   const location = useLocation();
 
   const { fromPage } = location.state || {};
-  console.log(fromPage, "PPPPP");
 
   const nav = useNavigate();
 
   const handleBack = () => {
     nav(`${fromPage}`);
   };
-
+  const application = data?.getApplicationById;
   return (
     <div className="flex min-h-screen flex-col gap-2 bg-secondary pb-10">
       <div className="flex w-full items-center justify-between bg-black p-4 text-background">
@@ -148,15 +147,15 @@ export default function ApplicationDetail() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between pl-4">
-              <div className="text-sm">
-                <div className="flex items-center gap-2">
-                  <Wallet width={16} />
-                  <p>
-                    {formattedCurrency(data?.getApplicationById?.salary) ||
-                      "Not Specified"}
-                  </p>
+              <div className="flex items-center justify-between pl-4">
+                <div className="text-sm">
+                  <div className="flex items-center gap-2">
+                    <Wallet width={16} />
+                    <p>
+                      {formattedCurrency(data?.getApplicationById?.salary) ||
+                        "Not Specified"}
+                    </p>
+                  </div>
                   <div className="flex items-center gap-2">
                     <MapPin width={16} />
                     <p>
@@ -172,19 +171,22 @@ export default function ApplicationDetail() {
                   </div>
                 </div>
               </div>
-              <Link to={`/applications/:id/edit`}>
+              <Link
+                to={`/applications/${data?.getApplicationById?._id}/edit`}
+                state={{ application, fromPage }}
+              >
                 <Button className="w-full">Edit</Button>
               </Link>
             </div>
           </div>
-          <div className="w-full">
-            <TaskCard
-              className="lg:w-full"
-              tasks={data?.getApplicationById?.tasks}
-              applicationId={_id}
-              applicationStage={stageState[0]}
-            />
-          </div>
+        </div>
+        <div className="w-full">
+          <TaskCard
+            className="lg:w-full"
+            tasks={data?.getApplicationById?.tasks}
+            applicationId={_id}
+            applicationStage={stageState[0]}
+          />
         </div>
       </div>
     </div>

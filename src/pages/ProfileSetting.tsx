@@ -179,6 +179,7 @@ export default function ProfileSetting() {
         title: "Success",
         description: "Profile updated successfully",
       });
+      navigate("/profile");
     } catch (error) {
       toast({
         title: "Error",
@@ -349,7 +350,7 @@ export default function ProfileSetting() {
   return (
     <div className="font-poppins relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar */}
-      <div className="flex w-full items-center justify-between bg-black p-4 text-background md:justify-center">
+      <div className="flex w-full items-center justify-between bg-black p-4 text-background">
         <button
           className="text-lg"
           aria-label="Go back"
