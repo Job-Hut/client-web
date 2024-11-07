@@ -179,6 +179,7 @@ export default function ProfileSetting() {
         title: "Success",
         description: "Profile updated successfully",
       });
+      navigate("/profile");
     } catch (error) {
       toast({
         title: "Error",

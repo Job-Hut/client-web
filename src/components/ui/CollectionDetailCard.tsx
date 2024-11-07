@@ -16,7 +16,7 @@ export default function CollectionDetailCard({
     <Card
       className={cn(
         "flex flex-col justify-center overflow-hidden rounded-lg",
-        "my-4 w-full msm:p-2 md:p-4",
+        "w-full msm:p-2 md:p-4",
         "shadow-sm",
         className,
       )}

@@ -102,7 +102,7 @@ export default function CollectionDetail() {
           </svg>
         </button>
 
-        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-base font-medium sm:text-lg text-center">
+        <h2 className="absolute left-1/2 -translate-x-1/2 transform text-center text-base font-medium sm:text-lg">
           {data?.getCollectionById?.name} Collection
         </h2>
 
@@ -143,10 +143,10 @@ export default function CollectionDetail() {
       {data?.getCollectionById && (
         <>
           {/*  Top Container */}
-          <div className="mt-4 py-5 w-[90%] max-w-screen-md space-y-4 rounded-lg bg-background p-4 shadow-md md:mt-28 md:max-w-screen-lg lg:max-w-screen-lg">
+          <div className="mt-4 w-[90%] max-w-screen-md space-y-4 rounded-lg bg-background p-4 py-5 shadow-md md:mt-28 md:max-w-screen-lg lg:max-w-screen-lg">
             {/* Title and Status */}
-            <div className="flex items-center justify-between md:flex-row underline">
-              <h1 className="text-center text-medium font-semibold md:text-left">
+            <div className="flex items-center justify-between underline md:flex-row">
+              <h1 className="text-medium text-center font-semibold md:text-left">
                 {data?.getCollectionById?.name} Collection
               </h1>
               {/* Edit button */}
@@ -218,8 +218,8 @@ export default function CollectionDetail() {
                   <span>{members.length}</span> <span>Personnel</span>
                 </p>
                 <button
-                  className="rounded-md bg-primary px-4 py-1.5 text-background text-sm font-medium"
-                  onClick={() => navigate(`/view-online-members/${_id}`)}
+                  className="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-background"
+                  onClick={() => navigate(`/view-joined-members/${_id}`)}
                 >
                   View
                 </button>
@@ -261,8 +261,8 @@ export default function CollectionDetail() {
                   <span>Personnel</span>
                 </p>
                 <button
-                  className="rounded-md bg-primary px-4 py-1.5 text-background text-sm font-medium"
-                  onClick={() => navigate(`/view-joined-members/${_id}`)}
+                  className="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-background"
+                  onClick={() => navigate(`/view-online-members/${_id}`)}
                 >
                   View
                 </button>
@@ -288,11 +288,9 @@ export default function CollectionDetail() {
                           alt="User Avatar"
                           className="h-10 w-10 rounded-full shadow-md"
                         />
-                        {
-                          member.isOnline && (
-                            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
-                          )
-                        }
+                        {member.isOnline && (
+                          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
+                        )}
                       </div>
                       {/* Username */}
                       <p className="mt-1 text-xs font-medium text-gray-700">
@@ -307,19 +305,19 @@ export default function CollectionDetail() {
           {/* Buttons for group chat, invite user, insert applcation */}
           <div className="flex gap-4 pt-4">
             <button
-              className="hover:bg-primary-dark hidden flex-1 rounded-md bg-primary py-2 px-4 text-sm font-semibold text-background transition md:block md:text-lg"
+              className="hover:bg-primary-dark hidden flex-1 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-background transition md:block md:text-lg"
               onClick={() => navigate(`/invite-user/${_id}`)}
             >
               Invite User
             </button>
             <button
-              className="hover:bg-secondary-dark flex-1 rounded-md bg-background py-2 px-4 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
+              className="hover:bg-secondary-dark flex-1 rounded-md bg-background px-4 py-2 text-sm font-semibold text-primary transition sm:text-base md:text-lg"
               onClick={() => navigate(`/group-chat/${_id}`)}
             >
               Open Group Chat
             </button>
             <button
-              className="hover:bg-primary-dark hidden flex-1 rounded-md bg-primary py-2 px-4 text-sm font-semibold text-background transition md:block md:text-lg"
+              className="hover:bg-primary-dark hidden flex-1 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-background transition md:block md:text-lg"
               onClick={() =>
                 navigate(`/insert-applications-to-collection/${_id}`)
               }
@@ -335,7 +333,7 @@ export default function CollectionDetail() {
           <hr className="my-4 w-[90%] border-t-2 border-primary" />
 
           {/* Applications */}
-          <div className="mb-20 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
+          <div className="mb-24 grid w-full gap-4 px-4 pb-20 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:px-10">
             {data?.getCollectionById?.applications?.map(
               (application: Application) => (
                 <Link to={`/applications/${application._id}`}>

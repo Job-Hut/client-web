@@ -7,20 +7,20 @@ import { User } from "@/lib/types";
 import { useEffect, useState } from "react";
 
 const GET_ALL_USERS = gql`
-query GetAllUsers($keyword: String) {
-  getAllUsers(keyword: $keyword) {
-    _id
-    username
-    avatar
-    fullName
-    email
-    password
-    isOnline
-    createdAt
-    updatedAt
+  query GetAllUsers($keyword: String) {
+    getAllUsers(keyword: $keyword) {
+      _id
+      username
+      avatar
+      fullName
+      email
+      password
+      isOnline
+      createdAt
+      updatedAt
+    }
   }
-}
-`
+`;
 
 export default function InviteToGroup() {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ export default function InviteToGroup() {
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center bg-secondary">
       {/* Navbar */}
-      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md md:hidden">
+      <div className="font-poppins fixed left-0 right-0 top-0 z-10 flex items-center justify-between bg-primary p-4 text-background shadow-md">
         <button
           className="text-lg"
           aria-label="Go back"
@@ -71,7 +71,7 @@ export default function InviteToGroup() {
         </h2>
       </div>
 
-      <div className="min-h-screen w-full px-4 pb-20 pt-10 mt-10 py-5 sm:px-[5%] md:px-[10%] md:pt-28 lg:px-[15%]">
+      <div className="mt-10 min-h-screen w-full px-4 py-5 pb-20 pt-10 sm:px-[5%] md:mt-0 md:px-[10%] lg:px-[15%]">
         <h1 className="mb-6 hidden text-center text-2xl font-semibold text-gray-800 md:block">
           Invite Users to Group
         </h1>

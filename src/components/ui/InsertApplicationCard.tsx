@@ -4,6 +4,7 @@ import { Button } from "./button";
 import { Application } from "@/lib/types";
 import { Link2, MapPin, Wallet } from "lucide-react";
 import { useState } from "react";
+import { formattedCurrency } from "@/utils/helper";
 
 type CardProps = React.ComponentProps<typeof Card> & {
   application: Application;
@@ -24,7 +25,7 @@ export default function InsertApplicationCard({
     <Card
       className={cn(
         "flex flex-col justify-center overflow-hidden rounded-lg",
-        "my-4 w-full msm:p-2 md:p-4",
+        "w-full msm:p-2 md:p-4",
         "shadow-sm",
         isSelected ? "border border-primary" : "",
         className,
@@ -61,7 +62,7 @@ export default function InsertApplicationCard({
               <div className="flex items-center gap-2">
                 <Wallet width={16} />
                 <p>
-                  {application.salary ? application.salary : "Not specified"}
+                  {formattedCurrency(application.salary) || "Not Specified"}
                 </p>
               </div>
               <div className="flex items-center gap-2">

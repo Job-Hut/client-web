@@ -22,7 +22,7 @@ export default function ViewMembers() {
         <button
           className="text-lg"
           aria-label="Go back"
-          onClick={() => navigate("/collections/:_id")}
+          onClick={() => navigate(`/collections/${_id}`)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
